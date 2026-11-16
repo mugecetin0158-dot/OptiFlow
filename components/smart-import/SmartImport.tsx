@@ -2,9 +2,8 @@
 import {
   AIImportCorrection,
   AIImportResult,
-  aiVerificationRequired,
-  applyImportAnalysis,
   correctionJournal,
+  prepareAIImport,
   requestAIImportAnalysis,
   requestModelPreview,
   saveAIImportModel,
@@ -164,6 +163,14 @@ export default function SmartImport({
   }
   async function processWithAI(next = sources) {
     if (!consent || !next.length || aiBusy) return;
+    if (
+      draft.employees.length + draft.availability.length + draft.shifts.length >
+        0 &&
+      !window.confirm(
+        t("Rebuild from source files? This replaces current preview edits."),
+      )
+    )
+      return;
     if (next.some((s) => s.parsed.issues.some((i) => i.severity === "error"))) {
       setError("Fix parsing errors before AI processing.");
       return;
@@ -180,35 +187,40 @@ export default function SmartImport({
     try {
       const analysis = await requestAIImportAnalysis(next, language, controller.signal);
       setAiResult(analysis);
-      const applied = applyImportAnalysis(next, analysis);
       const correctionProposals = analysis.files.flatMap((f) => f.corrections);
-      const confident = !analysis.requires_verification && !aiVerificationRequired(applied, correctionProposals);
-      const prepared = applied.map((s) => ({
-        ...s,
-        confirmed: confident && s.kinds.length > 0,
-      }));
-      setSources(prepared);
+      const prepared = prepareAIImport(next, analysis);
+      setSources(prepared.sources);
       setAiCorrections(correctionProposals);
       setAiComplete(true);
-      if (confident) {
-        const result = transformSources(prepared);
-        setDraft(result.draft);
-        setPipelineIssues(result.issues);
-        setUnmapped(result.unmapped);
-        setStale(false);
-        const validated = validateDraft(result.draft, rules);
-        if (!result.issues.some((i) => i.severity === "error") && validated.valid) {
-          setStep(4);
-          setNotice("AI processing completed. The validated preview is ready.");
-        } else {
-          setStep(analysis.questions.length ? 2 : 3);
-          setNotice("AI processing completed. Complete the highlighted information.");
-        }
-      } else {
-        setStale(true);
-        setStep(analysis.questions.length ? 2 : 3);
-        setNotice("AI processing completed. Review only the unresolved items.");
-      }
+      setDraft(prepared.draft);
+      setPipelineIssues(prepared.issues);
+      setUnmapped(prepared.unmapped);
+      setStale(false);
+      setAccepted(false);
+      const hasRequiredQuestions = analysis.questions.some(
+        (question) => question.required,
+      );
+      const validated = validateDraft(prepared.draft, rules);
+      const previewHasErrors =
+        prepared.issues.some((issue) => issue.severity === "error") ||
+        !validated.valid;
+      if (hasRequiredQuestions) setStep(2);
+      else if (
+        analysis.requires_verification ||
+        prepared.requiresMappingReview ||
+        correctionProposals.length
+      )
+        setStep(3);
+      else setStep(4);
+      setNotice(
+        previewHasErrors || hasRequiredQuestions
+          ? "AI processing completed. Complete the highlighted information."
+          : analysis.requires_verification ||
+                prepared.requiresMappingReview ||
+                correctionProposals.length
+              ? "AI processing completed. Review only the unresolved items."
+              : "AI processing completed. The validated preview is ready.",
+      );
     } catch (e) {
       if (!controller.signal.aborted) setError((e as Error).message);
     } finally {
@@ -840,7 +852,20 @@ export default function SmartImport({
             try {
               const result = await submitMissingAnswers(aiResult.session_id, questionAnswers);
               setAiResult({ ...aiResult, questions: result.remaining_questions });
-              setStep(3);
+              const mappingReview = sources.some(
+                (source) =>
+                  source.kinds.length > 0 &&
+                  source.mappings.some(
+                    (mapping) =>
+                      mapping.state === "suggested" ||
+                      mapping.state === "unmapped",
+                  ),
+              );
+              setStep(
+                mappingReview || aiCorrections.length || aiResult.requires_verification
+                  ? 3
+                  : 4,
+              );
             } catch (failure) { setError((failure as Error).message); }
           }}>{t("Continue to optional verification")} <ArrowRight size={16} /></button>
         </div>

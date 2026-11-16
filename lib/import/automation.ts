@@ -285,6 +285,34 @@ export function applyImportAnalysis(sources: ImportSource[], result: AIImportRes
   });
 }
 
+export function prepareAIImport(
+  sources: ImportSource[],
+  result: AIImportResult,
+) {
+  const applied = applyImportAnalysis(sources, result);
+  const prepared = applied.map((source) => ({
+    ...source,
+    confirmed:
+      !source.kinds.length ||
+      !source.mappings.some(
+        (mapping) =>
+          mapping.state === "suggested" || mapping.state === "unmapped",
+      ),
+  }));
+  return {
+    sources: prepared,
+    ...transformSources(prepared),
+    requiresMappingReview: prepared.some(
+      (source) =>
+        source.kinds.length > 0 &&
+        source.mappings.some(
+          (mapping) =>
+            mapping.state === "suggested" || mapping.state === "unmapped",
+        ),
+    ),
+  };
+}
+
 export function aiVerificationRequired(
   sources: ImportSource[],
   corrections: AIImportCorrection[],

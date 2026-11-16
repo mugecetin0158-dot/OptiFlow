@@ -14,6 +14,7 @@ import {
   applyImportAnalysis,
   requestAIImportAnalysis,
   aiVerificationRequired,
+  prepareAIImport,
 } from "../lib/import/automation";
 import { createAllocationSource } from "../lib/allocation/import";
 import { sampleDraft } from "../lib/allocation/sample";
@@ -21,7 +22,12 @@ import { exportCatalog } from "../lib/allocation/import";
 import { makeProfile } from "../lib/import/profiles";
 import { transformSources } from "../lib/import/pipeline";
 import { validateDraft } from "../lib/import/validation";
-import { emptyRules } from "../lib/import/types";
+import {
+  Dataset,
+  emptyRules,
+  Field,
+  Mapping,
+} from "../lib/import/types";
 import { readWorkbook } from "../lib/spreadsheet/read";
 import { readFileSync } from "node:fs";
 import { writeCSV, parseCSV } from "../lib/import/csv";
@@ -264,5 +270,200 @@ test("safe normalization records original and corrected cell with source row", (
         c.result === "Ada" &&
         c.row === 2,
     ),
+  );
+});
+
+type SyntheticFile = {
+  id: string;
+  name: string;
+  text: string;
+  dataset: Dataset;
+  mappings: [Field, NonNullable<Mapping["transform"]>][];
+};
+const syntheticFiles: SyntheticFile[] = [
+  {
+    id: "employees",
+    name: "ai_employee.csv",
+    text: readFileSync("tests/fixtures/import/ai_employee.csv", "utf8"),
+    dataset: "employees",
+    mappings: [
+      ["employee_id", "direct"],
+      ["name", "direct"],
+      ["hourly_rate", "direct"],
+      ["max_weekly_hours", "direct"],
+      ["roles", "direct"],
+    ],
+  },
+  {
+    id: "availability",
+    name: "ai_availability.csv",
+    text: readFileSync("tests/fixtures/import/ai_availability.csv", "utf8"),
+    dataset: "availability",
+    mappings: [
+      ["employee_id", "direct"],
+      ["date", "date"],
+      ["start_time", "time"],
+      ["end_time", "time"],
+      ["status", "status"],
+    ],
+  },
+  {
+    id: "shifts",
+    name: "ai_shifts.csv",
+    text: readFileSync("tests/fixtures/import/ai_shifts.csv", "utf8"),
+    dataset: "shifts",
+    mappings: [
+      ["shift_id", "direct"],
+      ["date", "date"],
+      ["start_time", "time"],
+      ["end_time", "time"],
+      ["required_count", "direct"],
+      ["required_role", "direct"],
+    ],
+  },
+];
+
+function interpretedSources(files = syntheticFiles, options: {
+  confidence?: number;
+  employeeOnly?: boolean;
+} = {}) {
+  const sources = files.map((file) =>
+    createSource(file.id, file.name, file.text),
+  );
+  const raw = {
+    files: sources.map((source) => {
+      const fixture = files.find((file) => file.id === source.id)!;
+      return {
+        source_id: source.id,
+        datasets: [fixture.dataset],
+        destination_note: "",
+        columns: source.parsed.headers.map((column, index) => {
+          const [field, transform] = fixture.mappings[index];
+          return {
+            column,
+            field,
+            transform,
+            confidence: options.confidence ?? 0.99,
+            reason: "Synthetic fixture mapping",
+          };
+        }),
+        corrections: [],
+      };
+    }),
+    questions: options.employeeOnly
+      ? []
+      : [{
+          id: "model:objective",
+          prompt: "Choose an optimization objective.",
+          answer_type: "choice",
+          options: ["minimize_cost", "maximize_output"],
+          target: "model.objective",
+          required: true,
+        }],
+    requires_verification: !options.employeeOnly,
+  };
+  const analysis = cleanImportAnalysis(raw, sources);
+  return { sources, analysis };
+}
+
+test("AI mappings populate all Scheduling preview datasets with provenance despite model questions", () => {
+  const { sources, analysis } = interpretedSources();
+  const prepared = prepareAIImport(sources, analysis);
+  const rules = {
+    ...emptyRules,
+    minRestHours: "0",
+    maxShiftsPerWeek: "5",
+    timezone: "Etc/UTC",
+    currency: "USD",
+    weekStart: "2026-11-16",
+    allowMultipleShifts: true,
+    reviewed: true,
+  };
+  const validation = validateDraft(prepared.draft, rules);
+  assert.equal(analysis.requires_verification, true);
+  assert.equal(prepared.requiresMappingReview, false);
+  assert.equal(prepared.draft.employees.length, 1);
+  assert.equal(prepared.draft.availability.length, 1);
+  assert.equal(prepared.draft.shifts.length, 1);
+  assert.deepEqual(validation.data.employees[0], {
+    employee_id: "EMP-001",
+    name: "Example Worker",
+    hourly_rate: 20,
+    max_weekly_hours: 40,
+    roles: ["Picker"],
+  });
+  assert.equal(validation.data.availability[0].status, "available");
+  assert.equal(validation.data.shifts[0].shift_id, "SHIFT-001");
+  assert.equal(validation.valid, true, JSON.stringify(validation.issues));
+  for (const kind of ["employees", "availability", "shifts"] as const) {
+    assert.deepEqual(prepared.draft[kind][0].sources, [{
+      fileId: kind,
+      file: `ai_${kind === "employees" ? "employee" : kind}.csv`,
+      row: 2,
+    }]);
+  }
+});
+
+test("employee-only AI imports retain employee data and report genuinely missing datasets", () => {
+  const { sources, analysis } = interpretedSources(
+    syntheticFiles.slice(0, 1),
+    { employeeOnly: true },
+  );
+  const prepared = prepareAIImport(sources, analysis);
+  const validation = validateDraft(prepared.draft, emptyRules);
+  assert.equal(prepared.draft.employees.length, 1);
+  assert.deepEqual(prepared.draft.availability, []);
+  assert.deepEqual(prepared.draft.shifts, []);
+  assert.deepEqual(
+    validation.issues
+      .filter((issue) => issue.code === "empty")
+      .map((issue) => issue.dataset)
+      .sort(),
+    ["availability", "shifts"],
+  );
+});
+
+test("ambiguous AI mappings wait for clarification instead of creating guessed records", () => {
+  const ambiguous: SyntheticFile[] = [{
+    ...syntheticFiles[0],
+    text: "employee_id,name,rate,max_weekly_hours,roles\nEMP-001,Example Worker,20,40,Picker",
+    mappings: [
+      ["employee_id", "direct"],
+      ["name", "direct"],
+      ["hourly_rate", "direct"],
+      ["max_weekly_hours", "direct"],
+      ["roles", "direct"],
+    ],
+  }];
+  const { sources, analysis } = interpretedSources(ambiguous, {
+    confidence: 0.65,
+    employeeOnly: true,
+  });
+  const prepared = prepareAIImport(sources, analysis);
+  assert.equal(prepared.requiresMappingReview, true);
+  assert.deepEqual(prepared.draft.employees, []);
+  assert.equal(prepared.sources[0].mappings[2].state, "suggested");
+  assert.ok(prepared.issues.some((issue) => issue.code === "classification"));
+});
+
+test("invalid AI-mapped values remain visible with source provenance and block validation", () => {
+  const availability = {
+    ...syntheticFiles[1],
+    text: readFileSync("tests/fixtures/import/ai_availability.csv", "utf8")
+      .replace("available", "maybe"),
+  };
+  const { sources, analysis } = interpretedSources([availability]);
+  const prepared = prepareAIImport(sources, analysis);
+  const row = prepared.draft.availability[0];
+  assert.equal(row.values.status, "maybe");
+  assert.equal(row.pending?.status, "Confirm how this status maps to available or unavailable.");
+  assert.deepEqual(row.sources, [{
+    fileId: "availability",
+    file: "ai_availability.csv",
+    row: 2,
+  }]);
+  assert.equal(
+    validateDraft(prepared.draft, emptyRules, "availability").valid,
+    false,
   );
 });

@@ -1,0 +1,2 @@
+shift_id,date,start_time,end_time,required_count,required_role
+SHIFT-001,2026-11-16,09:00,17:00,1,Picker
