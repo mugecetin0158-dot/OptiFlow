@@ -58,7 +58,7 @@ for origin in (value.strip() for value in configured_origins.split(',')):
     if not (origin.startswith('https://') or origin.startswith('http://localhost:') or origin.startswith('http://127.0.0.1:')) or '/' in origin.split('://',1)[1]:
         raise RuntimeError('OPTIFLOW_CORS_ORIGINS must contain comma-separated origins without paths.')
     allowed_origins.append(origin)
-app.add_middleware(CORSMiddleware,allow_origins=allowed_origins,allow_methods=['POST','GET'],allow_headers=['Content-Type'])
+app.add_middleware(CORSMiddleware,allow_origins=allowed_origins,allow_methods=['POST','GET'],allow_headers=['Content-Type','Authorization'])
 
 @app.get('/health')
 def health():
@@ -96,6 +96,12 @@ def solve(p:Scenario):
     if status_name=='UNKNOWN': messages=['No usable solution was found within the solver time limit.']
     return {'status':status_name,'assignments':assignments,'seconds':time.perf_counter()-start,'engine':'OR-Tools CP-SAT','messages':messages}
 
+# Keep the existing Smart Import API unchanged. Set the documented default before
+# its router is imported; GEMINI_IMPORT_MODEL remains an environment override.
+os.environ.setdefault('GEMINI_IMPORT_MODEL', 'gemini-2.5-flash')
 from backend.import_foundations import router as import_router
+from backend.gemini_diagnostics import configure_gemini_provider, router as gemini_router
 
+configure_gemini_provider()
 app.include_router(import_router)
+app.include_router(gemini_router)
