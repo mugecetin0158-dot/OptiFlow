@@ -9,6 +9,13 @@ import { createSource } from "../lib/import/recognition";
 import { translate, Language } from "../lib/i18n";
 // tsx uses classic JSX for this repository's Next.js preserve setting.
 (globalThis as any).React = React;
+const escapeHTML = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#x27;");
 test("upload workflow renders in all three languages without employee data or fake success", () => {
   for (const language of ["en", "tr", "fr", "es"] as Language[]) {
     const html = renderToStaticMarkup(
@@ -21,6 +28,35 @@ test("upload workflow renders in all three languages without employee data or fa
     );
     assert.ok(html.includes(translate(language, "Choose CSV or Excel files")));
     assert.ok(html.includes('type="file"'));
+    assert.ok(
+      html.includes(escapeHTML(translate(language, "What you'll need"))),
+    );
+    assert.ok(
+      html.includes(
+        escapeHTML(
+          translate(
+            language,
+            "To create a complete scheduling model, OptiFlow needs three types of data:",
+          ),
+        ),
+      ),
+    );
+    for (const text of [
+      "Employee IDs, names, hourly rates, maximum weekly hours, and roles.",
+      "Which employees are available, on which dates, and during which hours.",
+      "The shifts that need coverage, including dates, start/end times, required staffing counts, and roles.",
+      "Upload these datasets together or separately. OptiFlow will automatically identify and organize the information using AI. If anything is missing or unclear, we'll ask you to provide it.",
+      "Dataset readiness",
+    ])
+      assert.ok(html.includes(escapeHTML(translate(language, text))), text);
+    for (const dataset of ["Employees", "Availability", "Shifts"])
+      assert.ok(
+        html.includes(
+          escapeHTML(
+            `${translate(language, dataset)}: ${translate(language, "Missing")}`,
+          ),
+        ),
+      );
     for (const stage of ["AI Interpretation", "Missing Information", "Optional Verification", "Preview", "Save"])
       assert.ok(html.includes(translate(language, stage)));
     assert.ok(!html.includes(translate(language, "Map columns")));

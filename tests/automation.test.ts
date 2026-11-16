@@ -15,6 +15,7 @@ import {
   requestAIImportAnalysis,
   aiVerificationRequired,
   prepareAIImport,
+  datasetReadiness,
 } from "../lib/import/automation";
 import { createAllocationSource } from "../lib/allocation/import";
 import { sampleDraft } from "../lib/allocation/sample";
@@ -474,5 +475,48 @@ test("invalid AI-mapped values remain visible with source provenance and block v
   assert.equal(
     validateDraft(prepared.draft, emptyRules, "availability").valid,
     false,
+  );
+});
+
+test("dataset readiness distinguishes uploaded, identified, validated, and missing data", () => {
+  const { sources, analysis } = interpretedSources(
+    syntheticFiles.slice(0, 1),
+    { employeeOnly: true },
+  );
+  const empty = {
+    employees: [],
+    availability: [],
+    shifts: [],
+  };
+  assert.deepEqual(
+    datasetReadiness([], empty, [], emptyRules, false, false),
+    { employees: "Missing", availability: "Missing", shifts: "Missing" },
+  );
+  assert.deepEqual(
+    datasetReadiness(sources, empty, [], emptyRules, false, false),
+    { employees: "Uploaded", availability: "Uploaded", shifts: "Uploaded" },
+  );
+  const prepared = prepareAIImport(sources, analysis);
+  assert.deepEqual(
+    datasetReadiness(
+      prepared.sources,
+      prepared.draft,
+      prepared.issues,
+      emptyRules,
+      true,
+      false,
+    ),
+    { employees: "Validated", availability: "Missing", shifts: "Missing" },
+  );
+  assert.equal(
+    datasetReadiness(
+      prepared.sources,
+      prepared.draft,
+      prepared.issues,
+      emptyRules,
+      true,
+      true,
+    ).employees,
+    "Identified",
   );
 });

@@ -188,6 +188,16 @@ test("uploading a Scheduling spreadsheet reaches AI and renders editable populat
     });
     assert.equal(name.value, "Corrected Worker");
     assert.ok(document.body.textContent?.includes("scheduling.csv:2"));
+    await act(async () => {
+      [...document.querySelectorAll<HTMLButtonElement>(".import-steps button")]
+        .find((button) => button.textContent?.includes("Upload"))
+        ?.click();
+    });
+    for (const dataset of ["Employees", "Availability", "Shifts"])
+      assert.ok(
+        document.querySelector(`[aria-label="${dataset}: Validated"]`),
+        `${dataset} should be validated in the Upload-stage readiness indicators`,
+      );
   } finally {
     await act(async () => root.unmount());
     dom.window.close();

@@ -649,6 +649,86 @@
     "Disponibilités",
     "Disponibilidad"
   ],
+  "Shifts": [
+    "Vardiyalar",
+    "Horaires",
+    "Turnos"
+  ],
+  "Scheduling data": [
+    "Planlama verileri",
+    "Données de planification",
+    "Datos de programación"
+  ],
+  "What you'll need": [
+    "İhtiyacınız olanlar",
+    "Ce dont vous aurez besoin",
+    "Qué necesitará"
+  ],
+  "To create a complete scheduling model, OptiFlow needs three types of data:": [
+    "Eksiksiz bir planlama modeli oluşturmak için OptiFlow üç tür veriye ihtiyaç duyar:",
+    "Pour créer un modèle de planification complet, OptiFlow a besoin de trois types de données :",
+    "Para crear un modelo de programación completo, OptiFlow necesita tres tipos de datos:"
+  ],
+  "Employee data": [
+    "Çalışan verileri",
+    "Données des employés",
+    "Datos de empleados"
+  ],
+  "Employee IDs, names, hourly rates, maximum weekly hours, and roles.": [
+    "Çalışan kimlikleri, adları, saatlik ücretleri, haftalık azami çalışma saatleri ve rolleri.",
+    "Identifiants, noms, taux horaires, heures hebdomadaires maximales et rôles des employés.",
+    "Identificadores, nombres, tarifas por hora, horas semanales máximas y roles de los empleados."
+  ],
+  "Availability data": [
+    "Uygunluk verileri",
+    "Données de disponibilité",
+    "Datos de disponibilidad"
+  ],
+  "Which employees are available, on which dates, and during which hours.": [
+    "Hangi çalışanların hangi tarihlerde ve saatlerde müsait olduğu.",
+    "Quels employés sont disponibles, à quelles dates et à quelles heures.",
+    "Qué empleados están disponibles, en qué fechas y durante qué horas."
+  ],
+  "Shift data": [
+    "Vardiya verileri",
+    "Données des horaires",
+    "Datos de turnos"
+  ],
+  "The shifts that need coverage, including dates, start/end times, required staffing counts, and roles.": [
+    "Karşılanması gereken vardiyalar; tarihler, başlangıç/bitiş saatleri, gereken çalışan sayısı ve roller.",
+    "Les horaires à couvrir, avec les dates, heures de début et de fin, effectifs requis et rôles.",
+    "Los turnos que deben cubrirse, con fechas, horas de inicio y fin, cantidad de personal necesaria y roles."
+  ],
+  "Upload these datasets together or separately. OptiFlow will automatically identify and organize the information using AI. If anything is missing or unclear, we'll ask you to provide it.": [
+    "Bu veri kümelerini birlikte veya ayrı ayrı yükleyin. OptiFlow, yapay zekâ kullanarak bilgileri otomatik olarak tanımlayıp düzenler. Eksik veya belirsiz bir bilgi varsa sizden sağlamanızı isteriz.",
+    "Importez ces jeux de données ensemble ou séparément. OptiFlow identifiera et organisera automatiquement les informations à l’aide de l’IA. Si un élément manque ou n’est pas clair, nous vous demanderons de le fournir.",
+    "Cargue estos conjuntos de datos juntos o por separado. OptiFlow identificará y organizará la información automáticamente mediante IA. Si falta algo o no está claro, le pediremos que lo proporcione."
+  ],
+  "Dataset readiness": [
+    "Veri kümesi durumu",
+    "État des jeux de données",
+    "Estado de los conjuntos de datos"
+  ],
+  "Uploaded": [
+    "Yüklendi",
+    "Importé",
+    "Cargado"
+  ],
+  "Identified": [
+    "Tanımlandı",
+    "Identifié",
+    "Identificado"
+  ],
+  "Validated": [
+    "Doğrulandı",
+    "Validé",
+    "Validado"
+  ],
+  "Uploaded means a file was received; AI has not identified its datasets yet.": [
+    "Yüklendi, dosyanın alındığı ancak yapay zekânın içindeki veri kümelerini henüz tanımlamadığı anlamına gelir.",
+    "Importé signifie que le fichier a été reçu, mais que l’IA n’a pas encore identifié ses jeux de données.",
+    "Cargado significa que se recibió un archivo; la IA aún no ha identificado sus conjuntos de datos."
+  ],
   "Shift settings": [
     "Vardiya ayarları",
     "Paramètres des horaires",

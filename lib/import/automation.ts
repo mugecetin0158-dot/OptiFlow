@@ -3,11 +3,16 @@ import {
   Field,
   ImportSource,
   ImportProfile,
+  ImportDraft,
+  Issue,
+  Rules,
+  datasets,
   fields as schedulingFields,
 } from "./types";
 import { applyProfile, matchingProfile } from "./profiles";
 import { mappingIssues } from "./stages";
 import { transformSources } from "./pipeline";
+import { validateDraft } from "./validation";
 import {
   AllocationSource,
   recognizeAllocation,
@@ -306,6 +311,48 @@ export function prepareAIImport(
         ),
     ),
   };
+}
+
+export type DatasetReadinessState =
+  | "Missing"
+  | "Uploaded"
+  | "Identified"
+  | "Validated";
+
+export function datasetReadiness(
+  sources: ImportSource[],
+  draft: ImportDraft,
+  pipelineIssues: Issue[],
+  rules: Rules,
+  aiComplete: boolean,
+  stale: boolean,
+): Record<Dataset, DatasetReadinessState> {
+  return Object.fromEntries(
+    datasets.map((kind) => {
+      if (!draft[kind].length)
+        return [
+          kind,
+          sources.length > 0 && !aiComplete ? "Uploaded" : "Missing",
+        ];
+
+      const sourceIds = new Set(
+        sources.filter((source) => source.kinds.includes(kind)).map((s) => s.id),
+      );
+      const pipelineBlocked = pipelineIssues.some(
+        (issue) =>
+          issue.severity === "error" &&
+          (!issue.dataset || issue.dataset === kind) &&
+          (!issue.source || sourceIds.has(issue.source.fileId)),
+      );
+      const validation = validateDraft(draft, rules, kind);
+      return [
+        kind,
+        !stale && !pipelineBlocked && validation.valid
+          ? "Validated"
+          : "Identified",
+      ];
+    }),
+  ) as Record<Dataset, DatasetReadinessState>;
 }
 
 export function aiVerificationRequired(

@@ -87,6 +87,97 @@
 .import-panel {
   padding: 24px;
 }
+.scheduling-requirements {
+  border-color: #9dcac0;
+  background: linear-gradient(135deg, var(--teal-pale), var(--surface) 72%);
+}
+.scheduling-requirements header h2 {
+  margin: 5px 0 8px;
+  font-size: 21px;
+}
+.scheduling-requirements header > p,
+.scheduling-requirements-grid p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.scheduling-requirements-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.scheduling-requirements-grid article {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+.scheduling-requirements-grid h3 {
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.requirement-number {
+  display: grid;
+  flex: 0 0 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--teal);
+  color: var(--surface);
+  font-size: 12px;
+  font-weight: 700;
+}
+.scheduling-requirements-note {
+  margin: 0;
+  padding: 13px 15px;
+  border-left: 3px solid var(--teal);
+  border-radius: 4px;
+  background: var(--surface);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.dataset-readiness {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+.dataset-readiness-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 12px;
+}
+.dataset-readiness-item strong {
+  color: var(--muted);
+  font-size: 11px;
+}
+.readiness-validated strong {
+  color: #267558;
+}
+.readiness-identified strong {
+  color: #926b21;
+}
+.readiness-missing strong {
+  color: #a64e43;
+}
+.dataset-readiness-help {
+  display: block;
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
 .import-panel > p {
   margin: 12px 0;
   font-size: 12px;
@@ -566,6 +657,9 @@
   .import-upload-settings {
     grid-template-columns: 1fr;
   }
+  .scheduling-requirements-grid {
+    grid-template-columns: 1fr;
+  }
   .import-intro h2 {
     font-size: 20px;
   }
@@ -591,6 +685,9 @@
   }
   .import-panel {
     padding: 18px;
+  }
+  .dataset-readiness {
+    grid-template-columns: 1fr;
   }
   .import-form-grid {
     grid-template-columns: 1fr;

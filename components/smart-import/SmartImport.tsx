@@ -3,6 +3,7 @@ import {
   AIImportCorrection,
   AIImportResult,
   correctionJournal,
+  datasetReadiness,
   prepareAIImport,
   requestAIImportAnalysis,
   requestModelPreview,
@@ -150,6 +151,14 @@ export default function SmartImport({
     issues,
     stale,
     datasets.some((k) => draft[k].length > 0),
+  );
+  const readiness = datasetReadiness(
+    sources,
+    draft,
+    pipelineIssues,
+    rules,
+    aiComplete,
+    stale,
   );
   function changeSource(next: ImportSource) {
     setSources((old) => old.map((s) => (s.id === next.id ? next : s)));
@@ -470,6 +479,74 @@ export default function SmartImport({
       )}
       {step === 0 && (
         <>
+          <section className="panel import-panel scheduling-requirements">
+            <header>
+              <span className="eyebrow">{t("Scheduling data")}</span>
+              <h2>{t("What you'll need")}</h2>
+              <p>
+                {t(
+                  "To create a complete scheduling model, OptiFlow needs three types of data:",
+                )}
+              </p>
+            </header>
+            <div className="scheduling-requirements-grid">
+              {(
+                [
+                  [
+                    "employees",
+                    "Employee data",
+                    "Employee IDs, names, hourly rates, maximum weekly hours, and roles.",
+                  ],
+                  [
+                    "availability",
+                    "Availability data",
+                    "Which employees are available, on which dates, and during which hours.",
+                  ],
+                  [
+                    "shifts",
+                    "Shift data",
+                    "The shifts that need coverage, including dates, start/end times, required staffing counts, and roles.",
+                  ],
+                ] as const
+              ).map(([kind, heading, description], index) => (
+                <article key={kind}>
+                  <span className="requirement-number">{index + 1}</span>
+                  <div>
+                    <h3>{t(heading)}</h3>
+                    <p>{t(description)}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <p className="scheduling-requirements-note">
+              {t(
+                "Upload these datasets together or separately. OptiFlow will automatically identify and organize the information using AI. If anything is missing or unclear, we'll ask you to provide it.",
+              )}
+            </p>
+            <div className="dataset-readiness" aria-label={t("Dataset readiness")}>
+              {(
+                [
+                  ["employees", "Employees"],
+                  ["availability", "Availability"],
+                  ["shifts", "Shifts"],
+                ] as const
+              ).map(([kind, label]) => (
+                <div
+                  className={`dataset-readiness-item readiness-${readiness[kind].toLowerCase()}`}
+                  key={kind}
+                  aria-label={`${t(label)}: ${t(readiness[kind])}`}
+                >
+                  <span>{t(label)}</span>
+                  <strong>{t(readiness[kind])}</strong>
+                </div>
+              ))}
+            </div>
+            <small className="dataset-readiness-help">
+              {t(
+                "Uploaded means a file was received; AI has not identified its datasets yet.",
+              )}
+            </small>
+          </section>
           <div className="panel import-panel">
             <label className="import-confirm">
               <input
