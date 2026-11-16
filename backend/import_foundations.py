@@ -13,6 +13,7 @@ import os
 import re
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from threading import RLock
@@ -218,7 +219,16 @@ def _safe_model_label(model: str):
 
 
 def _effective_model():
-    return os.environ.get("GEMINI_IMPORT_MODEL", "").strip() or "gemini-2.5-flash"
+    model = os.environ.get("GEMINI_IMPORT_MODEL", "").strip() or "gemini-2.5-flash"
+    return model.removeprefix("models/")
+
+
+def _generation_url(model: str):
+    normalized_model = model.strip().removeprefix("models/")
+    return (
+        "https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{urllib.parse.quote(normalized_model, safe='-._~')}:generateContent"
+    )
 
 
 def _provider_error_category(status: int):
@@ -273,7 +283,7 @@ class GeminiClient:
                 "responseMimeType": "application/json",
             },
         }
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+        url = _generation_url(model)
         last_error: Exception | None = None
         for attempt in range(retries + 1):
             api_request = urllib.request.Request(

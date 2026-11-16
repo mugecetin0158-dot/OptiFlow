@@ -124,6 +124,17 @@ def test_gemini_request_uses_supported_default_model_and_v1beta_body(monkeypatch
     assert seen['body']['contents'][0]['role'] == 'user'
     assert seen['body']['generationConfig']['responseMimeType'] == 'application/json'
 
+def test_gemini_generation_normalizes_discovery_model_name(monkeypatch):
+    from backend.import_foundations import GeminiClient, InterpretRequest
+    monkeypatch.setenv('GEMINI_API_KEY', 'test-only-key')
+    monkeypatch.setenv('GEMINI_IMPORT_MODEL', 'models/gemini-2.5-flash')
+    seen = {}
+    def transport(request, timeout):
+        seen['url'] = request.full_url
+        return {'candidates': [{'content': {'parts': [{'text': json.dumps(ai_fixture())}]}}]}
+    GeminiClient(transport).interpret(InterpretRequest.model_validate(import_request()))
+    assert seen['url'] == 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+
 def test_gemini_http_failure_logs_only_safe_diagnostics(monkeypatch, caplog):
     from fastapi.testclient import TestClient
     from backend import gemini_diagnostics as diagnostics

@@ -123,8 +123,38 @@ def discover_models(api_key: str, configured_model: str, transport: ModelTranspo
     }
 
 
+def probe_generation(api_key: str, model: str):
+    """Make a minimal generation request and return safe status metadata only."""
+    timeout = max(3.0, min(60.0, float(os.environ.get("GEMINI_TIMEOUT_SECONDS", "20"))))
+    request = urllib.request.Request(
+        import_foundations._generation_url(model),
+        json.dumps({
+            "contents": [{"role": "user", "parts": [{"text": "Reply with exactly: OK"}]}],
+            "generationConfig": {"temperature": 0, "maxOutputTokens": 8},
+        }).encode(),
+        headers={"Content-Type": "application/json", "x-goog-api-key": api_key},
+        method="POST",
+    )
+    try:
+        response = _safe_transport(request, timeout)
+    except AIProviderFailure as error:
+        return {
+            "http_status": 502,
+            "provider_status": error.provider_status,
+            "category": error.category,
+        }
+
+    candidates = response.get("candidates") if isinstance(response, dict) else None
+    if not isinstance(candidates, list) or not candidates:
+        return {"http_status": 502, "provider_status": None, "category": "malformed_response"}
+    return {"http_status": 200, "provider_status": None, "category": "success"}
+
+
 @router.get("/diagnostics/gemini")
-def gemini_diagnostics(authorization: str | None = Header(default=None)):
+def gemini_diagnostics(
+    authorization: str | None = Header(default=None),
+    probe: bool = False,
+):
     """Discover accessible generation models; requires a server-only bearer token."""
     diagnostic_token = os.environ.get("GEMINI_DIAGNOSTIC_TOKEN", "").strip()
     if not diagnostic_token:
@@ -137,7 +167,10 @@ def gemini_diagnostics(authorization: str | None = Header(default=None)):
     if not api_key:
         raise HTTPException(status_code=503, detail="Gemini API key is not configured on this server.")
     configured_model = os.environ.get("GEMINI_IMPORT_MODEL", "gemini-2.5-flash").strip()
-    return discover_models(api_key, configured_model)
+    result = discover_models(api_key, configured_model)
+    if probe:
+        result["generation_probe"] = probe_generation(api_key, configured_model)
+    return result
 
 
 def configure_gemini_provider():
