@@ -125,24 +125,49 @@ def test_gemini_request_uses_supported_default_model_and_v1beta_body(monkeypatch
     assert seen['body']['generationConfig']['responseMimeType'] == 'application/json'
 
 def test_gemini_http_failure_logs_only_safe_diagnostics(monkeypatch, caplog):
-    from backend.import_foundations import GeminiClient, InterpretRequest, AIProviderFailure
+    from fastapi.testclient import TestClient
+    from backend import gemini_diagnostics as diagnostics
+    from backend import import_foundations as foundations
+    from backend.main import app
+    monkeypatch.setattr(foundations, 'provider', foundations.provider)
     monkeypatch.setenv('GEMINI_API_KEY', 'private-api-key')
     monkeypatch.setenv('GEMINI_IMPORT_MODEL', 'gemini-2.5-flash')
-    request_data = urllib.request.Request('https://example.test/generate')
-    provider_body = b'{"error":"private spreadsheet value and private-api-key"}'
-    http_error = urllib.error.HTTPError(request_data.full_url, 404, 'Not Found', {}, io.BytesIO(provider_body))
-    client_impl = GeminiClient(lambda request, timeout: (_ for _ in ()).throw(http_error))
+    monkeypatch.setenv('GEMINI_MAX_RETRIES', '0')
+    def fail_request(request, timeout):
+        body = b'{"error":"private spreadsheet value and private-api-key"}'
+        raise urllib.error.HTTPError(request.full_url, 404, 'Not Found', {}, io.BytesIO(body))
+    monkeypatch.setattr(diagnostics, '_urlopen_json', fail_request)
+    diagnostics.configure_gemini_provider()
+    request = import_request()
+    request['files'][0]['name'] = 'Private Person.xlsx'
     with caplog.at_level(logging.WARNING, logger='optiflow.gemini'):
-        try:
-            client_impl.interpret(InterpretRequest.model_validate(import_request()))
-            assert False
-        except AIProviderFailure as error:
-            assert 'HTTP 404' in str(error)
+        response = TestClient(app).post('/import/interpret', json=request)
+    assert response.status_code == 502
     assert 'model=gemini-2.5-flash' in caplog.text
-    assert 'status=404' in caplog.text
+    assert 'http_status=502' in caplog.text
+    assert 'provider_status=404' in caplog.text
     assert 'category=model_or_method_not_found' in caplog.text
     assert 'private-api-key' not in caplog.text
     assert 'private spreadsheet value' not in caplog.text
+    assert 'Private Person.xlsx' not in caplog.text
+    assert 'private-api-key' not in response.text
+    assert 'private spreadsheet value' not in response.text
+
+def test_invalid_gemini_interpretation_502_is_logged_safely(monkeypatch, caplog):
+    from fastapi.testclient import TestClient
+    from backend import import_foundations as foundations
+    from backend.main import app
+    monkeypatch.setenv('GEMINI_IMPORT_MODEL', 'gemini-2.5-flash')
+    invalid = ai_fixture()
+    invalid['files'][0]['source_id'] = 'not-the-requested-source'
+    class FixtureProvider:
+        def interpret(self, request):
+            return foundations.AIInterpretation.model_validate(invalid)
+    monkeypatch.setattr(foundations, 'provider', FixtureProvider())
+    with caplog.at_level(logging.WARNING, logger='optiflow.gemini'):
+        response = TestClient(app).post('/import/interpret', json=import_request())
+    assert response.status_code == 502
+    assert 'http_status=502 provider_status=none category=invalid_interpretation' in caplog.text
 
 def test_spanish_locale_reaches_gemini_and_questions(monkeypatch):
     from backend import import_foundations as foundations

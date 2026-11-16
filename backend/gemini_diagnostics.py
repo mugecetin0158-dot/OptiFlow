@@ -14,7 +14,7 @@ from typing import Any, Callable
 from fastapi import APIRouter, Header, HTTPException
 
 from backend import import_foundations
-from backend.import_foundations import AIProviderFailure, _urlopen_json
+from backend.import_foundations import AIProviderFailure, _provider_error_category, _urlopen_json
 
 logger = logging.getLogger("optiflow.gemini")
 MODEL_LIST_URL = "https://generativelanguage.googleapis.com/v1beta/models"
@@ -43,11 +43,21 @@ def _safe_transport(request: urllib.request.Request, timeout: float):
         return _urlopen_json(request, timeout)
     except urllib.error.HTTPError as error:
         # Never inspect, log, or include upstream response bodies; they can contain secrets.
-        raise AIProviderFailure(_provider_error_message(error.code)) from None
+        raise AIProviderFailure(
+            _provider_error_message(error.code),
+            category=_provider_error_category(error.code),
+            provider_status=error.code,
+        ) from None
     except (urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError, OSError):
-        raise AIProviderFailure("Gemini network request failed or timed out. Check backend connectivity and retry.") from None
+        raise AIProviderFailure(
+            "Gemini network request failed or timed out. Check backend connectivity and retry.",
+            category="network_or_transport_error",
+        ) from None
     except (json.JSONDecodeError, UnicodeDecodeError):
-        raise AIProviderFailure("Gemini returned a malformed provider response. Retry, and check provider status if it persists.") from None
+        raise AIProviderFailure(
+            "Gemini returned a malformed provider response. Retry, and check provider status if it persists.",
+            category="malformed_response",
+        ) from None
 
 
 class SafeGeminiClient(import_foundations.GeminiClient):

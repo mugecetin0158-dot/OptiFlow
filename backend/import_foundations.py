@@ -196,7 +196,10 @@ class AIUnavailable(Exception):
 
 
 class AIProviderFailure(Exception):
-    pass
+    def __init__(self, message: str, *, category: str = "provider_failure", provider_status: int | None = None):
+        super().__init__(message)
+        self.category = category
+        self.provider_status = provider_status
 
 
 Transport = Callable[[urllib.request.Request, float], dict[str, Any]]
@@ -212,6 +215,10 @@ logger = logging.getLogger("optiflow.gemini")
 
 def _safe_model_label(model: str):
     return model if re.fullmatch(r"gemini-[A-Za-z0-9][A-Za-z0-9._-]{0,80}", model) else "<redacted>"
+
+
+def _effective_model():
+    return os.environ.get("GEMINI_IMPORT_MODEL", "").strip() or "gemini-2.5-flash"
 
 
 def _provider_error_category(status: int):
@@ -238,7 +245,7 @@ class GeminiClient:
         key = os.environ.get("GEMINI_API_KEY", "").strip()
         if not key:
             raise AIUnavailable("Gemini import processing is not configured.")
-        model = os.environ.get("GEMINI_IMPORT_MODEL", "").strip() or "gemini-2.5-flash"
+        model = _effective_model()
         timeout = max(3.0, min(60.0, float(os.environ.get("GEMINI_TIMEOUT_SECONDS", "20"))))
         retries = max(0, min(4, int(os.environ.get("GEMINI_MAX_RETRIES", "2"))))
         schema = AIInterpretation.model_json_schema()
@@ -279,41 +286,60 @@ class GeminiClient:
                 raw = self.transport(api_request, timeout)
                 candidates = raw.get("candidates") or []
                 if not candidates:
-                    raise AIProviderFailure("Gemini returned no candidate. Check provider response and safety settings.")
+                    raise AIProviderFailure(
+                        "Gemini returned no candidate. Check provider response and safety settings.",
+                        category="empty_candidates",
+                    )
                 parts = candidates[0].get("content", {}).get("parts", [])
                 text = "".join(part.get("text", "") for part in parts if isinstance(part, dict))
                 if not text.strip():
-                    raise AIProviderFailure("Gemini returned an empty interpretation.")
+                    raise AIProviderFailure("Gemini returned an empty interpretation.", category="empty_response")
                 return AIInterpretation.model_validate_json(text)
             except urllib.error.HTTPError as error:
                 last_error = error
-                logger.warning(
-                    "Gemini request failed model=%s status=%s category=%s attempt=%s",
-                    _safe_model_label(model),
-                    error.code,
-                    _provider_error_category(error.code),
-                    attempt + 1,
-                )
                 if error.code not in {429, 500, 502, 503, 504} or attempt == retries:
                     break
                 time.sleep(min(2.0, 0.25 * (2**attempt)))
             except AIProviderFailure:
                 raise
             except (KeyError, IndexError, TypeError, ValueError, ValidationError, json.JSONDecodeError) as error:
-                logger.warning("Gemini response validation failed: %s", type(error).__name__)
-                raise AIProviderFailure("Gemini returned a malformed structured response.") from error
+                raise AIProviderFailure(
+                    "Gemini returned a malformed structured response.",
+                    category="malformed_response",
+                ) from error
             except Exception as error:  # network errors are retried, then normalized
                 last_error = error
                 if attempt == retries:
                     break
                 time.sleep(min(2.0, 0.25 * (2**attempt)))
         if isinstance(last_error, urllib.error.HTTPError) and last_error.code in {400, 404}:
-            raise AIProviderFailure(f"Gemini rejected the request (HTTP {last_error.code}); verify the configured model and request format.")
+            raise AIProviderFailure(
+                f"Gemini rejected the request (HTTP {last_error.code}); verify the configured model and request format.",
+                category=_provider_error_category(last_error.code),
+                provider_status=last_error.code,
+            )
         if isinstance(last_error, urllib.error.HTTPError) and last_error.code in {401, 403}:
-            raise AIProviderFailure(f"Gemini authorization failed (HTTP {last_error.code}); check API key permissions.")
+            raise AIProviderFailure(
+                f"Gemini authorization failed (HTTP {last_error.code}); check API key permissions.",
+                category=_provider_error_category(last_error.code),
+                provider_status=last_error.code,
+            )
         if isinstance(last_error, urllib.error.HTTPError) and last_error.code == 429:
-            raise AIProviderFailure("Gemini rate limit reached. Wait before retrying.")
-        raise AIProviderFailure("Gemini import processing failed. Retry without changing the source data.")
+            raise AIProviderFailure(
+                "Gemini rate limit reached. Wait before retrying.",
+                category=_provider_error_category(last_error.code),
+                provider_status=last_error.code,
+            )
+        if isinstance(last_error, urllib.error.HTTPError):
+            raise AIProviderFailure(
+                "Gemini import processing failed. Retry without changing the source data.",
+                category=_provider_error_category(last_error.code),
+                provider_status=last_error.code,
+            )
+        raise AIProviderFailure(
+            "Gemini import processing failed. Retry without changing the source data.",
+            category="network_or_transport_error",
+        )
 
 
 class ModelRepository(Protocol):
@@ -488,8 +514,31 @@ def interpret(request: InterpretRequest):
     except AIUnavailable as error:
         raise HTTPException(503, str(error))
     except AIProviderFailure as error:
+        category = error.category if error.category in {
+            "model_or_method_not_found", "invalid_request", "authorization",
+            "rate_limit", "provider_server_error", "provider_http_error",
+            "network_or_transport_error", "malformed_response", "empty_candidates",
+            "empty_response", "malformed_structured_response", "provider_failure",
+        } else "provider_failure"
+        status = error.provider_status
+        if not isinstance(status, int) or not 100 <= status <= 599:
+            status = "none"
+        logger.warning(
+            "Smart Import interpretation failed model=%s http_status=502 provider_status=%s category=%s",
+            _safe_model_label(_effective_model()),
+            status,
+            category,
+        )
         raise HTTPException(502, str(error))
-    result = validate_interpretation(request, result)
+    try:
+        result = validate_interpretation(request, result)
+    except HTTPException as error:
+        if error.status_code == 502:
+            logger.warning(
+                "Smart Import interpretation rejected model=%s http_status=502 provider_status=none category=invalid_interpretation",
+                _safe_model_label(_effective_model()),
+            )
+        raise
     session_id = sessions.create(request, result)
     return {
         "session_id": session_id,
