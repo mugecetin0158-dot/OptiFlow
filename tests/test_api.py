@@ -136,8 +136,12 @@ def test_gemini_request_uses_supported_default_model_and_v1beta_body(monkeypatch
     assert seen['body']['systemInstruction']['parts'][0]['text']
     assert seen['body']['contents'][0]['role'] == 'user'
     assert seen['body']['generationConfig']['responseMimeType'] == 'application/json'
-    assert 'scheduling' in seen['body']['systemInstruction']['parts'][0]['text']
-    assert set(seen['body']['generationConfig']['responseJsonSchema']['$defs']['FileInterpretation']['properties']['datasets']['items']['enum']) == {'employees','availability','shifts'}
+    instruction = seen['body']['systemInstruction']['parts'][0]['text']
+    assert "The selected import destination is 'scheduling'" in instruction
+    assert 'destination_note' in instruction
+    schema = seen['body']['generationConfig']['responseJsonSchema']
+    assert set(schema['$defs']['FileInterpretation']['properties']['datasets']['items']['enum']) == {'employees','availability','shifts'}
+    assert 'destination_note' in schema['$defs']['FileInterpretation']['required']
 
 def test_allocation_destination_is_enforced_by_gemini_schema_and_validation(monkeypatch):
     from backend import import_foundations as foundations
@@ -189,6 +193,31 @@ def test_unmatched_destination_requires_actionable_note_and_no_mapping():
         assert False
     except HTTPException as error:
         assert 'Choose a compatible destination' in error.detail
+
+def test_destination_note_cannot_contradict_dataset_classification():
+    from backend import import_foundations as foundations
+    from backend.import_foundations import InterpretRequest
+    from fastapi import HTTPException
+    cases = [
+        (import_request(), ai_fixture(), 'scheduling'),
+        (allocation_request(), allocation_ai_fixture(), 'allocation'),
+    ]
+    for request_data, fixture, target in cases:
+        request = InterpretRequest.model_validate(request_data)
+        contradictory = foundations.AIInterpretation.model_validate({
+            **fixture,
+            'files': [{
+                **fixture['files'][0],
+                'destination_note': 'This file belongs to another import destination.',
+            }],
+        })
+        try:
+            foundations.validate_interpretation(request, contradictory)
+            assert False
+        except HTTPException as error:
+            assert error.status_code == 502
+            assert f'selected {target} destination' in error.detail
+            assert 'select the matching destination' in error.detail
 
 def test_gemini_generation_normalizes_discovery_model_name(monkeypatch):
     from backend.import_foundations import GeminiClient, InterpretRequest

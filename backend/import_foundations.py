@@ -466,6 +466,13 @@ def validate_interpretation(request: InterpretRequest, result: AIInterpretation)
                 f"{request.target} destination. Select the matching destination or upload a "
                 f"{request.target}-compatible spreadsheet; the source was not reclassified.",
             )
+        if interpreted.datasets and interpreted.destination_note.strip():
+            raise HTTPException(
+                502,
+                f"AI returned both a dataset classification and a destination mismatch note for the selected "
+                f"{request.target} destination. Retry the interpretation; if the source belongs elsewhere, "
+                "select the matching destination or upload a compatible spreadsheet.",
+            )
         if not interpreted.datasets:
             if not interpreted.destination_note.strip():
                 raise HTTPException(
