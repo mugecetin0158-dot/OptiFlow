@@ -77,7 +77,7 @@ test("four-language catalog has complete nonempty translations", () => {
   }
   assert.equal(translate("es", "Resource Allocation"), "Asignación de recursos");
   assert.match(translate("es", "Day 1 Morning: needs 2, but only 1 eligible employees are available."), /^Día 1/);
-  assert.match(formatMoney("es", 1234.5), /1\.234,50/);
+  assert.match(formatMoney("es", 12345.5), /12\.345,50/);
 });
 
 test("literal UI translation calls resolve in all four languages", () => {

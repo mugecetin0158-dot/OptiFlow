@@ -32,19 +32,25 @@ export async function readWorkbook(
   const module = await import("exceljs");
   const ExcelJS = module.default ?? module;
   const workbook = new ExcelJS.Workbook();
+  let worksheets: typeof workbook.worksheets;
   try {
     await workbook.xlsx.load(bytes);
+    worksheets = workbook.worksheets;
   } catch {
     throw Error(
       "This Excel file could not be read. Its workbook metadata may be missing, damaged or unsupported. Open it in Excel or LibreOffice, save a new .xlsx copy, and try again.",
     );
   }
-  if (workbook.worksheets.length > 50)
+  if (!Array.isArray(worksheets) || !worksheets.length)
+    throw Error(
+      "The workbook has no readable worksheets. Save it as an Excel .xlsx workbook and try again.",
+    );
+  if (worksheets.length > 50)
     throw Error("Workbook limit: 50 worksheets.");
-  const sheets = workbook.worksheets.map((sheet) => {
+  const sheets = worksheets.map((sheet) => {
     if (sheet.rowCount > 10001 || sheet.columnCount > 80)
       throw Error(
-        `${sheet.name}: worksheet exceeds 10,000 data rows or 80 columns.`,
+        `${sheet.name}: Worksheet exceeds 10,000 data rows or 80 columns.`,
       );
     const rows: string[][] = [],
       formulas: WorkbookSheet["formulas"] = [],
@@ -98,13 +104,20 @@ export async function readWorkbook(
           typeof v === "object" &&
           ("formula" in v || "sharedFormula" in v)
         ) {
-          let cached: string | null = null;
+          if (v.result === undefined || v.result === null)
+            throw Error(
+              `${sheet.name}!${cell.address}: Formula has no cached result. Recalculate the workbook and save it before importing.`,
+            );
+          let cached: string;
           try {
-            cached =
-              v.result === undefined ? null : literal(v.result, cell.numFmt);
-          } catch {}
+            cached = literal(v.result, cell.numFmt);
+          } catch (e) {
+            throw Error(
+              `${sheet.name}!${cell.address}: ${(e as Error).message}`,
+            );
+          }
           formulas.push({ row: r - 1, col: c - 1, cached });
-          row.push(cached ?? "");
+          row.push(cached);
         } else {
           try {
             row.push(literal(v, cell.numFmt));

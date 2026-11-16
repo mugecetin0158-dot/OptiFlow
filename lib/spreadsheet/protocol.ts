@@ -1,12 +1,49 @@
 import type { WorkbookSheet } from "./read";
+const spreadsheetMessages = [
+  "Unsupported file type. Choose an .xlsx, .csv or .tsv file.",
+  "The file is empty. Choose a file containing data.",
+  "Encrypted workbooks are unsupported.",
+  "Workbook archive is invalid or expands beyond 100 MB.",
+  "XLSX limit: 10 MB.",
+  "This Excel file could not be read. Its workbook metadata may be missing, damaged or unsupported. Open it in Excel or LibreOffice, save a new .xlsx copy, and try again.",
+  "The workbook has no readable worksheets. Save it as an Excel .xlsx workbook and try again.",
+  "Workbook limit: 50 worksheets.",
+  "Worksheet exceeds 10,000 data rows or 80 columns.",
+  "Elapsed-duration cells need an explicit duration, not a clock time.",
+  "Unsupported cell value; replace it with an explicit literal value.",
+  "Nonfinite numeric cell.",
+  "Formula has no cached result. Recalculate the workbook and save it before importing.",
+  "Worksheet metadata is missing or invalid. Save a new .xlsx copy and try again.",
+  "The workbook is empty. Add a header row and records before importing.",
+  "Workbook parsing timed out.",
+  "The workbook parser returned unreadable data. Please try again.",
+  "Workbook could not be parsed.",
+  "Import was not accepted. Review the upload error and check the workbook data.",
+  "Reading workbook locally…",
+  "Workbook import cancelled.",
+  "The workbook has no tabular data to import.",
+  "Worksheet has no tabular data to import.",
+  "Worksheet data has no corresponding column header.",
+] as const;
+
+export function localizeSpreadsheetMessage(
+  message: string,
+  translate: (value: string) => string,
+) {
+  const key = spreadsheetMessages.find(
+    (candidate) =>
+      message === candidate || message.endsWith(`: ${candidate}`),
+  );
+  if (!key) return translate(message);
+  return message.slice(0, -key.length) + translate(key);
+}
+
 export function validateUploadFiles(files: { name: string; size: number }[]) {
   for (const file of files) {
     if (!/\.(xlsx|csv|tsv)$/i.test(file.name))
       throw Error("Unsupported file type. Choose an .xlsx, .csv or .tsv file.");
     if (!file.size)
-      throw Error(
-        `${file.name}: the file is empty. Choose a file containing data.`,
-      );
+      throw Error(`${file.name}: The file is empty. Choose a file containing data.`);
   }
 }
 export function worksheetResponse(data: unknown): WorkbookSheet[] {

@@ -6,7 +6,7 @@ A runnable business optimization prototype with a landing page, dashboard, six-m
 
 ## Spreadsheet-to-optimization upgrade
 
-Resource Allocation now supports joint multi-period LP/MILP planning, explicit renewable/consumable policies, cost/output/net-value objectives, independent verification, saved scenarios, immutable local run history, cancellation, comparisons and CSV/Excel exports. Both Smart Import destinations accept CSV and XLSX with worksheet selection. See the [upgrade guide, mathematical formulation, test instructions and limitations](docs/PLANNING_UPGRADE.md).
+Resource Allocation now supports joint multi-period LP/MILP planning, explicit renewable/consumable policies, cost/output/net-value objectives, independent verification, saved scenarios, immutable local run history, cancellation, comparisons and CSV/Excel exports. Both Smart Import destinations accept CSV and XLSX; Excel worksheets are normalized independently and automatically. See the [upgrade guide, mathematical formulation, test instructions and limitations](docs/PLANNING_UPGRADE.md).
 
 ## Smart Import
 

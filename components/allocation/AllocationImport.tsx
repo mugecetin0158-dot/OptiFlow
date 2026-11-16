@@ -170,7 +170,7 @@ export default function AllocationImport({
     if (busy || !files.length) return false;
     setError("");
     if (files.length + sources.length > 10) {
-      setError("Use at most 10 CSV files.");
+      setError("Use at most 10 tabular sources.");
       return false;
     }
     setBusy(true);
@@ -215,7 +215,7 @@ export default function AllocationImport({
         [...sources, ...next].reduce((n, s) => n + s.parsed.rows.length, 0) >
         10000
       )
-        throw Error("Use 1–10 files and at most 10,000 source rows.");
+        throw Error("Use at most 10 tabular sources and 10,000 source rows.");
       const combined = [...sources, ...next];
       setSources(combined);
       setStale(true);
@@ -235,7 +235,7 @@ export default function AllocationImport({
     setPreview(d);
     setAccepted(false);
   }
-  const { upload, picker } = useSpreadsheetUpload(consumeFiles);
+  const { upload, picker } = useSpreadsheetUpload(consumeFiles, t);
   return (
     <div className="smart-import allocation-import">
       <ol className="import-steps">

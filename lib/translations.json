@@ -1734,10 +1734,10 @@
     "Sélectionnez exactement un fichier pour remplacer une source.",
     "Seleccione exactamente un archivo al reemplazar una fuente."
   ],
-  "Upload at most 10 files per import.": [
-    "Her içe aktarmada en fazla 10 dosya yükleyin.",
-    "Importez au plus 10 fichiers à la fois.",
-    "Cargue como máximo 10 archivos por importación."
+  "Import at most 10 tabular sources per import.": [
+    "Her içe aktarmada en fazla 10 tablo kaynağı kullanın.",
+    "Importez au maximum 10 sources tabulaires à la fois.",
+    "Use como máximo 10 fuentes tabulares por importación."
   ],
   "File exceeds the 2 MB limit.": [
     "Dosya 2 MB sınırını aşıyor.",
@@ -3314,15 +3314,15 @@
     "Aucune donnée d’allocation",
     "Sin datos de asignación"
   ],
-  "Use at most 10 CSV files.": [
-    "En fazla 10 CSV dosyası kullanın.",
-    "Utilisez au maximum 10 fichiers CSV.",
-    "Utilice como máximo 10 archivos CSV."
+  "Use at most 10 tabular sources.": [
+    "En fazla 10 tablo kaynağı kullanın.",
+    "Utilisez au maximum 10 sources tabulaires.",
+    "Use como máximo 10 fuentes tabulares."
   ],
-  "Use 1–10 files and at most 10,000 source rows.": [
-    "1–10 dosya ve en fazla 10.000 kaynak satırı kullanın.",
-    "Utilisez 1 à 10 fichiers et au maximum 10 000 lignes source.",
-    "Utilice entre 1 y 10 archivos y como máximo 10 000 filas de origen."
+  "Use at most 10 tabular sources and 10,000 source rows.": [
+    "En fazla 10 tablo kaynağı ve 10.000 kaynak satırı kullanın.",
+    "Utilisez au maximum 10 sources tabulaires et 10 000 lignes source.",
+    "Use como máximo 10 fuentes tabulares y 10.000 filas de origen."
   ],
   "Select a dataset for each file; column names alone do not establish its meaning.": [
     "Her dosya için veri kümesi seçin; sütun adları tek başına anlamı belirlemez.",
@@ -3748,6 +3748,131 @@
     "CSV veya Excel dosyalarını seçin",
     "Choisir des fichiers CSV ou Excel",
     "Elija archivos CSV o Excel"
+  ],
+  "Unsupported file type. Choose an .xlsx, .csv or .tsv file.": [
+    "Desteklenmeyen dosya türü. Bir .xlsx, .csv veya .tsv dosyası seçin.",
+    "Type de fichier non pris en charge. Choisissez un fichier .xlsx, .csv ou .tsv.",
+    "Tipo de archivo no compatible. Elija un archivo .xlsx, .csv o .tsv."
+  ],
+  "The file is empty. Choose a file containing data.": [
+    "Dosya boş. Veri içeren bir dosya seçin.",
+    "Le fichier est vide. Choisissez un fichier contenant des données.",
+    "El archivo está vacío. Elija un archivo que contenga datos."
+  ],
+  "Encrypted workbooks are unsupported.": [
+    "Şifrelenmiş çalışma kitapları desteklenmiyor.",
+    "Les classeurs chiffrés ne sont pas pris en charge.",
+    "No se admiten libros de trabajo cifrados."
+  ],
+  "Workbook archive is invalid or expands beyond 100 MB.": [
+    "Çalışma kitabı arşivi geçersiz veya açıldığında 100 MB sınırını aşıyor.",
+    "L’archive du classeur est invalide ou dépasse 100 Mo après décompression.",
+    "El archivo del libro no es válido o supera los 100 MB al descomprimirse."
+  ],
+  "XLSX limit: 10 MB.": [
+    "XLSX sınırı: 10 MB.",
+    "Limite XLSX : 10 Mo.",
+    "Límite de XLSX: 10 MB."
+  ],
+  "This Excel file could not be read. Its workbook metadata may be missing, damaged or unsupported. Open it in Excel or LibreOffice, save a new .xlsx copy, and try again.": [
+    "Bu Excel dosyası okunamadı. Çalışma kitabı meta verileri eksik, hasarlı veya desteklenmiyor olabilir. Dosyayı Excel ya da LibreOffice'te açıp yeni bir .xlsx kopyası olarak kaydedin ve tekrar deneyin.",
+    "Impossible de lire ce fichier Excel. Les métadonnées du classeur sont peut-être absentes, endommagées ou non prises en charge. Ouvrez-le dans Excel ou LibreOffice, enregistrez une nouvelle copie .xlsx, puis réessayez.",
+    "No se pudo leer este archivo de Excel. Es posible que falten metadatos del libro, que estén dañados o que no sean compatibles. Ábralo en Excel o LibreOffice, guarde una copia .xlsx nueva e inténtelo de nuevo."
+  ],
+  "The workbook has no readable worksheets. Save it as an Excel .xlsx workbook and try again.": [
+    "Çalışma kitabında okunabilir çalışma sayfası yok. Excel .xlsx çalışma kitabı olarak kaydedip tekrar deneyin.",
+    "Le classeur ne contient aucune feuille lisible. Enregistrez-le au format Excel .xlsx, puis réessayez.",
+    "El libro no contiene hojas legibles. Guárdelo como un libro de Excel .xlsx e inténtelo de nuevo."
+  ],
+  "Workbook limit: 50 worksheets.": [
+    "Çalışma kitabı sınırı: 50 çalışma sayfası.",
+    "Limite du classeur : 50 feuilles.",
+    "Límite del libro: 50 hojas."
+  ],
+  "Worksheet exceeds 10,000 data rows or 80 columns.": [
+    "Çalışma sayfası 10.000 veri satırı veya 80 sütun sınırını aşıyor.",
+    "La feuille dépasse la limite de 10 000 lignes de données ou de 80 colonnes.",
+    "La hoja supera el límite de 10.000 filas de datos o 80 columnas."
+  ],
+  "Elapsed-duration cells need an explicit duration, not a clock time.": [
+    "Geçen süre hücreleri saat değeri değil, açık bir süre gerektirir.",
+    "Les cellules de durée écoulée nécessitent une durée explicite, et non une heure.",
+    "Las celdas de duración transcurrida requieren una duración explícita, no una hora del día."
+  ],
+  "Unsupported cell value; replace it with an explicit literal value.": [
+    "Desteklenmeyen hücre değeri; bunu açık bir sabit değerle değiştirin.",
+    "Valeur de cellule non prise en charge ; remplacez-la par une valeur littérale explicite.",
+    "Valor de celda no compatible; reemplácelo por un valor literal explícito."
+  ],
+  "Nonfinite numeric cell.": [
+    "Sayısal hücrede sonlu olmayan bir değer var.",
+    "La cellule numérique contient une valeur non finie.",
+    "La celda numérica contiene un valor no finito."
+  ],
+  "Formula has no cached result. Recalculate the workbook and save it before importing.": [
+    "Formülün önbelleğe alınmış sonucu yok. İçe aktarmadan önce çalışma kitabını yeniden hesaplayıp kaydedin.",
+    "La formule ne possède aucun résultat mis en cache. Recalculez et enregistrez le classeur avant l’importation.",
+    "La fórmula no tiene un resultado almacenado. Recalcule y guarde el libro antes de importarlo."
+  ],
+  "Worksheet metadata is missing or invalid. Save a new .xlsx copy and try again.": [
+    "Çalışma sayfası meta verileri eksik veya geçersiz. Yeni bir .xlsx kopyası kaydedip tekrar deneyin.",
+    "Les métadonnées de la feuille sont absentes ou invalides. Enregistrez une nouvelle copie .xlsx, puis réessayez.",
+    "Faltan metadatos de la hoja o no son válidos. Guarde una copia .xlsx nueva e inténtelo de nuevo."
+  ],
+  "The workbook is empty. Add a header row and records before importing.": [
+    "Çalışma kitabı boş. İçe aktarmadan önce bir başlık satırı ve kayıt ekleyin.",
+    "Le classeur est vide. Ajoutez une ligne d’en-tête et des enregistrements avant l’importation.",
+    "El libro está vacío. Agregue una fila de encabezados y registros antes de importarlo."
+  ],
+  "Workbook parsing timed out.": [
+    "Çalışma kitabının okunması zaman aşımına uğradı.",
+    "Le délai de lecture du classeur a expiré.",
+    "Se agotó el tiempo de lectura del libro."
+  ],
+  "The workbook parser returned unreadable data. Please try again.": [
+    "Çalışma kitabı okuyucusu okunamayan veri döndürdü. Lütfen tekrar deneyin.",
+    "Le lecteur du classeur a renvoyé des données illisibles. Veuillez réessayer.",
+    "El lector del libro devolvió datos ilegibles. Inténtelo de nuevo."
+  ],
+  "Workbook could not be parsed.": [
+    "Çalışma kitabı okunamadı.",
+    "Impossible d’analyser le classeur.",
+    "No se pudo analizar el libro."
+  ],
+  "Import was not accepted. Review the upload error and check the workbook data.": [
+    "İçe aktarma kabul edilmedi. Yükleme hatasını inceleyin ve çalışma kitabı verilerini kontrol edin.",
+    "L’importation n’a pas été acceptée. Vérifiez l’erreur et contrôlez les données du classeur.",
+    "No se aceptó la importación. Revise el error y compruebe los datos del libro."
+  ],
+  "Reading workbook locally…": [
+    "Çalışma kitabı yerel olarak okunuyor…",
+    "Lecture locale du classeur…",
+    "Leyendo el libro localmente…"
+  ],
+  "Workbook import cancelled.": [
+    "Çalışma kitabı içe aktarımı iptal edildi.",
+    "Importation du classeur annulée.",
+    "Se canceló la importación del libro."
+  ],
+  "The workbook has no tabular data to import.": [
+    "Çalışma kitabında içe aktarılacak tablo verisi yok.",
+    "Le classeur ne contient aucune donnée tabulaire à importer.",
+    "El libro no contiene datos tabulares para importar."
+  ],
+  "Worksheet has no tabular data to import.": [
+    "Çalışma sayfasında içe aktarılacak tablo verisi yok.",
+    "La feuille ne contient aucune donnée tabulaire à importer.",
+    "La hoja no contiene datos tabulares para importar."
+  ],
+  "Worksheet data has no corresponding column header.": [
+    "Çalışma sayfasındaki verilerin karşılık gelen bir sütun başlığı yok.",
+    "Les données de la feuille n’ont pas d’en-tête de colonne correspondant.",
+    "Los datos de la hoja no tienen un encabezado de columna correspondiente."
+  ],
+  "Cancel": [
+    "İptal",
+    "Annuler",
+    "Cancelar"
   ],
   "JOINT MULTI-PERIOD PLANNING": [
     "BİRLİKTE ÇOK DÖNEMLİ PLANLAMA",

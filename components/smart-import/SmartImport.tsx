@@ -248,7 +248,7 @@ export default function SmartImport({
       if (replaceId && files.length !== 1)
         throw Error("Select exactly one file when replacing a source.");
       if (sources.length + (replaceId ? 0 : files.length) > MAX_FILES)
-        throw Error("Upload at most 10 files per import.");
+        throw Error("Import at most 10 tabular sources per import.");
       const added: ImportSource[] = [];
       for (const file of files) {
         activeFile = file.name;
@@ -393,7 +393,7 @@ export default function SmartImport({
     }
   }
   const steps = ["Upload", "AI Interpretation", "Missing Information", "Optional Verification", "Preview", "Save"];
-  const { upload, picker } = useSpreadsheetUpload(consumeFiles);
+  const { upload, picker } = useSpreadsheetUpload(consumeFiles, t);
   return (
     <div className="smart-import">
       {picker}

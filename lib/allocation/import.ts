@@ -142,7 +142,7 @@ export function transformAllocationSources(
       issues: [
         {
           severity: "error",
-          message: "Use 1–10 files and at most 10,000 source rows.",
+          message: "Use at most 10 tabular sources and 10,000 source rows.",
         },
       ],
       unmapped,
