@@ -151,6 +151,7 @@ test("structured AI mappings are schema checked and preserve unresolved columns"
     files: [{
       source_id: "windows",
       datasets: ["availability"],
+      destination_note: "",
       columns: [
         { column: "Badge", field: "employee_id", transform: "direct", confidence: .99, reason: "identifier" },
         { column: "Day", field: "date", transform: "date", confidence: .98, reason: "date values" },
@@ -179,6 +180,14 @@ test("structured AI mappings are schema checked and preserve unresolved columns"
   assert.throws(
     () => cleanImportAnalysis({ files: [{ ...raw.files[0], columns: [{ ...raw.files[0].columns[0], field: "invented" }] }] }, [source]),
     /invalid column mapping/,
+  );
+  assert.throws(
+    () => cleanImportAnalysis({ files: [{ ...raw.files[0], datasets: ["resources"] }] }, [source]),
+    /incompatible with Scheduling/,
+  );
+  assert.throws(
+    () => cleanImportAnalysis({ files: [{ ...raw.files[0], datasets: [], destination_note: "" }] }, [source]),
+    /could not match this file to Scheduling/,
   );
 });
 

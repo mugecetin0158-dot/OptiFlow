@@ -44,6 +44,7 @@ export default function AllocationImport({
   const [aiConsent, setAiConsent] = useState(false),
     [aiBusy, setAiBusy] = useState(false),
     [aiComplete, setAiComplete] = useState(false),
+    [aiDestinationNotes, setAiDestinationNotes] = useState<{ file: string; note: string }[]>([]),
     [aiProposals, setAiProposals] = useState<{file: string; column: string; original: string; proposed: string; reason: string}[]>([]),
     [aiProposalsReviewed, setAiProposalsReviewed] = useState(false);
   const aiAbort = useRef<AbortController | null>(null);
@@ -89,6 +90,7 @@ export default function AllocationImport({
     aiAbort.current = controller;
     setAiBusy(true);
     setAiComplete(false);
+    setAiDestinationNotes([]);
     setAiProposals([]);
     setAiProposalsReviewed(false);
     setStep(1);
@@ -106,15 +108,26 @@ export default function AllocationImport({
           allowed_fields: [...new Set(tables.flatMap((kind) => columns[kind]))],
         }),
       });
-      if (!response.ok) throw Error(response.status === 503 ? "AI import processing is not configured on the server." : "AI import processing failed. Retry without changing the source data.");
+      if (!response.ok) {
+        let detail = "";
+        try { detail = (await response.json()).detail || ""; } catch {}
+        throw Error(detail || (response.status === 503 ? "AI import processing is not configured on the server." : "AI import processing failed. Retry without changing the source data."));
+      }
       const payload = await response.json();
       if (!Array.isArray(payload?.files) || payload.files.length !== input.length)
         throw Error("AI returned an invalid structured response.");
       const proposals: typeof aiProposals = [];
+      const destinationNotes: typeof aiDestinationNotes = [];
       const analyzed: AllocationSource[] = input.map((source) => {
         const file = payload.files.find((f: any) => f.source_id === source.id);
-        if (!file || !Array.isArray(file.datasets) || !Array.isArray(file.columns))
+        if (!file || !Array.isArray(file.datasets) || !Array.isArray(file.columns) ||
+            typeof file.destination_note !== "string" || file.destination_note.length > 400)
           throw Error("AI returned an invalid source reference.");
+        if (file.datasets.some((dataset: unknown) => typeof dataset !== "string" || !tables.includes(dataset as Table)))
+          throw Error("AI returned a dataset type incompatible with Resource Allocation. Select the matching destination or upload a Resource Allocation spreadsheet.");
+        if (file.datasets.length === 0 && !file.destination_note.trim())
+          throw Error("AI could not match this file to Resource Allocation. Choose a compatible destination or upload a matching spreadsheet.");
+        if (file.destination_note) destinationNotes.push({ file: source.name, note: file.destination_note });
         for (const c of Array.isArray(file.corrections) ? file.corrections : []) {
           const column = source.parsed.headers.indexOf(c.column);
           if (column < 0 || typeof c.source_value !== "string" ||
@@ -137,6 +150,7 @@ export default function AllocationImport({
         return { ...source, kind, mappings, confirmed };
       });
       setSources(analyzed);
+      setAiDestinationNotes(destinationNotes);
       setAiProposals(proposals);
       setAiComplete(true);
       const transformed = transformAllocationSources(analyzed, preview.settings);
@@ -379,6 +393,7 @@ export default function AllocationImport({
       <div hidden={step !== 1}>
         {aiBusy && <p role="status">{t("AI is analyzing the import…")} <button className="btn" onClick={() => aiAbort.current?.abort()}>{t("Cancel AI processing")}</button></p>}
         {!aiBusy && !aiComplete && sources.length > 0 && <button className="btn primary" disabled={!aiConsent} onClick={() => void processWithAI(sources)}>{t("Retry AI processing")}</button>}
+        {aiComplete && aiDestinationNotes.length > 0 && <div className="notice" role="status">{aiDestinationNotes.map((item) => <p key={item.file}><strong>{item.file}</strong>: {item.note}</p>)}</div>}
         {aiComplete && aiProposals.length > 0 && <div className="panel import-panel"><h3>{t("Corrections requiring approval")}</h3><p>{t("AI proposals are never applied automatically. Correct the affected source or preview value yourself before saving.")}</p>{aiProposals.map((p, i) => <p key={i}>{p.file} · {p.column}: {p.original} → {p.proposed} · {p.reason}</p>)}<label className="import-confirm"><input type="checkbox" checked={aiProposalsReviewed} onChange={(e) => setAiProposalsReviewed(e.target.checked)} />{t("I reviewed these proposals. Keep original values unless I explicitly edit them.")}</label></div>}
         {aiComplete && <>
         {sources.map((source) => (

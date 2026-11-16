@@ -730,6 +730,16 @@ export default function SmartImport({
               </label>
             </div>
           )}
+          {aiComplete && aiResult?.files.some((file) => file.destination_note) && (
+            <div className="notice" role="status">
+              {aiResult.files.filter((file) => file.destination_note).map((file) => (
+                <p key={file.source_id}>
+                  <strong>{sources.find((source) => source.id === file.source_id)?.name}</strong>:{" "}
+                  {file.destination_note}
+                </p>
+              ))}
+            </div>
+          )}
           {sources.length > 0 && aiComplete && (
             <button
               className="btn primary"

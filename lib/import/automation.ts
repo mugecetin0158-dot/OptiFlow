@@ -91,6 +91,7 @@ export type AIImportCorrection = {
 export type AIImportFile = {
   source_id: string;
   datasets: Dataset[];
+  destination_note: string;
   columns: {
     column: string;
     field: Field | "" | "ignore";
@@ -196,6 +197,13 @@ export function cleanImportAnalysis(raw: unknown, sources: ImportSource[]): AIIm
     const source = item && byId.get(item.source_id);
     if (!source || seen.has(source.id)) throw Error("AI returned an invalid source reference.");
     seen.add(source.id);
+    if (typeof item.destination_note !== "string" || item.destination_note.length > 400 ||
+        !Array.isArray(item.datasets))
+      throw Error("AI returned an invalid destination assessment.");
+    if (item.datasets.some((dataset: unknown) => !["employees", "availability", "shifts"].includes(String(dataset))))
+      throw Error("AI returned a dataset type incompatible with Scheduling. Select the matching destination or upload a Scheduling spreadsheet.");
+    if (item.datasets.length === 0 && !item.destination_note.trim())
+      throw Error("AI could not match this file to Scheduling. Choose a compatible destination or upload a matching spreadsheet.");
     const headerSet = new Set(source.parsed.headers), fieldSet = new Set<string>(schedulingFields);
     const columns = Array.isArray(item.columns) ? item.columns.map((column: any) => {
       if (!column || !headerSet.has(column.column) || (column.field && column.field !== "ignore" && !fieldSet.has(column.field)) ||
@@ -205,9 +213,7 @@ export function cleanImportAnalysis(raw: unknown, sources: ImportSource[]): AIIm
         throw Error("AI returned an invalid column mapping.");
       return column;
     }) : [];
-    const datasets = Array.isArray(item.datasets)
-      ? item.datasets.filter((v: unknown): v is Dataset => ["employees","availability","shifts"].includes(String(v)))
-      : [];
+    const datasets = item.datasets as Dataset[];
     const samples = new Map(profileSourcesForAI([source])[0].columns.map((c) => [c.header, new Set(c.samples)]));
     const corrections = Array.isArray(item.corrections) ? item.corrections.map((c: any) => {
       if (!c || !headerSet.has(c.column) || !samples.get(c.column)?.has(c.source_value) ||
@@ -216,7 +222,7 @@ export function cleanImportAnalysis(raw: unknown, sources: ImportSource[]): AIIm
         throw Error("AI returned an invalid correction proposal.");
       return { ...c, substantive: Boolean(c.substantive) };
     }) : [];
-    return { source_id: source.id, datasets, columns, corrections };
+    return { source_id: source.id, datasets, destination_note: item.destination_note, columns, corrections };
   });
   if (files.length !== sources.length) throw Error("AI did not analyze every source file.");
   const root = raw as any;

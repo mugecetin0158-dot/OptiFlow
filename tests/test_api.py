@@ -65,11 +65,24 @@ def import_request():
         ]}]}
 
 def ai_fixture():
-    return {'files':[{'source_id':'sheet-1','datasets':['availability'],'columns':[
+    return {'files':[{'source_id':'sheet-1','datasets':['availability'],'destination_note':'','columns':[
         {'column':'Badge','field':'employee_id','transform':'direct','confidence':.99,'reason':'Identifier'},
         {'column':'Day','field':'date','transform':'date','confidence':.99,'reason':'Date'},
         {'column':'Window','field':'start_time','transform':'time_range','confidence':.95,'reason':'Time range'},
         {'column':'Can Work','field':'status','transform':'status','confidence':.99,'reason':'Availability'},
+    ],'corrections':[]}], 'model':{'objective':{'kind':'unknown','description':'No objective is present.','source_fields':[],'confidence':1},'decision_variables':[],'constraints':[],'relationships':[]},'questions':[]}
+
+def allocation_request():
+    return {'target':'allocation','locale':'en','allowed_fields':['resource_id','capacity'],'files':[{
+        'source_id':'resource-sheet','name':'resources.csv','row_count':1,'columns':[
+            {'header':'Resource ID','inferred_type':'text','samples':['R1'],'blank_count':0,'unique_count':1},
+            {'header':'Capacity','inferred_type':'integer','samples':['10'],'blank_count':0,'unique_count':1},
+        ]}]}
+
+def allocation_ai_fixture():
+    return {'files':[{'source_id':'resource-sheet','datasets':['resources'],'destination_note':'','columns':[
+        {'column':'Resource ID','field':'resource_id','transform':'direct','confidence':.99,'reason':'Resource identifier'},
+        {'column':'Capacity','field':'capacity','transform':'direct','confidence':.99,'reason':'Available capacity'},
     ],'corrections':[]}], 'model':{'objective':{'kind':'unknown','description':'No objective is present.','source_fields':[],'confidence':1},'decision_variables':[],'constraints':[],'relationships':[]},'questions':[]}
 
 def test_parse_validation_and_missing_credentials(monkeypatch):
@@ -123,6 +136,59 @@ def test_gemini_request_uses_supported_default_model_and_v1beta_body(monkeypatch
     assert seen['body']['systemInstruction']['parts'][0]['text']
     assert seen['body']['contents'][0]['role'] == 'user'
     assert seen['body']['generationConfig']['responseMimeType'] == 'application/json'
+    assert 'scheduling' in seen['body']['systemInstruction']['parts'][0]['text']
+    assert set(seen['body']['generationConfig']['responseJsonSchema']['$defs']['FileInterpretation']['properties']['datasets']['items']['enum']) == {'employees','availability','shifts'}
+
+def test_allocation_destination_is_enforced_by_gemini_schema_and_validation(monkeypatch):
+    from backend import import_foundations as foundations
+    from backend.import_foundations import GeminiClient, InterpretRequest
+    monkeypatch.setenv('GEMINI_API_KEY', 'test-only-key')
+    seen = {}
+    def transport(request, timeout):
+        seen['body'] = json.loads(request.data)
+        return {'candidates': [{'content': {'parts': [{'text': json.dumps(allocation_ai_fixture())}]}}]}
+    request = InterpretRequest.model_validate(allocation_request())
+    valid = GeminiClient(transport).interpret(request)
+    foundations.validate_interpretation(request, valid)
+    schema = seen['body']['generationConfig']['responseJsonSchema']
+    allowed = schema['$defs']['FileInterpretation']['properties']['datasets']['items']['enum']
+    assert set(allowed) == {'resources','projects','demands','links'}
+    instruction = seen['body']['systemInstruction']['parts'][0]['text']
+    assert "selected import destination is 'allocation'" in instruction
+    assert 'destination_note' in instruction
+    invalid = foundations.AIInterpretation.model_validate({
+        **allocation_ai_fixture(),
+        'files': [{**allocation_ai_fixture()['files'][0], 'datasets':['availability']}],
+    })
+    from fastapi import HTTPException
+    try:
+        foundations.validate_interpretation(request, invalid)
+        assert False
+    except HTTPException as error:
+        assert error.status_code == 502
+        assert 'matching destination' in error.detail
+
+def test_unmatched_destination_requires_actionable_note_and_no_mapping():
+    from backend import import_foundations as foundations
+    from backend.import_foundations import InterpretRequest
+    from fastapi import HTTPException
+    request = InterpretRequest.model_validate(import_request())
+    unmatched = foundations.AIInterpretation.model_validate({
+        **ai_fixture(),
+        'files': [{
+            'source_id':'sheet-1','datasets':[],'destination_note':'This looks like resource planning data. Choose Resource Allocation or upload a scheduling spreadsheet.',
+            'columns':[{'column':'Badge','field':'','transform':'direct','confidence':.99,'reason':'Not a Scheduling field'}],
+            'corrections':[],
+        }],
+    })
+    assert foundations.validate_interpretation(request, unmatched).files[0].destination_note.startswith('This looks like')
+    invalid = unmatched.model_copy(deep=True)
+    invalid.files[0].destination_note = ''
+    try:
+        foundations.validate_interpretation(request, invalid)
+        assert False
+    except HTTPException as error:
+        assert 'Choose a compatible destination' in error.detail
 
 def test_gemini_generation_normalizes_discovery_model_name(monkeypatch):
     from backend.import_foundations import GeminiClient, InterpretRequest
