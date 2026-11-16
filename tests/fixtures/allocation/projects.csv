@@ -1,0 +1,3 @@
+﻿"project_id","name","output_unit","minimum_output","maximum_output","unit_value","priority","integer"
+"WEB","Website delivery","project","1","1","5000","1","true"
+"AUDIT","Operations audit","audit","0","3","2000","1","true"

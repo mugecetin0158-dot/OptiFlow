@@ -1,0 +1,5 @@
+employee_id;date;start_time;end_time;availability status
+001;16/11/2026;9:00 AM;1:00 PM;available
+001;16/11/2026;1:00 PM;5:00 PM;available
+002;16/11/2026;9:00 AM;5:00 PM;available
+002;17/11/2026;9:00 AM;5:00 PM;approved leave

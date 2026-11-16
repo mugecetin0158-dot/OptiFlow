@@ -1,0 +1,5 @@
+﻿"resource_id","name","resource_type","unit","capacity","unit_cost","integer"
+"ENG","Internal engineering","engineering","hour","40","30","false"
+"EXT","Partner engineering","engineering","hour","30","50","false"
+"DES","Design studio","design","hour","24","40","false"
+"KIT","Audit equipment","equipment","kit-use","6","100","true"

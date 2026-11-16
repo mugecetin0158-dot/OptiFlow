@@ -1,0 +1,15 @@
+# Smart Import automation (legacy design notes)
+
+> Superseded by the mandatory, consent-based Gemini interpretation workflow in [ai-first-import.md](ai-first-import.md). This file is retained only to document the earlier deterministic/optional-assistant behavior.
+
+CSV is parsed by the existing deterministic parser; XLSX uses the existing bounded ExcelJS Web Worker and worksheet preview. The picker now proposes a header row from distinctive schema names. Users can override it. Empty/corrupt files and invalid worksheet metadata remain errors. Original CSV text and source row references are preserved during the session.
+
+Scheduling auto-classifies only a single unambiguous dataset with complete required mappings or one matching saved profile. Allocation auto-classifies only complete catalog signatures (resources, projects, demands, or compatibility links). Reused mappings are checked against every new value. Unknown columns remain unmapped, wide assignments are not treated as demand, and numerical/date/role/constraint errors continue through deterministic validation. New uploads never overwrite edited previews without the existing rebuild confirmation.
+
+The first three stages now advance automatically for straightforward sources: upload → parse → map → transform and validate. Ambiguous sources remain in Map Columns. Safe normalization is recorded with file, row, original value, result and rule; the UI previews the first 100 records and saves the full correction log with validated scheduling data. This may hit browser quota for very large imports, in which case saving fails visibly. No missing value or constraint is supplied by automation.
+
+Optional AI mapping is exposed only for unresolved columns and only after clicking the consent button. It transmits at most 20 column headers and destination field names to the locally configured FastAPI server, which then contacts OpenAI with `OPENAI_API_KEY` read from its process environment. The backend sends no row values or business records. Responses are filtered against the actual schema on server and browser; clicking a suggestion marks it as needing confirmation. AI cannot validate data, modify constraints, or approve an import. Failures leave manual and deterministic workflows available.
+
+For optional local AI assistance, start FastAPI with `OPENAI_API_KEY` in its environment and run the Next.js dev server with `NEXT_PUBLIC_API_URL=http://127.0.0.1:8000`. The key must never use `NEXT_PUBLIC_`. The static hosted build has no server endpoint and continues deterministically without AI. Enabling AI in a hosted build would require a separately secured server deployment and a reviewed origin/CORS policy; no such deployment is performed here.
+
+Checks: `npm test`, `npm run typecheck`, `npm run build`, `.venv/bin/python -m pytest -q tests/test_api.py`. There is no configured standalone lint command. Limitations include no automatic interpretation of cross-domain inventory/constraint worksheets, no generic free-text optimizer rule execution, and local-only optional AI endpoint configuration.

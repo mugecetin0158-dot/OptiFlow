@@ -1,0 +1,899 @@
+[
+  {
+    "p": {
+      "name": "Retail Store",
+      "startDate": "2026-11-16",
+      "employees": [
+        {
+          "id": "e0",
+          "name": "Alex Morgan",
+          "wage": 18,
+          "maxHours": 32,
+          "availability": [
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e1",
+          "name": "Jamie Chen",
+          "wage": 20,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e2",
+          "name": "Sam Rivera",
+          "wage": 17,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e3",
+          "name": "Taylor Brooks",
+          "wage": 22,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "id": "e4",
+          "name": "Jordan Lee",
+          "wage": 19,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e5",
+          "name": "Casey Patel",
+          "wage": 21,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e6",
+          "name": "Riley Davis",
+          "wage": 18.5,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e7",
+          "name": "Morgan Quinn",
+          "wage": 24,
+          "maxHours": 32,
+          "availability": [
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true
+          ]
+        }
+      ],
+      "shifts": [
+        {
+          "id": 0,
+          "day": 0,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 2
+        },
+        {
+          "id": 1,
+          "day": 0,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 2,
+          "day": 1,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 2
+        },
+        {
+          "id": 3,
+          "day": 1,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 4,
+          "day": 2,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 2
+        },
+        {
+          "id": 5,
+          "day": 2,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 6,
+          "day": 3,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 2
+        },
+        {
+          "id": 7,
+          "day": 3,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 8,
+          "day": 4,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 2
+        },
+        {
+          "id": 9,
+          "day": 4,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 10,
+          "day": 5,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 11,
+          "day": 5,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 3
+        },
+        {
+          "id": 12,
+          "day": 6,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 13,
+          "day": 6,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 3
+        }
+      ]
+    },
+    "cost": 2320
+  },
+  {
+    "p": {
+      "name": "Café",
+      "startDate": "2026-11-16",
+      "employees": [
+        {
+          "id": "e0",
+          "name": "Alex Morgan",
+          "wage": 18,
+          "maxHours": 32,
+          "availability": [
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e1",
+          "name": "Jamie Chen",
+          "wage": 20,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e2",
+          "name": "Sam Rivera",
+          "wage": 17,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e3",
+          "name": "Taylor Brooks",
+          "wage": 22,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "id": "e4",
+          "name": "Jordan Lee",
+          "wage": 19,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "id": "e5",
+          "name": "Casey Patel",
+          "wage": 21,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ],
+      "shifts": [
+        {
+          "id": 0,
+          "day": 0,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 1,
+          "day": 0,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 2,
+          "day": 1,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 3,
+          "day": 1,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 4,
+          "day": 2,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 5,
+          "day": 2,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 6,
+          "day": 3,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 7,
+          "day": 3,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 8,
+          "day": 4,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 9,
+          "day": 4,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 10,
+          "day": 5,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 11,
+          "day": 5,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        },
+        {
+          "id": 12,
+          "day": 6,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 13,
+          "day": 6,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 2
+        }
+      ]
+    },
+    "cost": 2620
+  },
+  {
+    "p": {
+      "name": "Office",
+      "startDate": "2026-11-16",
+      "employees": [
+        {
+          "id": "e0",
+          "name": "Alex Morgan",
+          "wage": 18,
+          "maxHours": 24,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e1",
+          "name": "Jamie Chen",
+          "wage": 20,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e2",
+          "name": "Sam Rivera",
+          "wage": 17,
+          "maxHours": 40,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e3",
+          "name": "Taylor Brooks",
+          "wage": 22,
+          "maxHours": 20,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e4",
+          "name": "Jordan Lee",
+          "wage": 19,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e5",
+          "name": "Casey Patel",
+          "wage": 21,
+          "maxHours": 24,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e6",
+          "name": "Riley Davis",
+          "wage": 18.5,
+          "maxHours": 40,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e7",
+          "name": "Morgan Quinn",
+          "wage": 24,
+          "maxHours": 28,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e8",
+          "name": "Avery Kim",
+          "wage": 23,
+          "maxHours": 20,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "id": "e9",
+          "name": "Drew Ellis",
+          "wage": 19.5,
+          "maxHours": 32,
+          "availability": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+          ]
+        }
+      ],
+      "shifts": [
+        {
+          "id": 0,
+          "day": 0,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 1,
+          "day": 0,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 3
+        },
+        {
+          "id": 2,
+          "day": 1,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 3,
+          "day": 1,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 3
+        },
+        {
+          "id": 4,
+          "day": 2,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 5,
+          "day": 2,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 3
+        },
+        {
+          "id": 6,
+          "day": 3,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 7,
+          "day": 3,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 3
+        },
+        {
+          "id": 8,
+          "day": 4,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 3
+        },
+        {
+          "id": 9,
+          "day": 4,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 3
+        },
+        {
+          "id": 10,
+          "day": 5,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 0
+        },
+        {
+          "id": 11,
+          "day": 5,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 0
+        },
+        {
+          "id": 12,
+          "day": 6,
+          "period": "Morning",
+          "start": "09:00",
+          "end": "13:00",
+          "required": 0
+        },
+        {
+          "id": 13,
+          "day": 6,
+          "period": "Afternoon",
+          "start": "13:00",
+          "end": "17:00",
+          "required": 0
+        }
+      ]
+    },
+    "cost": 2156
+  }
+]

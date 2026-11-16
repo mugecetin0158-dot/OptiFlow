@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+.venv/
+__pycache__/
+*.pyc
+*.tar.gz
+.pytest_cache/
+*.tsbuildinfo
+.env.local
+
+.env
+.env.*
+!.env.example
+.vercel/

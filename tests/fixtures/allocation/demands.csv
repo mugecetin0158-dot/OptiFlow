@@ -1,0 +1,6 @@
+﻿"project_id","resource_type","unit","amount_per_output"
+"WEB","engineering","hour","30"
+"WEB","design","hour","12"
+"AUDIT","engineering","hour","10"
+"AUDIT","design","hour","4"
+"AUDIT","equipment","kit-use","2"

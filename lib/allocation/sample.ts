@@ -1,0 +1,111 @@
+import { Input } from "./types";
+import { toDraft } from "./validation";
+export function sampleInput(): Input {
+  return {
+    mode: "cost",
+    currency: "USD",
+    period: "Sample · one delivery week",
+    budget: null,
+    resources: [
+      {
+        id: "ENG",
+        name: "Internal engineering",
+        type: "engineering",
+        unit: "hour",
+        capacity: 40,
+        cost: 30,
+        integer: false,
+      },
+      {
+        id: "EXT",
+        name: "Partner engineering",
+        type: "engineering",
+        unit: "hour",
+        capacity: 30,
+        cost: 50,
+        integer: false,
+      },
+      {
+        id: "DES",
+        name: "Design studio",
+        type: "design",
+        unit: "hour",
+        capacity: 24,
+        cost: 40,
+        integer: false,
+      },
+      {
+        id: "KIT",
+        name: "Audit equipment",
+        type: "equipment",
+        unit: "kit-use",
+        capacity: 6,
+        cost: 100,
+        integer: true,
+      },
+    ],
+    projects: [
+      {
+        id: "WEB",
+        name: "Website delivery",
+        unit: "project",
+        min: 1,
+        max: 1,
+        value: 5000,
+        priority: 1,
+        integer: true,
+      },
+      {
+        id: "AUDIT",
+        name: "Operations audit",
+        unit: "audit",
+        min: 0,
+        max: 3,
+        value: 2000,
+        priority: 1,
+        integer: true,
+      },
+    ],
+    demands: [
+      { project: "WEB", type: "engineering", unit: "hour", amount: 30 },
+      { project: "WEB", type: "design", unit: "hour", amount: 12 },
+      { project: "AUDIT", type: "engineering", unit: "hour", amount: 10 },
+      { project: "AUDIT", type: "design", unit: "hour", amount: 4 },
+      { project: "AUDIT", type: "equipment", unit: "kit-use", amount: 2 },
+    ],
+    links: [
+      { resource: "ENG", project: "WEB", compatible: true, min: 0, max: null },
+      { resource: "EXT", project: "WEB", compatible: true, min: 0, max: null },
+      { resource: "DES", project: "WEB", compatible: true, min: 0, max: null },
+      {
+        resource: "ENG",
+        project: "AUDIT",
+        compatible: true,
+        min: 0,
+        max: null,
+      },
+      {
+        resource: "EXT",
+        project: "AUDIT",
+        compatible: true,
+        min: 0,
+        max: null,
+      },
+      {
+        resource: "DES",
+        project: "AUDIT",
+        compatible: true,
+        min: 0,
+        max: null,
+      },
+      {
+        resource: "KIT",
+        project: "AUDIT",
+        compatible: true,
+        min: 0,
+        max: null,
+      },
+    ],
+  };
+}
+export const sampleDraft = () => toDraft(sampleInput(), "sample");

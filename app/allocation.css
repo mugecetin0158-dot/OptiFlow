@@ -1,0 +1,175 @@
+.resource-workspace[hidden],
+.resource-workspace [hidden] {
+  display: none !important;
+}
+.allocation-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.allocation-toolbar label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+.allocation-toolbar > details {
+  margin-left: auto;
+}
+.allocation-toolbar summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--teal);
+}
+.allocation-settings {
+  margin-top: 20px;
+}
+.allocation-tabs {
+  display: flex;
+  overflow: auto;
+  border-bottom: 1px solid var(--border);
+  padding: 0 12px;
+}
+.allocation-tabs button {
+  border: 0;
+  border-bottom: 3px solid transparent;
+  padding: 18px 14px;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.allocation-tabs button.active {
+  color: var(--teal);
+  border-bottom-color: var(--teal);
+  background: var(--teal-pale);
+}
+.allocation-tabs span {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--surface-alt);
+}
+.allocation-catalog .import-table-heading > div {
+  max-width: 750px;
+}
+.allocation-catalog input,
+.allocation-catalog select {
+  min-width: 135px;
+  width: 145px;
+  font-size: 12px;
+}
+.allocation-catalog td {
+  padding: 10px;
+}
+.allocation-catalog input.invalid,
+.allocation-catalog [aria-invalid="true"] {
+  border-color: #c76760;
+}
+.allocation-catalog small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.allocation-hint {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+}
+.allocation-results {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.allocation-results p {
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 12px;
+}
+.allocation-empty {
+  text-align: center;
+  padding: 45px 20px;
+}
+.allocation-utilization {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+.allocation-utilization > div > div {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.allocation-utilization span {
+  color: var(--muted);
+}
+.allocation-utilization progress {
+  width: 100%;
+  height: 9px;
+  accent-color: var(--teal);
+  border: 0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.allocation-utilization progress::-webkit-progress-bar {
+  background: var(--surface-alt);
+}
+.allocation-utilization progress::-webkit-progress-value {
+  background: var(--teal);
+}
+.resource-workspace .import-panel > p {
+  margin-top: 12px;
+  line-height: 1.7;
+  font-size: 12px;
+}
+.allocation-import .import-dropzone {
+  margin-top: 20px;
+}
+@media (max-width: 700px) {
+  .allocation-utilization {
+    grid-template-columns: 1fr;
+  }
+  .allocation-toolbar > details {
+    margin-left: 0;
+  }
+  .allocation-tabs {
+    padding: 0;
+  }
+  .allocation-tabs button {
+    padding: 14px 10px;
+  }
+}
+
+.planning-workbench fieldset {
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 0;
+}
+.planning-workbench legend {
+  padding: 0 8px;
+  font-weight: 600;
+}
+.planning-workbench code {
+  overflow-wrap: anywhere;
+}
+.planning-workbench .allocation-toolbar {
+  margin-bottom: 14px;
+}
+.planning-workbench .notice {
+  overflow-wrap: anywhere;
+}
+.planning-workbench .table-wrap {
+  max-height: 500px;
+  overflow: auto;
+}
+.planning-workbench .import-panel > p {
+  line-height: 1.7;
+  font-size: 13px;
+  margin: 12px 0;
+}

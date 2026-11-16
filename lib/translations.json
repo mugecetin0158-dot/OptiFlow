@@ -1,0 +1,4019 @@
+{
+  "Scheduling": [
+    "Vardiya Planlama",
+    "Planification",
+    "Programación"
+  ],
+  "The right people. The right shifts. The lowest cost.": [
+    "Doğru ekip. Doğru vardiyalar. En düşük maliyet.",
+    "Les bonnes personnes. Les bons horaires. Le coût minimal.",
+    "Las personas adecuadas. La derecha cambia. El costo más bajo."
+  ],
+  "Available now": [
+    "Kullanıma hazır",
+    "Disponible",
+    "Disponible ahora"
+  ],
+  "Resource Allocation": [
+    "Kaynak Tahsisi",
+    "Allocation des ressources",
+    "Asignación de recursos"
+  ],
+  "Put your resources where they make the biggest difference.": [
+    "Kaynaklarınızı en çok fayda sağlayacak yerlere yönlendirin.",
+    "Affectez vos ressources là où elles sont les plus utiles.",
+    "Coloque sus recursos donde marquen la mayor diferencia."
+  ],
+  "Inventory Optimization": [
+    "Stok Optimizasyonu",
+    "Optimisation des stocks",
+    "Optimización de inventario"
+  ],
+  "Balance stock levels with demand and carrying costs.": [
+    "Stok seviyelerini talep ve stok bulundurma maliyetleriyle dengeleyin.",
+    "Équilibrez les stocks, la demande et les coûts de stockage.",
+    "Equilibre los niveles de existencias con la demanda y los costos de mantenimiento."
+  ],
+  "Budget Optimization": [
+    "Bütçe Optimizasyonu",
+    "Optimisation du budget",
+    "Optimización del presupuesto"
+  ],
+  "Make every dollar work toward your business goals.": [
+    "Her harcamayı işletme hedeflerinize katkı sağlayacak şekilde planlayın.",
+    "Faites contribuer chaque dépense à vos objectifs.",
+    "Haga que cada dólar sirva para alcanzar sus objetivos comerciales."
+  ],
+  "Workforce Planning": [
+    "İş Gücü Planlama",
+    "Planification des effectifs",
+    "Planificación de la fuerza laboral"
+  ],
+  "Build a team that keeps pace with your business.": [
+    "İşletmenizle birlikte gelişen bir ekip oluşturun.",
+    "Constituez une équipe qui suit le rythme de votre activité.",
+    "Forme un equipo que siga el ritmo de su negocio."
+  ],
+  "Decision Analysis": [
+    "Karar Analizi",
+    "Analyse décisionnelle",
+    "Análisis de decisiones"
+  ],
+  "Compare alternatives and move forward with confidence.": [
+    "Seçenekleri karşılaştırın ve güvenle ilerleyin.",
+    "Comparez les options et avancez en toute confiance.",
+    "Compare alternativas y avance con confianza."
+  ],
+  "Dashboard": [
+    "Genel Bakış",
+    "Tableau de bord",
+    "Panel"
+  ],
+  "Schedule": [
+    "Vardiya Çizelgesi",
+    "Planning",
+    "Cronograma"
+  ],
+  "Retail Store": [
+    "Perakende Mağazası",
+    "Commerce de détail",
+    "Tienda minorista"
+  ],
+  "OPTIMAL": [
+    "OPTİMAL",
+    "OPTIMAL",
+    "ÓPTIMO"
+  ],
+  "Included solved example": [
+    "Hazır çözülmüş örnek",
+    "Exemple résolu inclus",
+    "Ejemplo resuelto incluido"
+  ],
+  "Browser storage is unavailable. Changes will only last until you close this page.": [
+    "Tarayıcı depolaması kullanılamıyor. Değişiklikler yalnızca bu sayfayı kapatana kadar saklanacak.",
+    "Le stockage du navigateur est indisponible. Les modifications seront conservées uniquement jusqu’à la fermeture de cette page.",
+    "El almacenamiento del navegador no está disponible. Los cambios solo durarán hasta que cierre esta página."
+  ],
+  "The optimization backend rejected this request. Check that it is running and the inputs are valid.": [
+    "Optimizasyon sunucusu bu isteği reddetti. Sunucunun çalıştığını ve girdilerin geçerli olduğunu kontrol edin.",
+    "Le serveur d’optimisation a refusé la demande. Vérifiez qu’il fonctionne et que les données sont valides.",
+    "El backend de optimización rechazó esta solicitud. Verifique que esté funcionando y que las entradas sean válidas."
+  ],
+  "Inputs changed during optimization. Generate a new schedule.": [
+    "Optimizasyon sırasında girdiler değişti. Yeni bir çizelge oluşturun.",
+    "Les données ont changé pendant l’optimisation. Générez un nouveau planning.",
+    "Las entradas cambiaron durante la optimización. Generar un nuevo horario."
+  ],
+  "The returned schedule failed independent constraint validation.": [
+    "Dönen çizelge bağımsız kısıt doğrulamasından geçemedi.",
+    "Le planning reçu n’a pas passé la vérification indépendante des contraintes.",
+    "La programación devuelta no superó la validación de restricciones independientes."
+  ],
+  "Optimization failed. Please try again.": [
+    "Optimizasyon başarısız oldu. Lütfen tekrar deneyin.",
+    "L’optimisation a échoué. Veuillez réessayer.",
+    "La optimización falló. Por favor inténtalo de nuevo."
+  ],
+  "Exported as an invalid draft. Review constraint warnings.": [
+    "Geçersiz taslak olarak dışa aktarıldı. Kısıt uyarılarını inceleyin.",
+    "Exporté comme brouillon non valide. Consultez les alertes de contraintes.",
+    "Exportado como borrador no válido. Revise las advertencias de restricciones."
+  ],
+  "Schedule exported successfully": [
+    "Çizelge başarıyla dışa aktarıldı",
+    "Planning exporté avec succès",
+    "Horario exportado exitosamente"
+  ],
+  "Solving schedule…": [
+    "Çizelge hesaplanıyor…",
+    "Calcul du planning…",
+    "Resolviendo cronograma…"
+  ],
+  "Generate Optimal Schedule": [
+    "Optimal Çizelge Oluştur",
+    "Générer le planning optimal",
+    "Generar cronograma óptimo"
+  ],
+  "Weekly labor cost": [
+    "Haftalık iş gücü maliyeti",
+    "Coût de main-d’œuvre hebdomadaire",
+    "Costo laboral semanal"
+  ],
+  "Based on actual assignments": [
+    "Gerçek atamalara göre",
+    "Selon les affectations réelles",
+    "Basado en asignaciones reales"
+  ],
+  "Generate a schedule to calculate": [
+    "Hesaplamak için bir çizelge oluşturun",
+    "Générez un planning pour calculer",
+    "Generar un cronograma para calcular"
+  ],
+  "Scheduled hours": [
+    "Planlanan çalışma süresi",
+    "Heures planifiées",
+    "Horas programadas"
+  ],
+  "Staffing coverage": [
+    "Personel ihtiyacı karşılama oranı",
+    "Couverture des besoins",
+    "Cobertura de personal"
+  ],
+  "Coverage across the scheduling period": [
+    "Planlama dönemi genelinde karşılama oranı",
+    "Couverture sur la période de planification",
+    "Cobertura durante todo el período de programación"
+  ],
+  "Schedule health": [
+    "Çizelge durumu",
+    "État du planning",
+    "Programar salud"
+  ],
+  "Needs review": [
+    "İnceleme gerekli",
+    "À vérifier",
+    "Necesita revisión"
+  ],
+  "All clear": [
+    "Sorun yok",
+    "Tout est conforme",
+    "Todo claro"
+  ],
+  "Ready to run": [
+    "Hesaplamaya hazır",
+    "Prêt à calculer",
+    "Listo para correr"
+  ],
+  "All hard constraints satisfied": [
+    "Tüm zorunlu kısıtlar sağlandı",
+    "Toutes les contraintes obligatoires sont respectées",
+    "Todas las restricciones estrictas satisfechas"
+  ],
+  "Your inputs are ready to optimize": [
+    "Girdileriniz optimizasyona hazır",
+    "Vos données sont prêtes à être optimisées",
+    "Tus entradas están listas para optimizar"
+  ],
+  "Explore a demo scenario": [
+    "Bir örnek senaryoyu keşfedin",
+    "Explorez un scénario de démonstration",
+    "Explora un escenario de demostración"
+  ],
+  "Fictional data. Real optimization.": [
+    "Kurgusal veriler. Gerçek optimizasyon.",
+    "Données fictives. Optimisation réelle.",
+    "Datos ficticios. Optimización real."
+  ],
+  "Café": [
+    "Kafe",
+    "Café",
+    "Cafetería"
+  ],
+  "Office": [
+    "Ofis",
+    "Bureau",
+    "Oficina"
+  ],
+  "Infeasible test": [
+    "Çözümsüzlük testi",
+    "Test d’infaisabilité",
+    "Prueba inviable"
+  ],
+  "Load example": [
+    "Örneği yükle",
+    "Charger l’exemple",
+    "Cargar ejemplo"
+  ],
+  "Coming soon": [
+    "Yakında",
+    "À venir",
+    "Muy pronto"
+  ],
+  "Open scheduling": [
+    "Vardiya planlamayı aç",
+    "Ouvrir la planification",
+    "programación abierta"
+  ],
+  "On the roadmap": [
+    "Geliştirme planında",
+    "Prévu au programme",
+    "En la hoja de ruta"
+  ],
+  "Home": [
+    "Ana Sayfa",
+    "Accueil",
+    "Hogar"
+  ],
+  "Platform": [
+    "Platform",
+    "Plateforme",
+    "Plataforma"
+  ],
+  "Use cases": [
+    "Kullanım alanları",
+    "Cas d’usage",
+    "Casos de uso"
+  ],
+  "Launch Demo": [
+    "Demoyu Aç",
+    "Lancer la démo",
+    "Iniciar demostración"
+  ],
+  "OPERATIONS, OPTIMIZED": [
+    "OPERASYONLARINIZI OPTİMİZE EDİN",
+    "VOS OPÉRATIONS, OPTIMISÉES",
+    "OPERACIONES OPTIMIZADAS"
+  ],
+  "Smarter Decisions.": [
+    "Daha Akıllı Kararlar.",
+    "Des décisions plus avisées.",
+    "Decisiones más inteligentes."
+  ],
+  "Better Operations.": [
+    "Daha İyi Operasyonlar.",
+    "Des opérations plus efficaces.",
+    "Mejores operaciones."
+  ],
+  "Turn everyday business complexity into your next best move. Mathematical optimization, made accessible to every team.": [
+    "Günlük iş süreçlerindeki karmaşıklığı bir sonraki doğru adıma dönüştürün. Her ekip için erişilebilir matematiksel optimizasyon.",
+    "Transformez la complexité du quotidien en décisions concrètes. L’optimisation mathématique, accessible à toutes les équipes.",
+    "Convierta la complejidad empresarial cotidiana en su próximo mejor paso. Optimización matemática, accesible a todos los equipos."
+  ],
+  "No sign-up. No paid APIs. Just a smarter way to plan.": [
+    "Kayıt gerekmez. Ücretli API yok. Sadece daha akıllı planlama.",
+    "Sans inscription ni API payante. Simplement une meilleure façon de planifier.",
+    "Sin registro. Sin API pagas. Simplemente una forma más inteligente de planificar."
+  ],
+  "● Optimal solution found": [
+    "● Optimal çözüm bulundu",
+    "● Solution optimale trouvée",
+    "● Solución óptima encontrada"
+  ],
+  "Your week. Working better.": [
+    "Haftanız daha verimli.",
+    "Une semaine mieux organisée.",
+    "Tu semana. Trabajando mejor."
+  ],
+  "Every constraint considered.": [
+    "Her kısıt hesaba katılır.",
+    "Chaque contrainte est prise en compte.",
+    "Cada restricción considerada."
+  ],
+  "Availability · Coverage · Weekly hours": [
+    "Uygunluk · Personel ihtiyacı · Haftalık saatler",
+    "Disponibilités · Couverture · Heures hebdomadaires",
+    "Disponibilidad · Cobertura · Horas semanales"
+  ],
+  "BUILT FOR BETTER DECISIONS": [
+    "DAHA İYİ KARARLAR İÇİN TASARLANDI",
+    "CONÇU POUR MIEUX DÉCIDER",
+    "CONSTRUIDO PARA MEJORES DECISIONES"
+  ],
+  "Less guesswork. More possibility.": [
+    "Daha az tahmin. Daha çok olasılık.",
+    "Moins d’incertitude. Plus de possibilités.",
+    "Menos conjeturas. Más posibilidades."
+  ],
+  "One platform for the operational decisions that move your business forward.": [
+    "İşletmenizi ileriye taşıyan operasyonel kararlar için tek platform.",
+    "Une seule plateforme pour les décisions opérationnelles qui font avancer votre activité.",
+    "Una plataforma para las decisiones operativas que hacen avanzar su negocio."
+  ],
+  "Input": [
+    "Veri Girin",
+    "Saisir",
+    "Aporte"
+  ],
+  "Bring your people, requirements, and real-world constraints.": [
+    "Ekibinizi, ihtiyaçlarınızı ve gerçek koşullarınızı tanımlayın.",
+    "Renseignez votre équipe, vos besoins et vos contraintes réelles.",
+    "Traiga a su gente, sus requisitos y las limitaciones del mundo real."
+  ],
+  "Optimize": [
+    "Optimize Edin",
+    "Optimiser",
+    "Optimizar"
+  ],
+  "Let a mathematical solver explore the possible assignments.": [
+    "Matematiksel çözücü olası atamaları değerlendirsin.",
+    "Laissez un solveur mathématique explorer les affectations possibles.",
+    "Deje que un solucionador matemático explore las posibles tareas."
+  ],
+  "Improve": [
+    "İyileştirin",
+    "Améliorer",
+    "Mejorar"
+  ],
+  "Review a feasible plan, make adjustments, and put it to work.": [
+    "Uygulanabilir planı inceleyin, düzenleyin ve hayata geçirin.",
+    "Examinez un plan réalisable, ajustez-le et passez à l’action.",
+    "Revise un plan factible, haga ajustes y póngalo en práctica."
+  ],
+  "YOUR BUSINESS, BETTER BALANCED": [
+    "İŞLETMENİZ İÇİN DAHA İYİ BİR DENGE",
+    "UN MEILLEUR ÉQUILIBRE POUR VOTRE ACTIVITÉ",
+    "TU NEGOCIO, MEJOR EQUILIBRADO"
+  ],
+  "Built for everyday operations.": [
+    "Günlük operasyonlar için tasarlandı.",
+    "Conçu pour les opérations du quotidien.",
+    "Diseñado para operaciones diarias."
+  ],
+  "Retail & hospitality": [
+    "Perakende ve konaklama",
+    "Commerce et hôtellerie-restauration",
+    "Comercio minorista y hostelería"
+  ],
+  "Offices & professional services": [
+    "Ofisler ve profesyonel hizmetler",
+    "Bureaux et services professionnels",
+    "Oficinas y servicios profesionales"
+  ],
+  "Education": [
+    "Eğitim",
+    "Éducation",
+    "Educación"
+  ],
+  "Logistics & manufacturing": [
+    "Lojistik ve üretim",
+    "Logistique et industrie",
+    "Logística y fabricación"
+  ],
+  "Start with employee scheduling. More optimization tools are planned.": [
+    "Çalışan vardiyalarını planlayarak başlayın. Daha fazla optimizasyon aracı geliştirme planında.",
+    "Commencez par planifier les horaires de votre équipe. D’autres outils d’optimisation sont prévus.",
+    "Comience con la programación de empleados. Están previstas más herramientas de optimización."
+  ],
+  "Smarter Decisions. Better Operations.": [
+    "Daha Akıllı Kararlar. Daha İyi Operasyonlar.",
+    "Des décisions plus avisées. Des opérations plus efficaces.",
+    "Decisiones más inteligentes. Mejores operaciones."
+  ],
+  "Guide": [
+    "Rehber",
+    "Guide",
+    "Guía"
+  ],
+  "Model & limitations": [
+    "Model ve sınırlamalar",
+    "Modèle et limites",
+    "Modelo y limitaciones"
+  ],
+  "Demo workspace": [
+    "Demo çalışma alanı",
+    "Espace de démonstration",
+    "Espacio de trabajo de demostración"
+  ],
+  "Explore what’s possible": [
+    "Olasılıkları keşfedin",
+    "Explorez les possibilités",
+    "Explora lo que es posible"
+  ],
+  "WORKSPACE": [
+    "ÇALIŞMA ALANI",
+    "ESPACE DE TRAVAIL",
+    "ESPACIO DE TRABAJO"
+  ],
+  "Modules": [
+    "Modüller",
+    "Modules",
+    "Módulos"
+  ],
+  "Small changes.": [
+    "Küçük değişiklikler.",
+    "De petits changements.",
+    "Pequeños cambios."
+  ],
+  "Smarter operations.": [
+    "Daha akıllı operasyonlar.",
+    "Des opérations plus efficaces.",
+    "Operaciones más inteligentes."
+  ],
+  "Explore what mathematical optimization can do for your team.": [
+    "Matematiksel optimizasyonun ekibinize neler kazandırabileceğini keşfedin.",
+    "Découvrez ce que l’optimisation mathématique peut apporter à votre équipe.",
+    "Explore lo que la optimización matemática puede hacer por su equipo."
+  ],
+  "How OptiFlow works": [
+    "OptiFlow nasıl çalışır?",
+    "Comment fonctionne OptiFlow",
+    "Cómo funciona OptiFlow"
+  ],
+  "Guide & resources": [
+    "Rehber ve kaynaklar",
+    "Guide et ressources",
+    "Guía y recursos"
+  ],
+  "Light mode": [
+    "Açık tema",
+    "Mode clair",
+    "Modo de luz"
+  ],
+  "Dark mode": [
+    "Koyu tema",
+    "Mode sombre",
+    "modo oscuro"
+  ],
+  "Demo manager": [
+    "Demo yöneticisi",
+    "Responsable démo",
+    "Administrador de demostración"
+  ],
+  "Local demo workspace": [
+    "Yerel demo çalışma alanı",
+    "Espace de démonstration local",
+    "Espacio de trabajo de demostración local"
+  ],
+  "Workspace": [
+    "Çalışma alanı",
+    "Espace de travail",
+    "Espacio de trabajo"
+  ],
+  "Interactive prototype": [
+    "Etkileşimli prototip",
+    "Prototype interactif",
+    "Prototipo interactivo"
+  ],
+  "YOUR OPERATIONS, AT A GLANCE": [
+    "OPERASYONLARINIZA GENEL BAKIŞ",
+    "VOS OPÉRATIONS EN UN COUP D’ŒIL",
+    "SUS OPERACIONES, DE UN VISTAZO"
+  ],
+  "OPTIMIZATION / SCHEDULING": [
+    "OPTİMİZASYON / VARDİYA PLANLAMA",
+    "OPTIMISATION / PLANIFICATION",
+    "OPTIMIZACIÓN / PROGRAMACIÓN"
+  ],
+  "THE OPTIFLOW PLATFORM": [
+    "OPTIFLOW PLATFORMU",
+    "LA PLATEFORME OPTIFLOW",
+    "LA PLATAFORMA OPTIFLOW"
+  ],
+  "A better plan starts here.": [
+    "Daha iyi bir plan burada başlar.",
+    "Un meilleur plan commence ici.",
+    "Un mejor plan comienza aquí."
+  ],
+  "Employee scheduling": [
+    "Çalışan vardiya planlaması",
+    "Planification des horaires",
+    "programación de empleados"
+  ],
+  "Your optimization toolkit": [
+    "Optimizasyon araçlarınız",
+    "Vos outils d’optimisation",
+    "Su kit de herramientas de optimización"
+  ],
+  "From inputs to optimal decisions.": [
+    "Verilerden optimal kararlara.",
+    "Des données aux décisions optimales.",
+    "De los inputs a las decisiones óptimas."
+  ],
+  "Welcome back. Turn your operational challenges into clear, confident decisions.": [
+    "Tekrar hoş geldiniz. Operasyonel zorlukları net ve güvenilir kararlara dönüştürün.",
+    "Bienvenue. Transformez vos défis opérationnels en décisions claires et fiables.",
+    "Bienvenido de nuevo. Convierta sus desafíos operativos en decisiones claras y seguras."
+  ],
+  "Build a cost-efficient week that works for your team.": [
+    "Ekibiniz için uygun, maliyet açısından verimli bir hafta planlayın.",
+    "Planifiez une semaine adaptée à votre équipe et à votre budget.",
+    "Cree una semana rentable que funcione para su equipo."
+  ],
+  "Purpose-built tools for the decisions that matter.": [
+    "Önemli kararlar için özel olarak tasarlanmış araçlar.",
+    "Des outils conçus pour les décisions qui comptent.",
+    "Herramientas diseñadas específicamente para las decisiones importantes."
+  ],
+  "A transparent model. A practical starting point.": [
+    "Şeffaf bir model. Pratik bir başlangıç noktası.",
+    "Un modèle transparent. Un point de départ concret.",
+    "Un modelo transparente. Un punto de partida práctico."
+  ],
+  "New optimization": [
+    "Yeni optimizasyon",
+    "Nouvelle optimisation",
+    "Nueva optimización"
+  ],
+  "Export CSV": [
+    "CSV olarak indir",
+    "Exporter en CSV",
+    "Exportar CSV"
+  ],
+  "YOUR FIRST STEP TO SMARTER OPERATIONS": [
+    "DAHA AKILLI OPERASYONLARA İLK ADIMINIZ",
+    "VOTRE PREMIER PAS VERS DE MEILLEURES OPÉRATIONS",
+    "SU PRIMER PASO HACIA OPERACIONES MÁS INTELIGENTES"
+  ],
+  "A great week starts with the right schedule.": [
+    "Harika bir hafta doğru çizelgeyle başlar.",
+    "Une bonne semaine commence par le bon planning.",
+    "Una gran semana comienza con el horario adecuado."
+  ],
+  "Balance your team’s availability, meet staffing needs, and keep labor costs in check.": [
+    "Ekibinizin uygunluğunu dengeleyin, personel ihtiyacını karşılayın ve iş gücü maliyetlerini kontrol edin.",
+    "Conciliez les disponibilités de l’équipe, les besoins en personnel et les coûts de main-d’œuvre.",
+    "Equilibre la disponibilidad de su equipo, satisfaga las necesidades de personal y mantenga los costos laborales bajo control."
+  ],
+  "Optimize your schedule": [
+    "Çizelgenizi optimize edin",
+    "Optimiser votre planning",
+    "Optimiza tu horario"
+  ],
+  "A week of possibilities": [
+    "Olasılıklarla dolu bir hafta",
+    "Une semaine de possibilités",
+    "Una semana de posibilidades"
+  ],
+  "Constraints in. Clarity out.": [
+    "Kısıtlardan netliğe.",
+    "Des contraintes à la clarté.",
+    "Restricciones dentro. Claridad fuera."
+  ],
+  "Optimization modules": [
+    "Optimizasyon modülleri",
+    "Modules d’optimisation",
+    "Módulos de optimización"
+  ],
+  "The tools to make your next move a better one.": [
+    "Bir sonraki adımınızı iyileştiren araçlar.",
+    "Les outils pour faire de votre prochaine décision la bonne.",
+    "Las herramientas para hacer que su próximo paso sea mejor."
+  ],
+  "View all modules": [
+    "Tüm modülleri gör",
+    "Voir tous les modules",
+    "Ver todos los módulos"
+  ],
+  "Recent optimization runs": [
+    "Son optimizasyon çalıştırmaları",
+    "Dernières optimisations",
+    "Ejecuciones de optimización recientes"
+  ],
+  "Your latest decisions, all in one place.": [
+    "En son kararlarınız tek bir yerde.",
+    "Vos dernières décisions, au même endroit.",
+    "Tus últimas decisiones, todo en un solo lugar."
+  ],
+  "This browser": [
+    "Bu tarayıcı",
+    "Ce navigateur",
+    "este navegador"
+  ],
+  "Scenario": [
+    "Senaryo",
+    "Scénario",
+    "Guión"
+  ],
+  "Module": [
+    "Modül",
+    "Module",
+    "Módulo"
+  ],
+  "Status": [
+    "Durum",
+    "Statut",
+    "Estado"
+  ],
+  "Labor cost": [
+    "İş gücü maliyeti",
+    "Coût de main-d’œuvre",
+    "Costo laboral"
+  ],
+  "Run time": [
+    "Çalıştırma zamanı",
+    "Date d’exécution",
+    "tiempo de ejecución"
+  ],
+  "Your first optimization is one click away.": [
+    "İlk optimizasyonunuz bir tık uzağınızda.",
+    "Votre première optimisation est à portée de clic.",
+    "Su primera optimización está a un clic de distancia."
+  ],
+  "Create a schedule": [
+    "Çizelge oluştur",
+    "Créer un planning",
+    "Crear un horario"
+  ],
+  "Scheduling is fully implemented. The other five modules are planned features and do not run optimizations.": [
+    "Vardiya Planlama tamamen işlevseldir. Diğer beş modül planlanan özelliklerdir ve henüz optimizasyon çalıştırmaz.",
+    "La planification est entièrement fonctionnelle. Les cinq autres modules sont prévus et ne réalisent pas encore d’optimisations.",
+    "La programación está totalmente implementada. Los otros cinco módulos son funciones planificadas y no ejecutan optimizaciones."
+  ],
+  "Employees": [
+    "Çalışanlar",
+    "Employés",
+    "Empleados"
+  ],
+  "Availability": [
+    "Uygunluk",
+    "Disponibilités",
+    "Disponibilidad"
+  ],
+  "Shift settings": [
+    "Vardiya ayarları",
+    "Paramètres des horaires",
+    "Configuración de turnos"
+  ],
+  "Analytics": [
+    "Analizler",
+    "Analyses",
+    "Analítica"
+  ],
+  "Week starting": [
+    "Hafta başlangıcı",
+    "Semaine du",
+    "Semana que comienza"
+  ],
+  "INFEASIBLE": [
+    "UYGULANAMAZ",
+    "IRRÉALISABLE",
+    "INFABILABLE"
+  ],
+  "UNKNOWN": [
+    "BİLİNMİYOR",
+    "INCONNU",
+    "DESCONOCIDO"
+  ],
+  "Manual draft has constraint violations": [
+    "Manuel taslakta kısıt ihlalleri var",
+    "Le brouillon manuel enfreint des contraintes",
+    "El borrador manual tiene violaciones de restricciones"
+  ],
+  "Manually adjusted · optimality not claimed": [
+    "Manuel olarak düzenlendi · optimallik iddiası yok",
+    "Modifié manuellement · optimalité non garantie",
+    "Ajustado manualmente · Optimidad no reclamada"
+  ],
+  "Optimal schedule found": [
+    "Optimal çizelge bulundu",
+    "Planning optimal trouvé",
+    "Horario óptimo encontrado"
+  ],
+  "FEASIBLE": [
+    "UYGULANABİLİR",
+    "FAISABLE",
+    "FACTIBLE"
+  ],
+  "Feasible schedule · optimality not proven": [
+    "Uygulanabilir çizelge · optimallik kanıtlanmadı",
+    "Planning réalisable · optimalité non prouvée",
+    "Calendario factible · optimización no probada"
+  ],
+  "This schedule is infeasible": [
+    "Bu çizelge için çözüm bulunamıyor",
+    "Ce planning est irréalisable",
+    "Este cronograma es inviable."
+  ],
+  "No solution found within the limit": [
+    "Süre sınırı içinde çözüm bulunamadı",
+    "Aucune solution trouvée dans le délai imparti",
+    "No se encontró ninguna solución dentro del límite."
+  ],
+  "s": [
+    "sn",
+    "s",
+    "s"
+  ],
+  "· Minimum labor cost proven for this model": [
+    "· Bu model için en düşük iş gücü maliyeti kanıtlandı",
+    "· Coût minimal de main-d’œuvre prouvé pour ce modèle",
+    "· Coste laboral mínimo comprobado para este modelo."
+  ],
+  "Plus": [
+    "Ek olarak",
+    "Plus",
+    "Más"
+  ],
+  "more violations.": [
+    "ihlal daha var.",
+    "violation(s) supplémentaire(s).",
+    "más violaciones."
+  ],
+  "Your weekly schedule": [
+    "Haftalık çizelgeniz",
+    "Votre planning hebdomadaire",
+    "Tu agenda semanal"
+  ],
+  "Select a shift to review or change assignments.": [
+    "Atamaları incelemek veya değiştirmek için bir vardiya seçin.",
+    "Sélectionnez un créneau pour consulter ou modifier les affectations.",
+    "Seleccione un turno para revisar o cambiar asignaciones."
+  ],
+  "Set up your team, then generate your first optimal schedule.": [
+    "Ekibinizi tanımlayın, ardından ilk optimal çizelgenizi oluşturun.",
+    "Configurez votre équipe, puis générez votre premier planning optimal.",
+    "Configure su equipo y luego genere su primer cronograma óptimo."
+  ],
+  "SHIFT": [
+    "VARDİYA",
+    "CRÉNEAU",
+    "CAMBIO"
+  ],
+  "Afternoon": [
+    "Öğleden sonra",
+    "Après-midi",
+    "Tarde"
+  ],
+  "Morning": [
+    "Sabah",
+    "Matin",
+    "Mañana"
+  ],
+  "PM": [
+    "ÖS",
+    "Après-midi",
+    "P.M"
+  ],
+  "AM": [
+    "ÖÖ",
+    "Matin",
+    "SOY"
+  ],
+  "shift": [
+    "vardiyası",
+    "créneau",
+    "cambio"
+  ],
+  "No assignments": [
+    "Atama yok",
+    "Aucune affectation",
+    "Sin asignaciones"
+  ],
+  "No coverage needed": [
+    "Personel gerekmiyor",
+    "Aucun personnel requis",
+    "No se necesita cobertura"
+  ],
+  "staff": [
+    "personel",
+    "personnes",
+    "personal"
+  ],
+  "Hard constraints: coverage, availability, weekly hours, and no overlapping shifts.": [
+    "Zorunlu kısıtlar: personel ihtiyacı, uygunluk, haftalık saatler ve çakışmayan vardiyalar.",
+    "Contraintes obligatoires : couverture, disponibilités, heures hebdomadaires et absence de chevauchement.",
+    "Restricciones estrictas: cobertura, disponibilidad, horarios semanales y no superposición de turnos."
+  ],
+  "Your team": [
+    "Ekibiniz",
+    "Votre équipe",
+    "tu equipo"
+  ],
+  "Changes save automatically in this browser and reset the current schedule.": [
+    "Değişiklikler bu tarayıcıya otomatik kaydedilir ve mevcut çizelgeyi sıfırlar.",
+    "Les modifications sont enregistrées dans ce navigateur et réinitialisent le planning actuel.",
+    "Los cambios se guardan automáticamente en este navegador y restablecen el horario actual."
+  ],
+  "New employee": [
+    "Yeni çalışan",
+    "Nouvel employé",
+    "Nuevo empleado"
+  ],
+  "Add employee": [
+    "Çalışan ekle",
+    "Ajouter un employé",
+    "Agregar empleado"
+  ],
+  "Employee name": [
+    "Çalışan adı",
+    "Nom de l’employé",
+    "Nombre del empleado"
+  ],
+  "Hourly wage (USD)": [
+    "Saatlik ücret (USD)",
+    "Salaire horaire (USD)",
+    "Salario por hora (USD)"
+  ],
+  "Max weekly hours": [
+    "Haftalık azami saat",
+    "Maximum d’heures par semaine",
+    "Horas semanales máximas"
+  ],
+  "Available shifts": [
+    "Uygun vardiyalar",
+    "Créneaux disponibles",
+    "Turnos disponibles"
+  ],
+  "of 14": [
+    "/ 14",
+    "/ 14",
+    "de 14"
+  ],
+  "No employees yet. Add a team member to get started.": [
+    "Henüz çalışan yok. Başlamak için bir ekip üyesi ekleyin.",
+    "Aucun employé pour le moment. Ajoutez un membre pour commencer.",
+    "Aún no hay empleados. Agregue un miembro del equipo para comenzar."
+  ],
+  "Use fictional employee data only. No personal information is needed.": [
+    "Yalnızca kurgusal çalışan verileri kullanın. Kişisel bilgi gerekmez.",
+    "Utilisez uniquement des employés fictifs. Aucune donnée personnelle n’est nécessaire.",
+    "Utilice únicamente datos ficticios de empleados. No se necesita información personal."
+  ],
+  "Make room for everyone’s availability.": [
+    "Herkesin uygunluğunu dikkate alın.",
+    "Tenez compte des disponibilités de chacun.",
+    "Haz espacio para la disponibilidad de todos."
+  ],
+  "Click a cell to toggle availability for that shift.": [
+    "Vardiya uygunluğunu değiştirmek için bir hücreye tıklayın.",
+    "Cliquez sur une cellule pour modifier la disponibilité sur ce créneau.",
+    "Haga clic en una celda para alternar la disponibilidad para ese turno."
+  ],
+  "Available": [
+    "Uygun",
+    "Disponible",
+    "Disponible"
+  ],
+  "Employee": [
+    "Çalışan",
+    "Employé",
+    "Empleado"
+  ],
+  "Set the rhythm of your week.": [
+    "Haftanızın düzenini belirleyin.",
+    "Définissez le rythme de votre semaine.",
+    "Marca el ritmo de tu semana."
+  ],
+  "Configure each shift independently. Set required staff to zero for closed periods.": [
+    "Her vardiyayı ayrı yapılandırın. Kapalı dönemler için gerekli personel sayısını sıfır yapın.",
+    "Configurez chaque créneau séparément. Indiquez zéro personne pour les périodes de fermeture.",
+    "Configura cada turno de forma independiente. Establecer el personal requerido en cero para los períodos cerrados."
+  ],
+  "Day": [
+    "Gün",
+    "Jour",
+    "Día"
+  ],
+  "Shift": [
+    "Vardiya",
+    "Créneau",
+    "Cambio"
+  ],
+  "Start time": [
+    "Başlangıç saati",
+    "Heure de début",
+    "Hora de inicio"
+  ],
+  "End time": [
+    "Bitiş saati",
+    "Heure de fin",
+    "Hora de finalización"
+  ],
+  "Duration": [
+    "Süre",
+    "Durée",
+    "Duración"
+  ],
+  "Required staff": [
+    "Gerekli personel",
+    "Personnel requis",
+    "Personal requerido"
+  ],
+  "Invalid": [
+    "Geçersiz",
+    "Non valide",
+    "Inválido"
+  ],
+  "Labor cost by day": [
+    "Günlük iş gücü maliyeti",
+    "Coût de main-d’œuvre par jour",
+    "Costo laboral por día"
+  ],
+  "Actual assignment costs · USD": [
+    "Gerçek atama maliyetleri · USD",
+    "Coûts réels des affectations · USD",
+    "Costos reales de asignación · USD"
+  ],
+  "Employee utilization": [
+    "Çalışan kapasitesi kullanımı",
+    "Utilisation des capacités",
+    "Utilización de empleados"
+  ],
+  "Assigned hours as a share of weekly limits": [
+    "Atanan saatlerin haftalık sınırlara oranı",
+    "Heures affectées par rapport aux limites hebdomadaires",
+    "Horas asignadas como porcentaje de los límites semanales"
+  ],
+  "h ·": [
+    "sa ·",
+    "h ·",
+    "h·"
+  ],
+  "Your next decision, backed by numbers.": [
+    "Bir sonraki kararınız sayılarla desteklensin.",
+    "Votre prochaine décision, appuyée par les chiffres.",
+    "Tu próxima decisión, respaldada por números."
+  ],
+  "Generate a schedule to explore labor costs, coverage, and team utilization.": [
+    "İş gücü maliyetlerini, personel ihtiyacını karşılama oranını ve ekip kapasitesini incelemek için bir çizelge oluşturun.",
+    "Générez un planning pour explorer les coûts, la couverture et l’utilisation des capacités de l’équipe.",
+    "Genere un cronograma para explorar los costos laborales, la cobertura y la utilización del equipo."
+  ],
+  "Take OptiFlow with you.": [
+    "OptiFlow’u yanınızda götürün.",
+    "Emportez OptiFlow avec vous.",
+    "Lleve OptiFlow con usted."
+  ],
+  "Complete Next.js source, Python backend, tests, and local setup guide.": [
+    "Tam Next.js kaynak kodu, Python sunucusu, testler ve yerel kurulum rehberi.",
+    "Code source Next.js complet, serveur Python, tests et guide d’installation locale.",
+    "Complete el código fuente de Next.js, el backend de Python, las pruebas y la guía de configuración local."
+  ],
+  "Download source": [
+    "Kaynak kodunu indir",
+    "Télécharger le code source",
+    "Descargar fuente"
+  ],
+  "THE MODEL": [
+    "MODEL",
+    "LE MODÈLE",
+    "EL MODELO"
+  ],
+  "Real optimization. Transparent assumptions.": [
+    "Gerçek optimizasyon. Şeffaf varsayımlar.",
+    "Une optimisation réelle. Des hypothèses transparentes.",
+    "Optimización real. Supuestos transparentes."
+  ],
+  "OptiFlow assigns employees to shifts using binary decision variables x[e,s]. Assignment cost is hourly wage × shift duration. The objective is to minimize total labor cost.": [
+    "OptiFlow, x[e,s] ikili karar değişkenlerini kullanarak çalışanları vardiyalara atar. Atama maliyeti, saatlik ücret × vardiya süresidir. Amaç toplam iş gücü maliyetini en aza indirmektir.",
+    "OptiFlow affecte les employés aux créneaux à l’aide de variables binaires x[e,s]. Le coût d’une affectation est le salaire horaire × la durée du créneau. L’objectif est de minimiser le coût total de main-d’œuvre.",
+    "OptiFlow asigna empleados a turnos utilizando variables de decisión binarias x[e,s]. El costo de la asignación es el salario por hora × la duración del turno. El objetivo es minimizar el coste laboral total."
+  ],
+  "minimize Σ employee,shift wage[e] × hours[s] × x[e,s]": [
+    "en aza indir Σ çalışan,vardiya ücret[e] × saat[s] × x[e,s]",
+    "minimiser Σ employé,créneau salaire[e] × heures[s] × x[e,s]",
+    "minimizar Σ empleado,salario por turno[e] × horas[s] × x[e,s]"
+  ],
+  "Every generated schedule must satisfy": [
+    "Oluşturulan her çizelgenin sağlaması gerekenler",
+    "Chaque planning généré doit respecter",
+    "Cada programa generado debe satisfacer"
+  ],
+  "Staffing: assigned employees ≥ required employees for every shift.": [
+    "Personel ihtiyacı: her vardiya için atanan çalışan sayısı ≥ gerekli çalışan sayısı.",
+    "Couverture : employés affectés ≥ employés requis pour chaque créneau.",
+    "Dotación de personal: empleados asignados ≥ empleados requeridos para cada turno."
+  ],
+  "Availability: an employee can only work an available shift.": [
+    "Uygunluk: bir çalışan yalnızca uygun olduğu vardiyada çalışabilir.",
+    "Disponibilité : un employé ne peut travailler que sur un créneau où il est disponible.",
+    "Disponibilidad: un empleado sólo puede trabajar un turno disponible."
+  ],
+  "Weekly hours: assigned duration ≤ each employee’s weekly maximum.": [
+    "Haftalık saatler: atanan süre ≤ çalışanın haftalık üst sınırı.",
+    "Heures hebdomadaires : durée affectée ≤ maximum hebdomadaire de chaque employé.",
+    "Horas semanales: duración asignada ≤ máximo semanal de cada empleado."
+  ],
+  "Conflicts: employees cannot work overlapping shifts.": [
+    "Çakışmalar: bir çalışan çakışan vardiyalarda çalışamaz.",
+    "Conflits : un employé ne peut pas travailler sur des créneaux qui se chevauchent.",
+    "Conflictos: los empleados no pueden trabajar en turnos superpuestos."
+  ],
+  "Assignments are binary: an employee is assigned once or not at all.": [
+    "Atamalar ikilidir: çalışan bir vardiyaya bir kez atanır ya da hiç atanmaz.",
+    "Les affectations sont binaires : un employé est affecté une fois à un créneau, ou pas du tout.",
+    "Las asignaciones son binarias: a un empleado se le asigna una vez o ninguna."
+  ],
+  "The hosted demo uses GLPK’s mixed-integer branch-and-bound solver in a Web Worker. It reports “Optimal” only when the solver proves optimality with zero requested relative gap. The local Python backend uses OR-Tools CP-SAT. Both use integer minutes and integer wage cents to preserve input precision.": [
+    "Barındırılan demo, bir Web Worker içinde GLPK’nin karma tamsayılı dal-sınır çözücüsünü kullanır. Yalnızca istenen bağıl fark sıfırken çözücü optimalliği kanıtladığında “Optimal” gösterilir. Yerel Python sunucusu OR-Tools CP-SAT kullanır. Her iki çözücü de girdi hassasiyetini korumak için tamsayı dakika ve sent cinsinden ücret kullanır.",
+    "La démo hébergée utilise le solveur mixte en nombres entiers de GLPK, par séparation et évaluation, dans un Web Worker. Le statut « Optimal » n’est affiché que si le solveur prouve l’optimalité avec un écart relatif demandé de zéro. Le serveur Python local utilise OR-Tools CP-SAT. Les deux utilisent des minutes et des salaires en centimes entiers pour préserver la précision des données.",
+    "La demostración alojada utiliza el solucionador de rama y enlace de enteros mixtos de GLPK en un Web Worker. Informa \"Óptimo\" solo cuando el solucionador demuestra la optimización con una brecha relativa solicitada cero. El backend local de Python utiliza OR-Tools CP-SAT. Ambos utilizan minutos enteros y centavos de salario enteros para preservar la precisión de la entrada."
+  ],
+  "All results are independently checked against hard constraints. Manual edits immediately recalculate the constraints and metrics; optimality is no longer claimed. Editing model inputs clears the previous solution.": [
+    "Tüm sonuçlar zorunlu kısıtlara göre bağımsız olarak doğrulanır. Manuel düzenlemeler kısıtları ve metrikleri anında yeniden hesaplar; artık optimallik iddiasında bulunulmaz. Model girdilerini değiştirmek önceki çözümü temizler.",
+    "Tous les résultats sont vérifiés indépendamment au regard des contraintes obligatoires. Les modifications manuelles recalculent immédiatement les contraintes et les indicateurs ; l’optimalité n’est alors plus garantie. Modifier les données du modèle efface la solution précédente.",
+    "Todos los resultados se comparan de forma independiente con restricciones estrictas. Las ediciones manuales recalculan inmediatamente las restricciones y métricas; Ya no se reclama la optimización. La edición de las entradas del modelo borra la solución anterior."
+  ],
+  "Prototype boundaries": [
+    "Prototipin sınırları",
+    "Limites du prototype",
+    "Límites del prototipo"
+  ],
+  "One seven-day period, two same-day shifts per day, up to 30 employees. Overnight shifts are not supported.": [
+    "Yedi günlük tek dönem, günde iki aynı gün içinde biten vardiya ve en fazla 30 çalışan. Gece yarısını aşan vardiyalar desteklenmez.",
+    "Une période de sept jours, deux créneaux se terminant le même jour et jusqu’à 30 employés. Les créneaux de nuit ne sont pas pris en charge.",
+    "Un período de siete días, dos turnos el mismo día por día, hasta 30 empleados. No se admiten turnos nocturnos."
+  ],
+  "20-second solver limit. A feasible result is not necessarily optimal. Larger problems may require more time.": [
+    "Çözücü için 20 saniye sınırı vardır. Uygulanabilir bir sonuç her zaman optimal değildir. Büyük problemler daha fazla süre gerektirebilir.",
+    "Le solveur est limité à 20 secondes. Un résultat réalisable n’est pas nécessairement optimal. Les problèmes plus grands peuvent demander plus de temps.",
+    "Límite de resolución de 20 segundos. Un resultado factible no es necesariamente óptimo. Los problemas más grandes pueden requerir más tiempo."
+  ],
+  "No break, rest-day, overtime, skill, fairness, preference, or jurisdiction-specific employment rules.": [
+    "Mola, dinlenme günü, fazla mesai, yetkinlik, adalet, tercih veya bölgeye özgü iş hukuku kuralları uygulanmaz.",
+    "Aucune règle relative aux pauses, aux jours de repos, aux heures supplémentaires, aux compétences, à l’équité, aux préférences ou au droit du travail local n’est appliquée.",
+    "No hay pausas, días de descanso, horas extras, habilidades, equidad, preferencias ni reglas de empleo específicas de la jurisdicción."
+  ],
+  "Browser-local storage only. No accounts, shared database, or cross-device synchronization.": [
+    "Veriler yalnızca tarayıcıda saklanır. Hesap, paylaşılan veritabanı veya cihazlar arası eşitleme yoktur.",
+    "Stockage local au navigateur uniquement. Aucun compte, base de données partagée ou synchronisation entre appareils.",
+    "Solo almacenamiento local del navegador. Sin cuentas, base de datos compartida ni sincronización entre dispositivos."
+  ],
+  "Costs are in USD. No financial savings are claimed without a comparable baseline.": [
+    "Maliyetler USD cinsindedir. Karşılaştırılabilir bir referans olmadan tasarruf iddiasında bulunulmaz.",
+    "Les coûts sont en USD. Aucune économie n’est annoncée sans référence comparable.",
+    "Los costos están en USD. No se afirma ningún ahorro financiero sin una base comparable."
+  ],
+  "Fictional demonstration data only. This prototype does not claim employment-law compliance.": [
+    "Yalnızca kurgusal demo verileri kullanılır. Bu prototip iş hukukuna uygunluk iddiasında bulunmaz.",
+    "Données de démonstration fictives uniquement. Ce prototype ne garantit pas la conformité au droit du travail.",
+    "Sólo datos de demostración ficticios. Este prototipo no pretende cumplir con la legislación laboral."
+  ],
+  "The road ahead": [
+    "Geliştirme yol haritası",
+    "La suite du programme",
+    "El camino por delante"
+  ],
+  "01 / FOUNDATION": [
+    "01 / TEMEL ALTYAPI",
+    "01 / FONDATIONS",
+    "01 / FUNDACIÓN"
+  ],
+  "Production scheduling": [
+    "Üretim ortamında planlama",
+    "Planification en production",
+    "Programación de producción"
+  ],
+  "PostgreSQL, tenant isolation, sign-in, permissions, audit trails, background solve jobs, and operational monitoring.": [
+    "PostgreSQL, müşteri verilerinin ayrılması, oturum açma, yetkiler, denetim kayıtları, arka plan çözüm işleri ve operasyonel izleme.",
+    "PostgreSQL, isolation des clients, connexion, permissions, journaux d’audit, calculs en arrière-plan et supervision opérationnelle.",
+    "PostgreSQL, aislamiento de inquilinos, inicio de sesión, permisos, pistas de auditoría, trabajos de resolución en segundo plano y monitoreo operativo."
+  ],
+  "02 / REAL-WORLD CONSTRAINTS": [
+    "02 / GERÇEK DÜNYA KISITLARI",
+    "02 / CONTRAINTES RÉELLES",
+    "02 / LIMITACIONES DEL MUNDO REAL"
+  ],
+  "More useful schedules": [
+    "Daha kullanışlı çizelgeler",
+    "Des plannings plus utiles",
+    "Horarios más útiles"
+  ],
+  "Skills, preferences, overtime, breaks, time zones, labor-rule validation, and explainable infeasibility.": [
+    "Yetkinlikler, tercihler, fazla mesai, molalar, saat dilimleri, iş hukuku kurallarının doğrulanması ve açıklanabilir çözümsüzlük.",
+    "Compétences, préférences, heures supplémentaires, pauses, fuseaux horaires, validation des règles du travail et explication des cas irréalisables.",
+    "Habilidades, preferencias, horas extras, descansos, zonas horarias, validación de reglas laborales e inviabilidad explicable."
+  ],
+  "03 / PLATFORM": [
+    "03 / PLATFORM",
+    "03 / PLATEFORME",
+    "03 / PLATAFORMA"
+  ],
+  "A connected decision toolkit": [
+    "Bağlantılı karar araçları",
+    "Des outils de décision connectés",
+    "Un conjunto de herramientas de decisión conectado"
+  ],
+  "Business-system integrations, validated scenario comparisons, and five additional optimization modules.": [
+    "İş sistemleriyle entegrasyon, doğrulanmış senaryo karşılaştırmaları ve beş ek optimizasyon modülü.",
+    "Intégrations aux systèmes de l’entreprise, comparaisons de scénarios validées et cinq modules d’optimisation supplémentaires.",
+    "Integraciones de sistemas empresariales, comparaciones de escenarios validados y cinco módulos de optimización adicionales."
+  ],
+  "All changes stay in this browser": [
+    "Tüm değişiklikler bu tarayıcıda saklanır",
+    "Toutes les modifications restent dans ce navigateur",
+    "Todos los cambios permanecen en este navegador."
+  ],
+  "OptiFlow v0.1 · Built for better decisions": [
+    "OptiFlow v0.1 · Daha iyi kararlar için",
+    "OptiFlow v0.1 · Pour de meilleures décisions",
+    "OptiFlow v0.1 · Creado para tomar mejores decisiones"
+  ],
+  "MANUAL ADJUSTMENT": [
+    "MANUEL DÜZENLEME",
+    "MODIFICATION MANUELLE",
+    "AJUSTE MANUAL"
+  ],
+  "employees required": [
+    "çalışan gerekli",
+    "employé(s) requis",
+    "empleados requeridos"
+  ],
+  "/hr ·": [
+    "/sa ·",
+    "/h ·",
+    "/hora ·"
+  ],
+  "Unavailable": [
+    "Uygun değil",
+    "Indisponible",
+    "Indisponible"
+  ],
+  "h": [
+    "sa",
+    "h",
+    "h"
+  ],
+  "constraint violation(s). Close this panel to review the full warnings.": [
+    "kısıt ihlali var. Tüm uyarıları incelemek için bu paneli kapatın.",
+    "violation(s) de contraintes. Fermez ce panneau pour consulter toutes les alertes.",
+    "violaciones de restricciones. Cierre este panel para revisar las advertencias completas."
+  ],
+  "All hard constraints satisfied.": [
+    "Tüm zorunlu kısıtlar sağlandı.",
+    "Toutes les contraintes obligatoires sont respectées.",
+    "Todas las duras limitaciones satisfechas."
+  ],
+  "Done": [
+    "Tamam",
+    "Terminé",
+    "Hecho"
+  ],
+  "Language": [
+    "Dil",
+    "Langue",
+    "Idioma"
+  ],
+  "Demo scenario": [
+    "Demo senaryosu",
+    "Scénario de démonstration",
+    "Escenario de demostración"
+  ],
+  "Toggle theme": [
+    "Temayı değiştir",
+    "Changer de thème",
+    "Alternar tema"
+  ],
+  "Toggle color mode": [
+    "Renk temasını değiştir",
+    "Changer de mode de couleur",
+    "Alternar modo de color"
+  ],
+  "OptiFlow home": [
+    "OptiFlow ana sayfa",
+    "Accueil OptiFlow",
+    "Inicio OptiFlow"
+  ],
+  "Close navigation": [
+    "Gezinme menüsünü kapat",
+    "Fermer la navigation",
+    "Cerrar navegación"
+  ],
+  "Open navigation": [
+    "Gezinme menüsünü aç",
+    "Ouvrir la navigation",
+    "Abrir navegación"
+  ],
+  "Dismiss error": [
+    "Hata mesajını kapat",
+    "Fermer le message d’erreur",
+    "Descartar error"
+  ],
+  "Scheduling start date": [
+    "Planlama başlangıç tarihi",
+    "Date de début de la planification",
+    "Fecha de inicio de programación"
+  ],
+  "Edit shift assignments": [
+    "Vardiya atamalarını düzenle",
+    "Modifier les affectations du créneau",
+    "Editar asignaciones de turnos"
+  ],
+  "Close assignment editor": [
+    "Atama düzenleyicisini kapat",
+    "Fermer l’éditeur d’affectations",
+    "Cerrar editor de tareas"
+  ],
+  "start": [
+    "başlangıç",
+    "début",
+    "comenzar"
+  ],
+  "end": [
+    "bitiş",
+    "fin",
+    "fin"
+  ],
+  "Date": [
+    "Tarih",
+    "Date",
+    "Fecha"
+  ],
+  "Start": [
+    "Başlangıç",
+    "Début",
+    "Comenzar"
+  ],
+  "End": [
+    "Bitiş",
+    "Fin",
+    "Fin"
+  ],
+  "Hours": [
+    "Saat",
+    "Heures",
+    "Horas"
+  ],
+  "Assignment cost (USD)": [
+    "Atama maliyeti (USD)",
+    "Coût de l’affectation (USD)",
+    "Costo de la tarea (USD)"
+  ],
+  "Choose a valid scheduling start date.": [
+    "Geçerli bir planlama başlangıç tarihi seçin.",
+    "Choisissez une date de début valide.",
+    "Elija una fecha de inicio de programación válida."
+  ],
+  "Employee identifiers must be unique.": [
+    "Çalışan kimlikleri benzersiz olmalıdır.",
+    "Les identifiants des employés doivent être uniques.",
+    "Los identificadores de empleados deben ser únicos."
+  ],
+  "Provide two ordered shifts per day.": [
+    "Her gün için sıralı iki vardiya tanımlayın.",
+    "Définissez deux créneaux ordonnés par jour.",
+    "Proporcionar dos turnos ordenados por día."
+  ],
+  "Add at least one employee.": [
+    "En az bir çalışan ekleyin.",
+    "Ajoutez au moins un employé.",
+    "Agregue al menos un empleado."
+  ],
+  "This prototype supports up to 30 employees.": [
+    "Bu prototip en fazla 30 çalışanı destekler.",
+    "Ce prototype accepte jusqu’à 30 employés.",
+    "Este prototipo admite hasta 30 empleados."
+  ],
+  "Provide exactly 14 shifts for the seven-day period.": [
+    "Yedi günlük dönem için tam olarak 14 vardiya tanımlayın.",
+    "Définissez exactement 14 créneaux pour les sept jours.",
+    "Proporcione exactamente 14 turnos para el período de siete días."
+  ],
+  "Every employee needs a name.": [
+    "Her çalışan için bir ad girin.",
+    "Chaque employé doit avoir un nom.",
+    "Cada empleado necesita un nombre."
+  ],
+  "Duplicate employee assignment.": [
+    "Aynı çalışan birden fazla kez atanmış.",
+    "Affectation d’employé en double.",
+    "Asignación de empleados duplicados."
+  ],
+  "An assigned employee no longer exists.": [
+    "Atanan bir çalışan artık mevcut değil.",
+    "Un employé affecté n’existe plus.",
+    "Un empleado asignado ya no existe."
+  ],
+  "GLPK · integer programming": [
+    "GLPK · tamsayılı programlama",
+    "GLPK · programmation en nombres entiers",
+    "GLPK · programación entera"
+  ],
+  "Solver result failed independent constraint validation. No schedule was accepted.": [
+    "Çözücü sonucu bağımsız kısıt doğrulamasından geçemedi. Hiçbir çizelge kabul edilmedi.",
+    "Le résultat du solveur n’a pas passé la vérification indépendante des contraintes. Aucun planning n’a été accepté.",
+    "El resultado del solucionador no superó la validación de restricción independiente. No se aceptó ningún horario."
+  ],
+  "No assignment satisfies availability, coverage, overlapping shifts, and weekly hour limits together. Try increasing capacity or reducing demand.": [
+    "Uygunluk, personel ihtiyacı, vardiya çakışmaları ve haftalık saat sınırlarını aynı anda sağlayan atama yok. Kapasiteyi artırmayı veya ihtiyacı azaltmayı deneyin.",
+    "Aucune affectation ne satisfait simultanément les disponibilités, la couverture, l’absence de chevauchement et les limites hebdomadaires. Augmentez la capacité ou réduisez les besoins.",
+    "Ninguna asignación satisface juntos la disponibilidad, la cobertura, los turnos superpuestos y los límites de horas semanales. Intente aumentar la capacidad o reducir la demanda."
+  ],
+  "The solver reached its limit without a usable solution. Reduce the problem size or adjust constraints.": [
+    "Çözücü kullanılabilir bir çözüm bulamadan süre sınırına ulaştı. Problemi küçültün veya kısıtları düzenleyin.",
+    "Le solveur a atteint sa limite sans solution exploitable. Réduisez la taille du problème ou ajustez les contraintes.",
+    "El solucionador alcanzó su límite sin una solución utilizable. Reduzca el tamaño del problema o ajuste las restricciones."
+  ],
+  "A valid schedule was found, but optimality was not proven within the time limit.": [
+    "Geçerli bir çizelge bulundu, ancak süre sınırı içinde optimallik kanıtlanamadı.",
+    "Un planning valide a été trouvé, mais l’optimalité n’a pas été prouvée dans le délai imparti.",
+    "Se encontró un cronograma válido, pero no se demostró la optimidad dentro del límite de tiempo."
+  ],
+  "Coverage, availability, overlaps, and weekly hour limits cannot all be satisfied together. Increase capacity or reduce demand.": [
+    "Personel ihtiyacı, uygunluk, çakışma ve haftalık saat kısıtları aynı anda sağlanamıyor. Kapasiteyi artırın veya ihtiyacı azaltın.",
+    "La couverture, les disponibilités, l’absence de chevauchement et les limites hebdomadaires ne peuvent pas être respectées simultanément. Augmentez la capacité ou réduisez les besoins.",
+    "La cobertura, la disponibilidad, las superposiciones y los límites de horas semanales no pueden satisfacerse todos juntos. Aumentar la capacidad o reducir la demanda."
+  ],
+  "Valid schedule found; optimality was not proven within the time limit.": [
+    "Geçerli bir çizelge bulundu; süre sınırı içinde optimallik kanıtlanamadı.",
+    "Planning valide trouvé ; l’optimalité n’a pas été prouvée dans le délai imparti.",
+    "Horario válido encontrado; La optimización no se demostró dentro del plazo."
+  ],
+  "No usable solution was found within the solver time limit.": [
+    "Çözücünün süre sınırı içinde kullanılabilir bir çözüm bulunamadı.",
+    "Aucune solution exploitable n’a été trouvée dans le délai du solveur.",
+    "No se encontró ninguna solución utilizable dentro del límite de tiempo del solucionador."
+  ],
+  "Failed to fetch": [
+    "Sunucuya bağlanılamadı. Bağlantınızı ve sunucuyu kontrol edin.",
+    "Connexion au serveur impossible. Vérifiez votre connexion et le serveur.",
+    "No se pudo recuperar"
+  ],
+  "The operation was aborted due to timeout": [
+    "İstek zaman aşımına uğradı. Lütfen tekrar deneyin.",
+    "La demande a expiré. Veuillez réessayer.",
+    "La operación fue cancelada debido al tiempo de espera."
+  ],
+  "AM shift": [
+    "Sabah vardiyası",
+    "Créneau du matin",
+    "turno de la mañana"
+  ],
+  "PM shift": [
+    "Öğleden sonra vardiyası",
+    "Créneau de l’après-midi",
+    "turno de tarde"
+  ],
+  "Imported data cannot be sent to the demo optimizer.": [
+    "İçe aktarılan veriler demo çözücüsüne gönderilemez.",
+    "Les données importées ne peuvent pas être envoyées au solveur de démonstration.",
+    "Los datos importados no se pueden enviar al optimizador de demostración."
+  ],
+  "Smart Import": [
+    "Akıllı İçe Aktarma",
+    "Import intelligent",
+    "Importación inteligente"
+  ],
+  "OptiFlow Smart Import": [
+    "OptiFlow Akıllı İçe Aktarma",
+    "OptiFlow Import intelligent",
+    "Importación inteligente OptiFlow"
+  ],
+  "Turn existing CSV files into validated scheduling data.": [
+    "Mevcut CSV dosyalarını doğrulanmış planlama verilerine dönüştürün.",
+    "Transformez vos CSV existants en données de planification validées.",
+    "Convierta archivos CSV existentes en datos de programación validados."
+  ],
+  "Review imported data": [
+    "İçe aktarılan verileri incele",
+    "Consulter les données importées",
+    "Revisar datos importados"
+  ],
+  "Bring your own business data": [
+    "Kendi işletme verilerinizi kullanın",
+    "Utilisez vos propres données métier",
+    "Traiga sus propios datos comerciales"
+  ],
+  "Import CSV files with explicit mappings and validation.": [
+    "CSV dosyalarını açık eşlemeler ve doğrulamayla içe aktarın.",
+    "Importez des CSV avec des correspondances explicites et une validation.",
+    "Importe archivos CSV con asignaciones explícitas y validación."
+  ],
+  "Open Smart Import": [
+    "Akıllı İçe Aktarmayı aç",
+    "Ouvrir l’import intelligent",
+    "Abrir importación inteligente"
+  ],
+  "Scheduling data source": [
+    "Planlama veri kaynağı",
+    "Source des données de planification",
+    "Fuente de datos de programación"
+  ],
+  "Demo scenarios": [
+    "Demo senaryoları",
+    "Scénarios de démonstration",
+    "Escenarios de demostración"
+  ],
+  "Validated imported data": [
+    "Doğrulanmış içe aktarılan veriler",
+    "Données importées validées",
+    "Datos importados validados"
+  ],
+  "Imported data · no optimization run": [
+    "İçe aktarılan veriler · optimizasyon çalıştırılmadı",
+    "Données importées · aucune optimisation exécutée",
+    "Datos importados · sin ejecución de optimización"
+  ],
+  "Availability windows": [
+    "Uygunluk aralıkları",
+    "Plages de disponibilité",
+    "Ventanas de disponibilidad"
+  ],
+  "Shift requirements": [
+    "Vardiya gereksinimleri",
+    "Besoins en personnel",
+    "Requisitos de turno"
+  ],
+  "No saved import yet.": [
+    "Henüz kaydedilmiş içe aktarma yok.",
+    "Aucun import enregistré.",
+    "Aún no hay importación guardada."
+  ],
+  "No validation errors or warnings.": [
+    "Doğrulama hatası veya uyarısı yok.",
+    "Aucune erreur ni alerte de validation.",
+    "Sin errores de validación ni advertencias."
+  ],
+  "Showing the first 150 issues. Correct these and revalidate to reveal the remaining issues.": [
+    "İlk 150 sorun gösteriliyor. Diğer sorunları görmek için bunları düzeltip yeniden doğrulayın.",
+    "Les 150 premiers problèmes sont affichés. Corrigez-les puis relancez la validation.",
+    "Mostrando los primeros 150 números. Corríjalos y vuelva a validarlos para revelar los problemas restantes."
+  ],
+  "Minimum rest": [
+    "Asgari dinlenme",
+    "Repos minimal",
+    "Descanso mínimo"
+  ],
+  "Weekly shift limit": [
+    "Haftalık vardiya sınırı",
+    "Limite hebdomadaire de créneaux",
+    "Límite de turno semanal"
+  ],
+  "Weekly hour cap": [
+    "Haftalık saat üst sınırı",
+    "Plafond d’heures hebdomadaires",
+    "Límite de horas semanales"
+  ],
+  "Employee limits": [
+    "Çalışan sınırları",
+    "Limites des employés",
+    "Límites de empleados"
+  ],
+  "Maximum daily hours": [
+    "Günlük azami saat",
+    "Maximum d’heures par jour",
+    "Horas máximas diarias"
+  ],
+  "Business timezone": [
+    "İşletmenin saat dilimi",
+    "Fuseau horaire de l’entreprise",
+    "Zona horaria comercial"
+  ],
+  "Business currency": [
+    "İşletmenin para birimi",
+    "Devise de l’entreprise",
+    "Moneda comercial"
+  ],
+  "Scheduling week start": [
+    "Planlama haftası başlangıcı",
+    "Début de la semaine de planification",
+    "Programación de inicio de semana"
+  ],
+  "Multiple shifts on the same day": [
+    "Aynı gün birden fazla vardiya",
+    "Plusieurs créneaux le même jour",
+    "Varios turnos el mismo día"
+  ],
+  "Not allowed": [
+    "İzin verilmiyor",
+    "Non autorisé",
+    "No permitido"
+  ],
+  "Closed weekdays": [
+    "Kapalı günler",
+    "Jours de fermeture",
+    "Cerrado entre semana"
+  ],
+  "None selected": [
+    "Seçilmedi",
+    "Aucun sélectionné",
+    "Ninguno seleccionado"
+  ],
+  "Roles use a JSON list, for example [\"Cashier\", \"Manager\"].": [
+    "Roller JSON listesi kullanır; örneğin [\"Kasiyer\", \"Yönetici\"].",
+    "Les rôles sont une liste JSON, par exemple [\"Caissier\", \"Responsable\"].",
+    "Los roles usan una lista JSON, por ejemplo [\"Cajero\", \"Administrador\"]."
+  ],
+  "Dates use YYYY-MM-DD; times use HH:mm.": [
+    "Tarihler YYYY-MM-DD, saatler HH:mm biçimindedir.",
+    "Dates au format YYYY-MM-DD ; heures au format HH:mm.",
+    "Las fechas utilizan AAAA-MM-DD; veces se utiliza HH:mm."
+  ],
+  "Add record": [
+    "Kayıt ekle",
+    "Ajouter un enregistrement",
+    "Agregar registro"
+  ],
+  "Manual entry": [
+    "Manuel giriş",
+    "Saisie manuelle",
+    "Entrada manual"
+  ],
+  "Remove record": [
+    "Kaydı kaldır",
+    "Supprimer l’enregistrement",
+    "Eliminar registro"
+  ],
+  "No records. Map source columns or add the missing information explicitly.": [
+    "Kayıt yok. Kaynak sütunları eşleyin veya eksik bilgileri açıkça ekleyin.",
+    "Aucun enregistrement. Associez les colonnes ou saisissez explicitement les informations manquantes.",
+    "Sin registros. Asigne columnas de origen o agregue explícitamente la información que falta."
+  ],
+  "Start with validated business data.": [
+    "Doğrulanmış işletme verileriyle başlayın.",
+    "Commencez avec des données métier validées.",
+    "Comience con datos comerciales validados."
+  ],
+  "Import employee, availability, and staffing requirements before using imported-data mode.": [
+    "İçe aktarılan veri modunu kullanmadan önce çalışanları, uygunlukları ve personel ihtiyaçlarını içe aktarın.",
+    "Importez les employés, les disponibilités et les besoins en personnel avant d’utiliser ce mode.",
+    "Importe los requisitos de empleados, disponibilidad y dotación de personal antes de utilizar el modo de datos importados."
+  ],
+  "Review import": [
+    "İçe aktarmayı incele",
+    "Vérifier l’import",
+    "Importación de reseñas"
+  ],
+  "Validated import": [
+    "Doğrulanmış içe aktarma",
+    "Import validé",
+    "Importación validada"
+  ],
+  "Your data is available to Scheduling.": [
+    "Verileriniz Planlama modülünde kullanılabilir.",
+    "Vos données sont disponibles dans Planification.",
+    "Tus datos están disponibles para Programar."
+  ],
+  "No schedule has been generated for this dataset.": [
+    "Bu veri kümesi için çizelge oluşturulmadı.",
+    "Aucun planning n’a été généré pour ces données.",
+    "No se ha generado ningún cronograma para este conjunto de datos."
+  ],
+  "Optimizer connection required": [
+    "Optimizasyon bağlantısı gerekli",
+    "Connexion au solveur requise",
+    "Se requiere conexión al optimizador"
+  ],
+  "Scheduling rules summary": [
+    "Planlama kuralları özeti",
+    "Résumé des règles de planification",
+    "Resumen de reglas de programación"
+  ],
+  "Saved validation notes": [
+    "Kaydedilmiş doğrulama notları",
+    "Notes de validation enregistrées",
+    "Notas de validación guardadas"
+  ],
+  "Scheduling rules": [
+    "Planlama kuralları",
+    "Règles de planification",
+    "Reglas de programación"
+  ],
+  "Business rules are stored separately from imported records. No legal defaults are assumed.": [
+    "İşletme kuralları içe aktarılan kayıtlardan ayrı saklanır. Yasal varsayılanlar kabul edilmez.",
+    "Les règles métier sont stockées séparément des données. Aucune règle légale par défaut n’est présumée.",
+    "Las reglas comerciales se almacenan por separado de los registros importados. No se asumen incumplimientos legales."
+  ],
+  "Step 4": [
+    "Adım 4",
+    "Étape 4",
+    "Paso 4"
+  ],
+  "Minimum rest between shifts (hours)": [
+    "Vardiyalar arası asgari dinlenme (saat)",
+    "Repos minimal entre créneaux (heures)",
+    "Descanso mínimo entre turnos (horas)"
+  ],
+  "Maximum shifts per employee per week": [
+    "Çalışan başına haftalık azami vardiya",
+    "Nombre maximal de créneaux par employé et par semaine",
+    "Turnos máximos por empleado por semana"
+  ],
+  "Business weekly hour cap (optional)": [
+    "İşletme haftalık saat üst sınırı (isteğe bağlı)",
+    "Plafond hebdomadaire de l’entreprise (facultatif)",
+    "Límite de horas semanales de trabajo (opcional)"
+  ],
+  "Use each employee’s limit": [
+    "Her çalışanın kendi sınırını kullan",
+    "Utiliser la limite de chaque employé",
+    "Utilice el límite de cada empleado"
+  ],
+  "Select currency": [
+    "Para birimi seçin",
+    "Choisir une devise",
+    "Seleccionar moneda"
+  ],
+  "Maximum daily hours (optional)": [
+    "Günlük azami saat (isteğe bağlı)",
+    "Maximum d’heures par jour (facultatif)",
+    "Horas máximas diarias (opcional)"
+  ],
+  "Choose explicitly": [
+    "Açıkça seçin",
+    "Choisir explicitement",
+    "Elija explícitamente"
+  ],
+  "Allowed, subject to rest and hour limits": [
+    "Dinlenme ve saat sınırlarına bağlı olarak izin verilir",
+    "Autorisé sous réserve des limites d’heures et de repos",
+    "Permitido, sujeto a límites de descanso y horarios."
+  ],
+  "At most one shift per day": [
+    "Günde en fazla bir vardiya",
+    "Au plus un créneau par jour",
+    "Como máximo un turno por día"
+  ],
+  "Closed weekdays (optional)": [
+    "Kapalı günler (isteğe bağlı)",
+    "Jours de fermeture (facultatif)",
+    "Cerrado entre semana (opcional)"
+  ],
+  "Only these structured restrictions are stored. Free-text instructions are not executable rules.": [
+    "Yalnızca bu yapılandırılmış kısıtlar saklanır. Serbest metin talimatları çalıştırılabilir kurallar değildir.",
+    "Seules ces restrictions structurées sont enregistrées. Les consignes libres ne sont pas des règles exécutables.",
+    "Sólo se almacenan estas restricciones estructuradas. Las instrucciones de texto libre no son reglas ejecutables."
+  ],
+  "I have reviewed these business rules. They do not guarantee employment-law compliance.": [
+    "Bu işletme kurallarını inceledim. İş hukukuna uygunluk garantisi sağlamazlar.",
+    "J’ai vérifié ces règles métier. Elles ne garantissent pas la conformité au droit du travail.",
+    "He revisado estas reglas comerciales. No garantizan el cumplimiento de la legislación laboral."
+  ],
+  "Select exactly one file when replacing a source.": [
+    "Bir kaynağı değiştirmek için tam olarak bir dosya seçin.",
+    "Sélectionnez exactement un fichier pour remplacer une source.",
+    "Seleccione exactamente un archivo al reemplazar una fuente."
+  ],
+  "Upload at most 10 files per import.": [
+    "Her içe aktarmada en fazla 10 dosya yükleyin.",
+    "Importez au plus 10 fichiers à la fois.",
+    "Cargue como máximo 10 archivos por importación."
+  ],
+  "File exceeds the 2 MB limit.": [
+    "Dosya 2 MB sınırını aşıyor.",
+    "Le fichier dépasse la limite de 2 Mo.",
+    "El archivo supera el límite de 2 MB."
+  ],
+  "An import may contain at most 10,000 source records.": [
+    "Bir içe aktarma en fazla 10.000 kaynak kaydı içerebilir.",
+    "Un import peut contenir au plus 10 000 enregistrements source.",
+    "Una importación puede contener como máximo 10.000 registros de origen."
+  ],
+  "Upload at least one CSV file.": [
+    "En az bir CSV dosyası yükleyin.",
+    "Importez au moins un fichier CSV.",
+    "Cargue al menos un archivo CSV."
+  ],
+  "Rebuild from source files? This replaces current preview edits.": [
+    "Kaynak dosyalardan yeniden oluşturulsun mu? Mevcut önizleme düzenlemeleri değiştirilecektir.",
+    "Reconstruire à partir des sources ? Les modifications de l’aperçu seront remplacées.",
+    "¿Reconstruir a partir de archivos fuente? Esto reemplaza las ediciones de vista previa actuales."
+  ],
+  "Transformation complete. Review missing information and validation errors.": [
+    "Dönüştürme tamamlandı. Eksik bilgileri ve doğrulama hatalarını inceleyin.",
+    "Transformation terminée. Vérifiez les informations manquantes et les erreurs.",
+    "Transformación completa. Revisar la información faltante y los errores de validación."
+  ],
+  "Import profiles saved.": [
+    "İçe aktarma profilleri kaydedildi.",
+    "Profils d’import enregistrés.",
+    "Importar perfiles guardados."
+  ],
+  "Resolve all blocking errors and confirm the preview before saving.": [
+    "Kaydetmeden önce tüm engelleyici hataları düzeltin ve önizlemeyi onaylayın.",
+    "Corrigez les erreurs bloquantes et confirmez l’aperçu avant d’enregistrer.",
+    "Resuelva todos los errores de bloqueo y confirme la vista previa antes de guardar."
+  ],
+  "Validated data saved locally. No optimization has been run.": [
+    "Doğrulanmış veriler yerel olarak kaydedildi. Optimizasyon çalıştırılmadı.",
+    "Données validées enregistrées localement. Aucune optimisation n’a été exécutée.",
+    "Datos validados guardados localmente. No se ha ejecutado ninguna optimización."
+  ],
+  "Map columns": [
+    "Sütunları eşle",
+    "Associer les colonnes",
+    "Columnas del mapa"
+  ],
+  "Validate & correct": [
+    "Doğrula ve düzelt",
+    "Valider et corriger",
+    "Validar y corregir"
+  ],
+  "Configure rules": [
+    "Kuralları yapılandır",
+    "Configurer les règles",
+    "Configurar reglas"
+  ],
+  "Preview & save": [
+    "Önizle ve kaydet",
+    "Vérifier et enregistrer",
+    "Vista previa y guardar"
+  ],
+  "STOP OPTIMIZING AIR": [
+    "VARSAYIMLARI DEĞİL VERİYİ OPTİMİZE EDİN",
+    "OPTIMISEZ À PARTIR DE DONNÉES RÉELLES",
+    "DEJA DE OPTIMIZAR EL AIRE"
+  ],
+  "Start with validated data.": [
+    "Doğrulanmış verilerle başlayın.",
+    "Commencez par des données validées.",
+    "Comience con datos validados."
+  ],
+  "Your CSV files. Explicit rules. Clear decisions. No AI, no external uploads, no invented values.": [
+    "CSV dosyalarınız. Açık kurallar. Net kararlar. Yapay zekâ, harici yükleme veya uydurma değer yok.",
+    "Vos CSV. Des règles explicites. Des décisions claires. Sans IA, transfert externe ni valeurs inventées.",
+    "Tus archivos CSV. Reglas explícitas. Decisiones claras. Sin IA, sin cargas externas, sin valores inventados."
+  ],
+  "Processed in this browser": [
+    "Bu tarayıcıda işlenir",
+    "Traité dans ce navigateur",
+    "Procesado en este navegador"
+  ],
+  "Source mappings changed. Rebuild the preview before saving or exporting.": [
+    "Kaynak eşlemeleri değişti. Kaydetmeden veya dışa aktarmadan önce önizlemeyi yeniden oluşturun.",
+    "Les correspondances ont changé. Reconstruisez l’aperçu avant l’enregistrement ou l’export.",
+    "Las asignaciones de origen cambiaron. Reconstruya la vista previa antes de guardar o exportar."
+  ],
+  "Rebuild preview": [
+    "Önizlemeyi yeniden oluştur",
+    "Reconstruire l’aperçu",
+    "Reconstruir vista previa"
+  ],
+  "File encoding": [
+    "Dosya kodlaması",
+    "Encodage du fichier",
+    "Codificación de archivos"
+  ],
+  "UTF-8 or Unicode BOM detection": [
+    "UTF-8 veya Unicode BOM algılama",
+    "UTF-8 ou détection du BOM Unicode",
+    "Detección de lista de materiales UTF-8 o Unicode"
+  ],
+  "Detect from header": [
+    "Başlıktan algıla",
+    "Détecter depuis l’en-tête",
+    "Detectar desde el encabezado"
+  ],
+  "Upload action": [
+    "Yükleme işlemi",
+    "Action d’import",
+    "Subir acción"
+  ],
+  "Add new files": [
+    "Yeni dosyalar ekle",
+    "Ajouter des fichiers",
+    "Agregar nuevos archivos"
+  ],
+  "Drop CSV files here": [
+    "CSV dosyalarını buraya bırakın",
+    "Déposez vos fichiers CSV ici",
+    "Suelte archivos CSV aquí"
+  ],
+  "Up to 10 files · 2 MB per file · 5,000 rows per file": [
+    "En fazla 10 dosya · Dosya başına 2 MB · Dosya başına 5.000 satır",
+    "10 fichiers maximum · 2 Mo et 5 000 lignes par fichier",
+    "Hasta 10 archivos · 2 MB por archivo · 5000 filas por archivo"
+  ],
+  "Reading files…": [
+    "Dosyalar okunuyor…",
+    "Lecture des fichiers…",
+    "Leyendo archivos…"
+  ],
+  "Choose CSV files": [
+    "CSV dosyaları seç",
+    "Choisir des fichiers CSV",
+    "Elija archivos CSV"
+  ],
+  "Legacy encodings require an explicit choice. Unknown columns and unrelated files can remain unmapped.": [
+    "Eski kodlamalar açık seçim gerektirir. Bilinmeyen sütunlar ve ilgisiz dosyalar eşlenmeden bırakılabilir.",
+    "Les anciens encodages nécessitent un choix explicite. Les colonnes inconnues et les fichiers sans rapport peuvent rester non associés.",
+    "Las codificaciones heredadas requieren una elección explícita. Las columnas desconocidas y los archivos no relacionados pueden permanecer sin asignar."
+  ],
+  "Review mappings": [
+    "Eşlemeleri incele",
+    "Vérifier les correspondances",
+    "Revisar asignaciones"
+  ],
+  "Remove file": [
+    "Dosyayı kaldır",
+    "Retirer le fichier",
+    "Eliminar archivo"
+  ],
+  "Any CSV can be inspected. Not every CSV contains scheduling data.": [
+    "Her CSV incelenebilir. Her CSV planlama verisi içermez.",
+    "Tout CSV peut être examiné. Tous ne contiennent pas de données de planification.",
+    "Se puede inspeccionar cualquier CSV. No todos los CSV contienen datos de programación."
+  ],
+  "Wide weekly grids, assignments, sales, and payroll totals are not silently converted into availability or demand.": [
+    "Geniş haftalık tablolar, atamalar, satışlar ve bordro toplamları sessizce uygunluğa veya ihtiyaca dönüştürülmez.",
+    "Les grilles hebdomadaires, affectations, ventes et totaux de paie ne sont pas convertis automatiquement en disponibilités ou besoins.",
+    "Las amplias tablas semanales, las asignaciones, las ventas y los totales de nómina no se convierten silenciosamente en disponibilidad o demanda."
+  ],
+  "Upload files to review their columns.": [
+    "Sütunlarını incelemek için dosya yükleyin.",
+    "Importez des fichiers pour examiner leurs colonnes.",
+    "Sube archivos para revisar sus columnas."
+  ],
+  "Upload CSV files": [
+    "CSV dosyaları yükle",
+    "Importer des fichiers CSV",
+    "Subir archivos CSV"
+  ],
+  "Transform & validate": [
+    "Dönüştür ve doğrula",
+    "Transformer et valider",
+    "Transformar y validar"
+  ],
+  "Reusable import profiles": [
+    "Yeniden kullanılabilir içe aktarma profilleri",
+    "Profils d’import réutilisables",
+    "Perfiles de importación reutilizables"
+  ],
+  "Matching uses normalized headers, even when columns change order. Applying a profile never skips value validation or dataset confirmation.": [
+    "Sütun sırası değişse bile normalleştirilmiş başlıklar eşleştirilir. Profil kullanımı veri doğrulamasını veya veri kümesi onayını atlamaz.",
+    "Les en-têtes normalisés sont comparés même si leur ordre change. Un profil ne dispense jamais de valider les valeurs et la nature des données.",
+    "La coincidencia utiliza encabezados normalizados, incluso cuando las columnas cambian de orden. La aplicación de un perfil nunca omite la validación de valores o la confirmación del conjunto de datos."
+  ],
+  "Profile name": [
+    "Profil adı",
+    "Nom du profil",
+    "Nombre del perfil"
+  ],
+  "Save name": [
+    "Adı kaydet",
+    "Enregistrer le nom",
+    "Guardar nombre"
+  ],
+  "Delete profile": [
+    "Profili sil",
+    "Supprimer le profil",
+    "Eliminar perfil"
+  ],
+  "To edit mappings, apply a profile to a matching file, change the mappings, then save a new profile and delete the old one.": [
+    "Eşlemeleri düzenlemek için profili eşleşen bir dosyaya uygulayın, değiştirin, yeni profil olarak kaydedin ve eskisini silin.",
+    "Pour modifier les correspondances, appliquez le profil à un fichier compatible, ajustez-le, enregistrez un nouveau profil et supprimez l’ancien.",
+    "Para editar asignaciones, aplique un perfil a un archivo coincidente, cambie las asignaciones, luego guarde un perfil nuevo y elimine el anterior."
+  ],
+  "Correct the data, keep the source.": [
+    "Veriyi düzeltin, kaynağı koruyun.",
+    "Corrigez les données, conservez leur origine.",
+    "Corrija los datos, conserve la fuente."
+  ],
+  "Edit any cell, add missing records, or remove conflicts. Validation updates immediately. Source rows remain traceable.": [
+    "Hücreleri düzenleyin, eksik kayıtları ekleyin veya çakışmaları kaldırın. Doğrulama anında güncellenir. Kaynak satırlar izlenebilir kalır.",
+    "Modifiez les cellules, ajoutez les informations manquantes ou supprimez les conflits. La validation est immédiate et les sources restent traçables.",
+    "Edite cualquier celda, agregue registros faltantes o elimine conflictos. La validación se actualiza inmediatamente. Las filas de origen siguen siendo rastreables."
+  ],
+  "Validation refreshed.": [
+    "Doğrulama yenilendi.",
+    "Validation actualisée.",
+    "Validación actualizada."
+  ],
+  "Preview standardized data": [
+    "Standartlaştırılmış verileri önizle",
+    "Prévisualiser les données standardisées",
+    "Vista previa de datos estandarizados"
+  ],
+  "Unmapped source columns": [
+    "Eşlenmemiş kaynak sütunları",
+    "Colonnes source non associées",
+    "Columnas de origen no asignadas"
+  ],
+  "No unmapped source columns.": [
+    "Eşlenmemiş kaynak sütunu yok.",
+    "Aucune colonne source non associée.",
+    "No hay columnas de origen no asignadas."
+  ],
+  "I reviewed the records, rules, warnings, and unmapped columns. Save this dataset for Scheduling.": [
+    "Kayıtları, kuralları, uyarıları ve eşlenmemiş sütunları inceledim. Bu veri kümesini Planlama için kaydet.",
+    "J’ai vérifié les données, règles, alertes et colonnes non associées. Enregistrer pour Planification.",
+    "Revisé los registros, reglas, advertencias y columnas no asignadas. Guarde este conjunto de datos para programación."
+  ],
+  "Confirm & save validated data": [
+    "Doğrulanmış verileri onayla ve kaydet",
+    "Confirmer et enregistrer les données validées",
+    "Confirmar y guardar datos validados"
+  ],
+  "Saved locally in this browser. The demo optimizer stays separate; no schedule is generated by importing.": [
+    "Bu tarayıcıda yerel olarak saklanır. Demo çözücüsü ayrı kalır; içe aktarma çizelge oluşturmaz.",
+    "Stockage local dans ce navigateur. Le solveur de démonstration reste séparé ; l’import ne génère aucun planning.",
+    "Guardado localmente en este navegador. El optimizador de demostración permanece separado; no se genera ninguna programación al importar."
+  ],
+  "Preview records or correct the source CSV": [
+    "Kayıtları önizle veya kaynak CSV’yi düzelt",
+    "Prévisualiser les enregistrements ou corriger le CSV source",
+    "Vista previa de registros o corrección del CSV de origen"
+  ],
+  "Edit raw CSV": [
+    "Ham CSV’yi düzenle",
+    "Modifier le CSV brut",
+    "Editar CSV sin formato"
+  ],
+  "Reparse source and reset mappings": [
+    "Kaynağı yeniden ayrıştır ve eşlemeleri sıfırla",
+    "Relire la source et réinitialiser les correspondances",
+    "Analizar fuente y restablecer asignaciones"
+  ],
+  "What do these rows represent?": [
+    "Bu satırlar neyi temsil ediyor?",
+    "Que représentent ces lignes ?",
+    "¿Qué representan estas filas?"
+  ],
+  "Confirm the meaning, not just the column names. Existing assignments are not staffing demand.": [
+    "Yalnızca sütun adlarını değil anlamını onaylayın. Mevcut atamalar personel ihtiyacı değildir.",
+    "Confirmez le sens, pas seulement les noms de colonnes. Les affectations existantes ne sont pas des besoins.",
+    "Confirme el significado, no solo los nombres de las columnas. Las asignaciones existentes no son demanda de personal."
+  ],
+  "Leave every dataset unchecked for unrelated data or existing assignments.": [
+    "İlgisiz veriler veya mevcut atamalar için tüm veri kümelerini seçilmemiş bırakın.",
+    "Ne sélectionnez aucun jeu de données pour les informations sans rapport ou les affectations existantes.",
+    "Deje todos los conjuntos de datos sin marcar para datos no relacionados o asignaciones existentes."
+  ],
+  "Matching import profiles": [
+    "Eşleşen içe aktarma profilleri",
+    "Profils d’import compatibles",
+    "Perfiles de importación coincidentes"
+  ],
+  "Apply profile": [
+    "Profili uygula",
+    "Appliquer le profil",
+    "Aplicar perfil"
+  ],
+  "Source column": [
+    "Kaynak sütun",
+    "Colonne source",
+    "Columna de origen"
+  ],
+  "Sample values": [
+    "Örnek değerler",
+    "Exemples de valeurs",
+    "Valores de muestra"
+  ],
+  "Standard field": [
+    "Standart alan",
+    "Champ standard",
+    "Campo estándar"
+  ],
+  "Map column": [
+    "Sütunu eşle",
+    "Associer la colonne",
+    "Columna de mapa"
+  ],
+  "Confirmed by you": [
+    "Sizin tarafınızdan onaylandı",
+    "Confirmé par vous",
+    "Confirmado por ti"
+  ],
+  "Keep unmapped": [
+    "Eşlenmeden bırak",
+    "Laisser non associé",
+    "Mantener sin mapear"
+  ],
+  "Confirm suggested mapping": [
+    "Önerilen eşlemeyi onayla",
+    "Confirmer la correspondance proposée",
+    "Confirmar el mapeo sugerido"
+  ],
+  "Needs confirmation": [
+    "Onay gerekiyor",
+    "Confirmation requise",
+    "Necesita confirmación"
+  ],
+  "Conflicting mappings must be resolved.": [
+    "Çakışan eşlemeler çözülmelidir.",
+    "Les correspondances contradictoires doivent être résolues.",
+    "Es necesario resolver las asignaciones conflictivas."
+  ],
+  "Non-ISO date order": [
+    "ISO dışı tarih sırası",
+    "Ordre des dates non ISO",
+    "Orden de fecha no ISO"
+  ],
+  "Require clarification": [
+    "Açıklama gerektir",
+    "Demander une clarification",
+    "Requerir aclaración"
+  ],
+  "Decimal convention": [
+    "Ondalık sayı biçimi",
+    "Convention décimale",
+    "Convención decimal"
+  ],
+  "Role list separator": [
+    "Rol listesi ayıracı",
+    "Séparateur de la liste des rôles",
+    "Separador de lista de roles"
+  ],
+  "One role per cell or JSON list": [
+    "Hücre başına bir rol veya JSON listesi",
+    "Un rôle par cellule ou une liste JSON",
+    "Un rol por celda o lista JSON"
+  ],
+  "Confirm status values, including approved time off": [
+    "Onaylı izinler dahil durum değerlerini doğrulayın",
+    "Confirmer les statuts, y compris les congés approuvés",
+    "Confirmar los valores de estado, incluido el tiempo libre aprobado"
+  ],
+  "Available and unavailable are recognized. Map approved leave explicitly to unavailable. Other meanings require your decision.": [
+    "Available ve unavailable tanınır. Onaylı izni açıkça unavailable olarak eşleyin. Diğer anlamlar kararınızı gerektirir.",
+    "Available et unavailable sont reconnus. Associez explicitement les congés approuvés à unavailable. Les autres sens nécessitent votre décision.",
+    "Se reconocen disponibles y no disponibles. El mapa aprobado se deja explícitamente como no disponible. Otros significados requieren tu decisión."
+  ],
+  "Status meaning": [
+    "Durumun anlamı",
+    "Signification du statut",
+    "Significado del estado"
+  ],
+  "Use explicit recognized status only": [
+    "Yalnızca açıkça tanınan durumu kullan",
+    "Utiliser uniquement un statut explicitement reconnu",
+    "Utilice únicamente el estado reconocido explícito"
+  ],
+  "I confirm the selected datasets and column meanings. Shift requirements represent demand, not assignments.": [
+    "Seçilen veri kümelerini ve sütun anlamlarını onaylıyorum. Vardiya gereksinimleri atamaları değil ihtiyacı temsil eder.",
+    "Je confirme les jeux de données et le sens des colonnes. Les exigences représentent des besoins, pas des affectations.",
+    "Confirmo los conjuntos de datos seleccionados y los significados de las columnas. Los requisitos de turno representan demanda, no asignaciones."
+  ],
+  "Save mapping profile": [
+    "Eşleme profilini kaydet",
+    "Enregistrer le profil de correspondance",
+    "Guardar perfil de mapeo"
+  ],
+  "Unsupported encoding.": [
+    "Desteklenmeyen kodlama.",
+    "Encodage non pris en charge.",
+    "Codificación no compatible."
+  ],
+  "Cannot decode this file. Select its encoding and upload it again.": [
+    "Dosya çözümlenemiyor. Kodlamasını seçip yeniden yükleyin.",
+    "Impossible de décoder le fichier. Choisissez son encodage et réimportez-le.",
+    "No se puede decodificar este archivo. Seleccione su codificación y cárguelo nuevamente."
+  ],
+  "Delimiter is ambiguous. Choose a delimiter explicitly.": [
+    "Ayıraç belirsiz. Ayıracı açıkça seçin.",
+    "Séparateur ambigu. Choisissez-le explicitement.",
+    "El delimitador es ambiguo. Elija un delimitador explícitamente."
+  ],
+  "Unsupported delimiter.": [
+    "Desteklenmeyen ayıraç.",
+    "Séparateur non pris en charge.",
+    "Delimitador no admitido."
+  ],
+  "File exceeds the 5,000-row limit.": [
+    "Dosya 5.000 satır sınırını aşıyor.",
+    "Le fichier dépasse la limite de 5 000 lignes.",
+    "El archivo supera el límite de 5000 filas."
+  ],
+  "Unexpected characters after a quoted value.": [
+    "Tırnak içindeki değerden sonra beklenmeyen karakterler var.",
+    "Caractères inattendus après une valeur entre guillemets.",
+    "Caracteres inesperados después de un valor citado."
+  ],
+  "Unexpected quote in an unquoted value.": [
+    "Tırnaksız değerde beklenmeyen tırnak var.",
+    "Guillemet inattendu dans une valeur non délimitée.",
+    "Cotización inesperada en un valor no cotizado."
+  ],
+  "Unclosed quoted value. Check the source CSV.": [
+    "Kapanmamış tırnaklı değer. Kaynak CSV’yi kontrol edin.",
+    "Valeur entre guillemets non fermée. Vérifiez le CSV source.",
+    "Valor cotizado no cerrado. Verifique el CSV de origen."
+  ],
+  "The file is empty.": [
+    "Dosya boş.",
+    "Le fichier est vide.",
+    "El archivo está vacío."
+  ],
+  "Every column needs a nonempty header.": [
+    "Her sütunun boş olmayan bir başlığı olmalıdır.",
+    "Chaque colonne doit avoir un en-tête non vide.",
+    "Cada columna necesita un encabezado que no esté vacío."
+  ],
+  "Duplicate column headers must be renamed in the source CSV.": [
+    "Yinelenen sütun başlıklarını kaynak CSV’de yeniden adlandırın.",
+    "Renommez les en-têtes en double dans le CSV source.",
+    "Se debe cambiar el nombre de los encabezados de columnas duplicados en el CSV de origen."
+  ],
+  "File exceeds the 80-column limit.": [
+    "Dosya 80 sütun sınırını aşıyor.",
+    "Le fichier dépasse la limite de 80 colonnes.",
+    "El archivo supera el límite de 80 columnas."
+  ],
+  "Row length does not match the header.": [
+    "Satır uzunluğu başlıkla eşleşmiyor.",
+    "Le nombre de valeurs ne correspond pas à l’en-tête.",
+    "La longitud de la fila no coincide con el encabezado."
+  ],
+  "The file has headers but no records.": [
+    "Dosyada başlıklar var ancak kayıt yok.",
+    "Le fichier contient des en-têtes mais aucun enregistrement.",
+    "El archivo tiene encabezados pero no registros."
+  ],
+  "Imported scheduling data requires validation.": [
+    "İçe aktarılan planlama verilerinin doğrulanması gerekiyor.",
+    "Les données de planification importées doivent être validées.",
+    "Los datos de programación importados requieren validación."
+  ],
+  "The demo optimizer does not support imported roles, arbitrary shift windows, or these scheduling rules. An adapter must enforce all of them before optimization is enabled.": [
+    "Demo çözücüsü içe aktarılan rolleri, değişken vardiya aralıklarını veya bu planlama kurallarını desteklemez. Optimizasyondan önce bir bağdaştırıcı bunların tümünü uygulamalıdır.",
+    "Le solveur de démonstration ne prend pas en charge les rôles importés, les créneaux variables ou ces règles. Un adaptateur doit tous les appliquer avant d’activer l’optimisation.",
+    "El optimizador de demostración no admite roles importados, ventanas de turnos arbitrarios ni estas reglas de programación. Un adaptador debe aplicarlos todos antes de habilitar la optimización."
+  ],
+  "Choose DMY or MDY for non-ISO dates.": [
+    "ISO dışı tarihler için DMY veya MDY seçin.",
+    "Choisissez DMY ou MDY pour les dates non ISO.",
+    "Elija DMY o MDY para fechas que no sean ISO."
+  ],
+  "Invalid calendar date.": [
+    "Geçersiz takvim tarihi.",
+    "Date du calendrier non valide.",
+    "Fecha del calendario no válida."
+  ],
+  "Use HH:mm or an explicit AM/PM time.": [
+    "HH:mm veya açık AM/PM saat biçimini kullanın.",
+    "Utilisez HH:mm ou une heure explicitement indiquée AM/PM.",
+    "Utilice HH:mm o una hora explícita AM/PM."
+  ],
+  "Invalid time.": [
+    "Geçersiz saat.",
+    "Heure non valide.",
+    "Hora no válida."
+  ],
+  "Choose a decimal convention for fractional values.": [
+    "Kesirli değerler için ondalık sayı biçimi seçin.",
+    "Choisissez une convention décimale pour les valeurs fractionnaires.",
+    "Elija una convención decimal para valores fraccionarios."
+  ],
+  "Invalid decimal. Currency symbols and thousands separators are not supported.": [
+    "Geçersiz ondalık sayı. Para birimi simgeleri ve binlik ayıraçlar desteklenmez.",
+    "Décimal non valide. Les symboles monétaires et séparateurs de milliers ne sont pas pris en charge.",
+    "Decimal no válido. No se admiten símbolos de moneda ni separadores de miles."
+  ],
+  "Invalid number.": [
+    "Geçersiz sayı.",
+    "Nombre non valide.",
+    "Número no válido."
+  ],
+  "Roles must be a JSON list of role names.": [
+    "Roller JSON biçiminde bir rol adları listesi olmalıdır.",
+    "Les rôles doivent être une liste JSON de noms de rôles.",
+    "Los roles deben ser una lista JSON de nombres de roles."
+  ],
+  "Confirm how this status maps to available or unavailable.": [
+    "Bu durumun available veya unavailable karşılığını onaylayın.",
+    "Confirmez la correspondance de ce statut avec available ou unavailable.",
+    "Confirme cómo este estado se asigna a disponible o no disponible."
+  ],
+  "Confirm what the source rows represent before transforming.": [
+    "Dönüştürmeden önce kaynak satırların neyi temsil ettiğini onaylayın.",
+    "Confirmez ce que représentent les lignes avant la transformation.",
+    "Confirme lo que representan las filas de origen antes de transformar."
+  ],
+  "No scheduling datasets selected. This file is retained as unrelated information.": [
+    "Planlama veri kümesi seçilmedi. Dosya ilgisiz bilgi olarak tutulur.",
+    "Aucun jeu de données de planification sélectionné. Ce fichier est conservé comme information sans rapport.",
+    "No se han seleccionado conjuntos de datos de programación. Este archivo se conserva como información no relacionada."
+  ],
+  "Confirm or clear all suggested mappings.": [
+    "Önerilen tüm eşlemeleri onaylayın veya temizleyin.",
+    "Confirmez ou effacez toutes les correspondances proposées.",
+    "Confirme o borre todas las asignaciones sugeridas."
+  ],
+  "No source column is mapped to this required field. Fill it in the preview.": [
+    "Bu zorunlu alana eşlenmiş kaynak sütunu yok. Önizlemede doldurun.",
+    "Aucune colonne n’est associée à ce champ obligatoire. Complétez-le dans l’aperçu.",
+    "No hay ninguna columna de origen asignada a este campo obligatorio. Rellénelo en la vista previa."
+  ],
+  "Unsupported value.": [
+    "Desteklenmeyen değer.",
+    "Valeur non prise en charge.",
+    "Valor no admitido."
+  ],
+  "Identical repeated employee rows were consolidated with source traceability.": [
+    "Aynı çalışan bilgilerini içeren tekrarlar kaynak izlenebilirliği korunarak birleştirildi.",
+    "Les lignes employé identiques ont été regroupées en conservant la traçabilité.",
+    "Se consolidaron filas de empleados repetidas idénticas con trazabilidad de origen."
+  ],
+  "Give the profile a name.": [
+    "Profile bir ad verin.",
+    "Donnez un nom au profil.",
+    "Dale un nombre al perfil."
+  ],
+  "Confirm the dataset types and resolve mappings before saving a profile.": [
+    "Profil kaydetmeden önce veri türlerini onaylayın ve eşlemeleri çözün.",
+    "Confirmez les types de données et résolvez les correspondances avant d’enregistrer le profil.",
+    "Confirme los tipos de conjuntos de datos y resuelva las asignaciones antes de guardar un perfil."
+  ],
+  "Profile columns do not match this file.": [
+    "Profil sütunları bu dosyayla eşleşmiyor.",
+    "Les colonnes du profil ne correspondent pas à ce fichier.",
+    "Las columnas del perfil no coinciden con este archivo."
+  ],
+  "Profile contains an unsupported target field.": [
+    "Profil desteklenmeyen bir hedef alan içeriyor.",
+    "Le profil contient un champ cible non pris en charge.",
+    "El perfil contiene un campo de destino no admitido."
+  ],
+  "Reused profile. New values still require validation.": [
+    "Profil yeniden kullanıldı. Yeni değerler yine doğrulanmalıdır.",
+    "Profil réutilisé. Les nouvelles valeurs doivent toujours être validées.",
+    "Perfil reutilizado. Los nuevos valores aún requieren validación."
+  ],
+  "Ambiguous meaning. Confirm or change this mapping.": [
+    "Anlam belirsiz. Bu eşlemeyi onaylayın veya değiştirin.",
+    "Sens ambigu. Confirmez ou modifiez cette correspondance.",
+    "Significado ambiguo. Confirme o cambie esta asignación."
+  ],
+  "Exact recognized alias": [
+    "Tam tanınan eş ad",
+    "Alias exact reconnu",
+    "Alias ​​reconocido exactamente"
+  ],
+  "Wide schedules require explicit dates and separate rows.": [
+    "Geniş çizelgeler açık tarihler ve ayrı satırlar gerektirir.",
+    "Les grilles larges nécessitent des dates explicites et des lignes distinctes.",
+    "Los horarios amplios requieren fechas explícitas y filas separadas."
+  ],
+  "No safe match. Keep unmapped or choose a field.": [
+    "Güvenli eşleşme yok. Eşlenmeden bırakın veya alan seçin.",
+    "Aucune correspondance certaine. Laissez non associé ou choisissez un champ.",
+    "No hay coincidencia segura. Mantener sin asignar o elegir un campo."
+  ],
+  "Resolve all blocking errors before saving.": [
+    "Kaydetmeden önce tüm engelleyici hataları düzeltin.",
+    "Corrigez toutes les erreurs bloquantes avant d’enregistrer.",
+    "Resuelva todos los errores de bloqueo antes de guardar."
+  ],
+  "Browser storage is full or unavailable. Nothing was confirmed. Export the CSV files instead.": [
+    "Tarayıcı depolaması dolu veya kullanılamıyor. İşlem onaylanmadı. Bunun yerine CSV dosyalarını dışa aktarın.",
+    "Le stockage du navigateur est plein ou indisponible. Rien n’a été confirmé. Exportez plutôt les CSV.",
+    "El almacenamiento del navegador está lleno o no está disponible. No se confirmó nada. En su lugar, exporte los archivos CSV."
+  ],
+  "Saved import is incomplete. Review and save it again.": [
+    "Kaydedilmiş içe aktarma eksik. İnceleyip yeniden kaydedin.",
+    "L’import enregistré est incomplet. Vérifiez-le puis enregistrez-le à nouveau.",
+    "La importación guardada está incompleta. Revíselo y guárdelo nuevamente."
+  ],
+  "Saved import failed validation. Review the data before using it.": [
+    "Kaydedilmiş içe aktarma doğrulanamadı. Kullanmadan önce verileri inceleyin.",
+    "L’import enregistré n’a pas passé la validation. Vérifiez les données avant utilisation.",
+    "La importación guardada falló en la validación. Revisa los datos antes de usarlo."
+  ],
+  "Saved profiles could not be read.": [
+    "Kaydedilmiş profiller okunamadı.",
+    "Les profils enregistrés n’ont pas pu être lus.",
+    "No se pudieron leer los perfiles guardados."
+  ],
+  "Profile storage is full or unavailable.": [
+    "Profil depolaması dolu veya kullanılamıyor.",
+    "Le stockage des profils est plein ou indisponible.",
+    "El almacenamiento del perfil está lleno o no está disponible."
+  ],
+  "Review and confirm the scheduling rules.": [
+    "Planlama kurallarını inceleyin ve onaylayın.",
+    "Vérifiez et confirmez les règles de planification.",
+    "Revisar y confirmar las reglas de programación."
+  ],
+  "Enter a minimum rest period from 0 to 168 hours.": [
+    "0–168 saat arasında asgari dinlenme süresi girin.",
+    "Indiquez un repos minimal de 0 à 168 heures.",
+    "Introduzca un período mínimo de descanso de 0 a 168 horas."
+  ],
+  "Enter a maximum from 1 to 168 shifts per week.": [
+    "Haftada 1–168 vardiya arasında bir üst sınır girin.",
+    "Indiquez un maximum de 1 à 168 créneaux par semaine.",
+    "Introduzca un máximo de 1 a 168 turnos por semana."
+  ],
+  "The optional weekly limit must be greater than 0 and at most 168 hours.": [
+    "İsteğe bağlı haftalık sınır 0’dan büyük ve en fazla 168 saat olmalıdır.",
+    "La limite hebdomadaire facultative doit être supérieure à 0 et au plus égale à 168 heures.",
+    "El límite semanal opcional debe ser superior a 0 y como máximo 168 horas."
+  ],
+  "The optional daily limit must be greater than 0 and at most 24 hours.": [
+    "İsteğe bağlı günlük sınır 0’dan büyük ve en fazla 24 saat olmalıdır.",
+    "La limite quotidienne facultative doit être supérieure à 0 et au plus égale à 24 heures.",
+    "El límite diario opcional debe ser mayor a 0 y como máximo 24 horas."
+  ],
+  "Choose a valid IANA business timezone.": [
+    "Geçerli bir IANA işletme saat dilimi seçin.",
+    "Choisissez un fuseau horaire IANA valide.",
+    "Elija una zona horaria comercial válida de la IANA."
+  ],
+  "Choose a supported ISO currency code.": [
+    "Desteklenen bir ISO para birimi kodu seçin.",
+    "Choisissez un code de devise ISO pris en charge.",
+    "Elija un código de moneda ISO compatible."
+  ],
+  "Choose a valid scheduling week start.": [
+    "Geçerli bir planlama haftası başlangıcı seçin.",
+    "Choisissez un début de semaine de planification valide.",
+    "Elija un inicio de semana de programación válido."
+  ],
+  "Closed weekdays must be valid weekday numbers.": [
+    "Kapalı günler geçerli hafta günü numaraları olmalıdır.",
+    "Les jours de fermeture doivent être des numéros de jours valides.",
+    "Los días laborables cerrados deben ser números de días laborables válidos."
+  ],
+  "Confirm whether multiple shifts per day are allowed.": [
+    "Aynı gün birden fazla vardiyaya izin verilip verilmediğini onaylayın.",
+    "Confirmez si plusieurs créneaux le même jour sont autorisés.",
+    "Confirme si se permiten varios turnos por día."
+  ],
+  "This required dataset has no records.": [
+    "Bu zorunlu veri kümesinde kayıt yok.",
+    "Ce jeu de données obligatoire ne contient aucun enregistrement.",
+    "Este conjunto de datos requerido no tiene registros."
+  ],
+  "Required value is missing.": [
+    "Zorunlu değer eksik.",
+    "Valeur obligatoire manquante.",
+    "Falta el valor requerido."
+  ],
+  "Spreadsheet formula-like text is preserved. Import exports as text in spreadsheet software.": [
+    "Elektronik tablo formülüne benzeyen metin korundu. Dışa aktarılan verileri tablo yazılımına metin olarak alın.",
+    "Le texte ressemblant à une formule est conservé. Importez les exports comme texte dans votre tableur.",
+    "Se conserva el texto similar a una fórmula de hoja de cálculo. Importe exportaciones como texto en software de hoja de cálculo."
+  ],
+  "Duplicate employee ID. Merge or remove the conflicting record.": [
+    "Yinelenen çalışan kimliği. Çakışan kaydı birleştirin veya kaldırın.",
+    "Identifiant d’employé en double. Fusionnez ou supprimez le conflit.",
+    "Identificación de empleado duplicada. Fusionar o eliminar el registro en conflicto."
+  ],
+  "Hourly rate must be a nonnegative decimal without currency symbols.": [
+    "Saatlik ücret para birimi simgesi içermeyen, negatif olmayan bir ondalık sayı olmalıdır.",
+    "Le taux horaire doit être un décimal non négatif, sans symbole monétaire.",
+    "La tarifa por hora debe ser un decimal no negativo sin símbolos de moneda."
+  ],
+  "Weekly hours must be greater than 0 and at most 168.": [
+    "Haftalık saat 0’dan büyük ve en fazla 168 olmalıdır.",
+    "Les heures hebdomadaires doivent être supérieures à 0 et au plus égales à 168.",
+    "Las horas semanales deben ser mayores a 0 y como máximo 168."
+  ],
+  "Duplicate role names in the role list.": [
+    "Rol listesinde yinelenen rol adları var.",
+    "Noms de rôles en double dans la liste.",
+    "Nombres de roles duplicados en la lista de roles."
+  ],
+  "Roles must be a nonempty JSON list of role names.": [
+    "Roller boş olmayan bir JSON rol adları listesi olmalıdır.",
+    "Les rôles doivent être une liste JSON non vide de noms de rôles.",
+    "Los roles deben ser una lista JSON no vacía de nombres de roles."
+  ],
+  "Date must be a real ISO date: YYYY-MM-DD.": [
+    "Tarih geçerli bir ISO tarihi olmalıdır: YYYY-MM-DD.",
+    "La date doit être une date ISO réelle : YYYY-MM-DD.",
+    "La fecha debe ser una fecha ISO real: AAAA-MM-DD."
+  ],
+  "Time must use 24-hour HH:mm.": [
+    "Saat 24 saatlik HH:mm biçiminde olmalıdır.",
+    "L’heure doit utiliser le format HH:mm sur 24 heures.",
+    "El tiempo debe ser de 24 horas HH:mm."
+  ],
+  "End time must be later on the same day. Overnight windows are unsupported.": [
+    "Bitiş aynı gün daha geç olmalıdır. Gece yarısını aşan aralıklar desteklenmez.",
+    "La fin doit être plus tard le même jour. Les plages passant minuit ne sont pas prises en charge.",
+    "La hora de finalización debe ser más tarde el mismo día. Las ventanas nocturnas no son compatibles."
+  ],
+  "Employee ID does not reference an imported employee.": [
+    "Çalışan kimliği içe aktarılan bir çalışanı göstermiyor.",
+    "L’identifiant ne correspond à aucun employé importé.",
+    "La identificación del empleado no hace referencia a un empleado importado."
+  ],
+  "Status must be explicitly available or unavailable.": [
+    "Durum açıkça available veya unavailable olmalıdır.",
+    "Le statut doit être explicitement available ou unavailable.",
+    "El estado debe estar explícitamente disponible o no disponible."
+  ],
+  "Duplicate availability record. Remove the duplicate.": [
+    "Yinelenen uygunluk kaydı. Tekrarı kaldırın.",
+    "Disponibilité en double. Supprimez le doublon.",
+    "Registro de disponibilidad duplicado. Elimina el duplicado."
+  ],
+  "Duplicate shift ID. Each role requirement needs a distinct ID.": [
+    "Yinelenen vardiya kimliği. Her rol gereksiniminin ayrı kimliği olmalıdır.",
+    "Identifiant de créneau en double. Chaque besoin de rôle doit avoir un identifiant distinct.",
+    "ID de turno duplicado. Cada requisito de rol necesita una identificación distinta."
+  ],
+  "Required count must be a positive integer.": [
+    "Gerekli personel sayısı pozitif bir tamsayı olmalıdır.",
+    "L’effectif requis doit être un entier positif.",
+    "El recuento requerido debe ser un número entero positivo."
+  ],
+  "Required role does not match an imported employee role. Role names are case-sensitive.": [
+    "Gerekli rol içe aktarılan çalışan rolleriyle eşleşmiyor. Rol adları büyük/küçük harfe duyarlıdır.",
+    "Le rôle requis ne correspond à aucun rôle importé. Les noms de rôles sont sensibles à la casse.",
+    "El rol requerido no coincide con el rol de empleado importado. Los nombres de funciones distinguen entre mayúsculas y minúsculas."
+  ],
+  "Shift is outside the configured seven-day scheduling period.": [
+    "Vardiya yapılandırılan yedi günlük dönemin dışında.",
+    "Le créneau est hors de la période de sept jours configurée.",
+    "El turno está fuera del período de programación de siete días configurado."
+  ],
+  "A shift requirement falls on a configured closed weekday.": [
+    "Vardiya gereksinimi kapalı olarak yapılandırılan bir güne denk geliyor.",
+    "Un besoin de personnel tombe un jour de fermeture configuré.",
+    "Un requisito de turno cae en un día laborable cerrado configurado."
+  ],
+  "Available and unavailable windows overlap. Split the windows or correct the conflict.": [
+    "Uygun ve uygun olmayan aralıklar çakışıyor. Aralıkları bölün veya çakışmayı düzeltin.",
+    "Des plages disponibles et indisponibles se chevauchent. Scindez-les ou corrigez le conflit.",
+    "Las ventanas disponibles y no disponibles se superponen. Divida las ventanas o corrija el conflicto."
+  ],
+  "Availability windows overlap with the same status.": [
+    "Aynı durumdaki uygunluk aralıkları çakışıyor.",
+    "Des plages de disponibilité de même statut se chevauchent.",
+    "Las ventanas de disponibilidad se superponen con el mismo estado."
+  ],
+  "No availability was supplied for this employee. Missing availability remains unknown.": [
+    "Bu çalışan için uygunluk verilmedi. Eksik uygunluk bilinmiyor olarak kalır.",
+    "Aucune disponibilité fournie pour cet employé. Les disponibilités manquantes restent inconnues.",
+    "No se proporcionó disponibilidad para este empleado. La disponibilidad faltante sigue siendo desconocida."
+  ],
+  "Known availability and roles cannot cover this requirement. Data is valid, but scheduling may be infeasible.": [
+    "Bilinen uygunluklar ve roller bu ihtiyacı karşılamıyor. Veri geçerli, ancak planlama çözümsüz olabilir.",
+    "Les disponibilités et rôles connus ne couvrent pas ce besoin. Les données sont valides, mais le planning peut être irréalisable.",
+    "La disponibilidad y los roles conocidos no pueden cubrir este requisito. Los datos son válidos, pero la programación puede resultar inviable."
+  ],
+  "employees": [
+    "Çalışanlar",
+    "Employés",
+    "empleados"
+  ],
+  "availability": [
+    "Uygunluk",
+    "Disponibilités",
+    "disponibilidad"
+  ],
+  "shifts": [
+    "Vardiya gereksinimleri",
+    "Besoins en personnel",
+    "turnos"
+  ],
+  "Error": [
+    "Hata",
+    "Erreur",
+    "Error"
+  ],
+  "Warning": [
+    "Uyarı",
+    "Alerte",
+    "Advertencia"
+  ],
+  "Record": [
+    "Kayıt",
+    "Enregistrement",
+    "Registro"
+  ],
+  "Source": [
+    "Kaynak",
+    "Source",
+    "Fuente"
+  ],
+  "Previous": [
+    "Önceki",
+    "Précédent",
+    "Anterior"
+  ],
+  "Next": [
+    "Sonraki",
+    "Suivant",
+    "Próximo"
+  ],
+  "Allowed": [
+    "İzin veriliyor",
+    "Autorisé",
+    "Permitido"
+  ],
+  "Upload": [
+    "Yükle",
+    "Importer",
+    "Subir"
+  ],
+  "Dismiss": [
+    "Kapat",
+    "Fermer",
+    "Despedir"
+  ],
+  "Delimiter": [
+    "Ayıraç",
+    "Séparateur",
+    "Delimitador"
+  ],
+  "Comma": [
+    "Virgül",
+    "Virgule",
+    "Coma"
+  ],
+  "Semicolon": [
+    "Noktalı virgül",
+    "Point-virgule",
+    "Punto y coma"
+  ],
+  "Replace": [
+    "Değiştir",
+    "Remplacer",
+    "Reemplazar"
+  ],
+  "records": [
+    "kayıt",
+    "enregistrements",
+    "archivos"
+  ],
+  "columns": [
+    "sütun",
+    "colonnes",
+    "columnas"
+  ],
+  "Validation": [
+    "Doğrulama",
+    "Validation",
+    "Validación"
+  ],
+  "errors": [
+    "hata",
+    "erreurs",
+    "errores"
+  ],
+  "warnings": [
+    "uyarı",
+    "alertes",
+    "advertencias"
+  ],
+  "Line": [
+    "Satır",
+    "Ligne",
+    "Línea"
+  ],
+  "Recognition": [
+    "Tanıma",
+    "Reconnaissance",
+    "Reconocimiento"
+  ],
+  "Automatic": [
+    "Otomatik",
+    "Automatique",
+    "Automático"
+  ],
+  "Confirmed": [
+    "Onaylandı",
+    "Confirmé",
+    "Confirmado"
+  ],
+  "Unmapped": [
+    "Eşlenmemiş",
+    "Non associé",
+    "no mapeado"
+  ],
+  "Irrelevant": [
+    "İlgisiz",
+    "Sans rapport",
+    "Irrelevante"
+  ],
+  "Revalidate": [
+    "Yeniden doğrula",
+    "Revalider",
+    "Revalidar"
+  ],
+  "Sunday": [
+    "Pazar",
+    "Dimanche",
+    "Domingo"
+  ],
+  "Monday": [
+    "Pazartesi",
+    "Lundi",
+    "Lunes"
+  ],
+  "Tuesday": [
+    "Salı",
+    "Mardi",
+    "Martes"
+  ],
+  "Wednesday": [
+    "Çarşamba",
+    "Mercredi",
+    "Miércoles"
+  ],
+  "Thursday": [
+    "Perşembe",
+    "Jeudi",
+    "Jueves"
+  ],
+  "Friday": [
+    "Cuma",
+    "Vendredi",
+    "Viernes"
+  ],
+  "Saturday": [
+    "Cumartesi",
+    "Samedi",
+    "Sábado"
+  ],
+  "Replace this saved profile with the confirmed mappings?": [
+    "Kaydedilmiş profil bu onaylı eşlemelerle değiştirilsin mi?",
+    "Remplacer ce profil par les correspondances confirmées ?",
+    "¿Reemplazar este perfil guardado con las asignaciones confirmadas?"
+  ],
+  "To edit a profile, apply it to a matching file, adjust and confirm the mappings, then save with the same profile name.": [
+    "Profili düzenlemek için eşleşen dosyaya uygulayın, eşlemeleri düzenleyip onaylayın ve aynı adla kaydedin.",
+    "Pour modifier un profil, appliquez-le à un fichier compatible, ajustez et confirmez les correspondances, puis enregistrez sous le même nom.",
+    "Para editar un perfil, aplíquelo a un archivo coincidente, ajuste y confirme las asignaciones, luego guárdelo con el mismo nombre de perfil."
+  ],
+  "Unrelated / existing assignments": [
+    "İlgisiz / mevcut atamalar",
+    "Sans rapport / affectations existantes",
+    "Asignaciones no relacionadas/existentes"
+  ],
+  "This source row did not produce a record for the selected datasets.": [
+    "Bu kaynak satır seçilen veri kümeleri için kayıt oluşturmadı.",
+    "Cette ligne source n’a produit aucun enregistrement pour les jeux de données sélectionnés.",
+    "Esta fila de origen no produjo un registro para los conjuntos de datos seleccionados."
+  ],
+  "Parsing validation": [
+    "Ayrıştırma doğrulaması",
+    "Validation de lecture",
+    "Validación de análisis"
+  ],
+  "Mapping validation": [
+    "Eşleme doğrulaması",
+    "Validation des correspondances",
+    "Validación de mapeo"
+  ],
+  "Dataset validation": [
+    "Veri kümesi doğrulaması",
+    "Validation des données",
+    "Validación del conjunto de datos"
+  ],
+  "Complete": [
+    "Tamamlandı",
+    "Terminé",
+    "Completo"
+  ],
+  "Needs attention": [
+    "İnceleme gerekiyor",
+    "À vérifier",
+    "necesita atencion"
+  ],
+  "Not started": [
+    "Başlatılmadı",
+    "Non commencé",
+    "No iniciado"
+  ],
+  "Not validated": [
+    "Doğrulanmadı",
+    "Non validé",
+    "No validado"
+  ],
+  "No scheduling data": [
+    "Çizelgeleme verisi yok",
+    "Aucune donnée de planification",
+    "Sin datos de programación"
+  ],
+  "Mapping and transformation issues": [
+    "Eşleme ve dönüştürme sorunları",
+    "Problèmes de correspondance et de transformation",
+    "Problemas de mapeo y transformación"
+  ],
+  "Transformation preview": [
+    "Dönüştürme önizlemesi",
+    "Aperçu de la transformation",
+    "Vista previa de la transformación"
+  ],
+  "Transformation": [
+    "Dönüştürme",
+    "Transformation",
+    "Transformación"
+  ],
+  "Direct mapping": [
+    "Doğrudan eşleme",
+    "Correspondance directe",
+    "Mapeo directo"
+  ],
+  "Date parsing": [
+    "Tarih ayrıştırma",
+    "Interprétation des dates",
+    "análisis de fecha"
+  ],
+  "Time parsing": [
+    "Saat ayrıştırma",
+    "Interprétation des heures",
+    "análisis de tiempo"
+  ],
+  "Value normalization": [
+    "Değer normalleştirme",
+    "Normalisation des valeurs",
+    "Normalización de valores"
+  ],
+  "Split into start_time and end_time": [
+    "start_time ve end_time alanlarına böl",
+    "Séparer en start_time et end_time",
+    "Dividir en hora_inicio y hora_final"
+  ],
+  "Overnight interpretation": [
+    "Gece yarısını aşan aralık",
+    "Interprétation des horaires de nuit",
+    "Interpretación nocturna"
+  ],
+  "Earlier end time means next day": [
+    "Daha erken bitiş saati ertesi gün anlamına gelir",
+    "Une heure de fin antérieure indique le lendemain",
+    "Una hora de finalización más temprana significa el día siguiente"
+  ],
+  "Needs clarification": [
+    "Açıklığa kavuşturulmalı",
+    "À clarifier",
+    "Necesita aclaración"
+  ],
+  "Inspect profile": [
+    "Profili incele",
+    "Consulter le profil",
+    "Inspeccionar perfil"
+  ],
+  "Original uploaded CSV": [
+    "Yüklenen özgün CSV",
+    "CSV original importé",
+    "CSV original subido"
+  ],
+  "YES → available; NO → unavailable. Review every distinct source value. Unknown values require your decision.": [
+    "YES → available; NO → unavailable. Her farklı kaynak değerini inceleyin. Bilinmeyen değerler için kararınız gerekir.",
+    "YES → available ; NO → unavailable. Vérifiez chaque valeur source distincte. Les valeurs inconnues nécessitent votre décision.",
+    "SÍ → disponible; NO → no disponible. Revise cada valor de fuente distinto. Los valores desconocidos requieren su decisión."
+  ],
+  "Individual CSV exports validate that dataset. Missing employee references remain unverified; full scheduling approval still requires all datasets and rules.": [
+    "Ayrı CSV dışa aktarımları ilgili veri kümesini doğrular. Eksik çalışan referansları doğrulanmamış kalır; çizelgeleme onayı için tüm veri kümeleri ve kurallar gereklidir.",
+    "Chaque export CSV valide le jeu de données concerné. Les références aux employés absents restent non vérifiées ; l’approbation pour la planification exige tous les jeux de données et règles.",
+    "Las exportaciones CSV individuales validan ese conjunto de datos. Las referencias de empleados que faltan siguen sin verificarse; La aprobación completa de la programación aún requiere todos los conjuntos de datos y reglas."
+  ],
+  "Dates use YYYY-MM-DD; times use HH:mm. Set end_date explicitly for overnight intervals; blank means same day.": [
+    "Tarihler YYYY-MM-DD, saatler HH:mm biçimindedir. Gece yarısını aşan aralıklar için end_date belirtin; boş bırakılırsa aynı gün kabul edilir.",
+    "Dates au format YYYY-MM-DD, heures au format HH:mm. Renseignez end_date pour les intervalles de nuit ; une cellule vide indique le même jour.",
+    "Las fechas utilizan AAAA-MM-DD; veces se utiliza HH:mm. Establezca end_date explícitamente para intervalos nocturnos; En blanco significa el mismo día."
+  ],
+  "Time range detected. Confirm the transformation and dataset meaning.": [
+    "Saat aralığı algılandı. Dönüştürmeyi ve veri kümesinin anlamını onaylayın.",
+    "Plage horaire détectée. Confirmez la transformation et la nature des données.",
+    "Rango de tiempo detectado. Confirme la transformación y el significado del conjunto de datos."
+  ],
+  "Map or derive this required field before approval.": [
+    "Onaylamadan önce bu zorunlu alanı eşleyin veya türetin.",
+    "Associez ou dérivez ce champ obligatoire avant approbation.",
+    "Asigne o derive este campo obligatorio antes de la aprobación."
+  ],
+  "Retained as unrelated data; no scheduling records will be produced.": [
+    "İlgisiz veri olarak saklanır; çizelgeleme kaydı üretilmez.",
+    "Conservé comme données sans rapport ; aucun enregistrement de planification ne sera produit.",
+    "Conservados como datos no relacionados; no se producirán registros de programación."
+  ],
+  "A time-range transformation must target start_time and end_time.": [
+    "Saat aralığı dönüştürmesi start_time ve end_time alanlarını hedeflemelidir.",
+    "Une transformation de plage horaire doit cibler start_time et end_time.",
+    "Una transformación de rango de tiempo debe tener como destino hora_inicial y hora_final."
+  ],
+  "Date parsing requires a date field.": [
+    "Tarih ayrıştırma için bir tarih alanı gerekir.",
+    "L’interprétation des dates nécessite un champ de date.",
+    "El análisis de fechas requiere un campo de fecha."
+  ],
+  "Time parsing requires a time field.": [
+    "Saat ayrıştırma için bir saat alanı gerekir.",
+    "L’interprétation des heures nécessite un champ horaire.",
+    "El análisis de tiempo requiere un campo de tiempo."
+  ],
+  "Status normalization requires the status field.": [
+    "Durum normalleştirme için status alanı gerekir.",
+    "La normalisation des statuts nécessite le champ status.",
+    "La normalización del estado requiere el campo de estado."
+  ],
+  "Use a complete time range, for example 09:00–17:00 or 9 AM - 5 PM.": [
+    "Tam bir saat aralığı kullanın, örneğin 09:00–17:00 veya 9 AM - 5 PM.",
+    "Utilisez une plage horaire complète, par exemple 09:00–17:00 ou 9 AM - 5 PM.",
+    "Utilice un intervalo de tiempo completo, por ejemplo, de 09:00 a 17:00 o de 9 a. m. a 5 p. m."
+  ],
+  "Specify AM/PM on both times, or use 24-hour times.": [
+    "Her iki saatte de AM/PM belirtin veya 24 saat biçimini kullanın.",
+    "Précisez AM/PM pour les deux heures, ou utilisez le format 24 heures.",
+    "Especifique AM/PM en ambos horarios o utilice horarios de 24 horas."
+  ],
+  "Equal start and end times are ambiguous. Supply separate times and an explicit end date.": [
+    "Aynı başlangıç ve bitiş saatleri belirsizdir. Saatleri ayrı alanlarda ve açık bir bitiş tarihiyle belirtin.",
+    "Des heures de début et de fin identiques sont ambiguës. Indiquez des heures séparées et une date de fin explicite.",
+    "Los tiempos de inicio y finalización iguales son ambiguos. Proporcione horarios separados y una fecha de finalización explícita."
+  ],
+  "A valid start date is required to derive the next-day end date.": [
+    "Ertesi günün bitiş tarihini türetmek için geçerli bir başlangıç tarihi gerekir.",
+    "Une date de début valide est nécessaire pour calculer la date de fin du lendemain.",
+    "Se requiere una fecha de inicio válida para derivar la fecha de finalización del día siguiente."
+  ],
+  "End date is outside the supported calendar range.": [
+    "Bitiş tarihi desteklenen takvim aralığının dışında.",
+    "La date de fin dépasse la plage de dates prise en charge.",
+    "La fecha de finalización está fuera del rango del calendario admitido."
+  ],
+  "Overnight interval: confirm next-day interpretation or supply an explicit end_date.": [
+    "Gece yarısını aşan aralık: ertesi gün yorumunu onaylayın veya açık bir end_date belirtin.",
+    "Intervalle de nuit : confirmez le passage au lendemain ou renseignez explicitement end_date.",
+    "Intervalo nocturno: confirme la interpretación del día siguiente o proporcione una fecha de finalización explícita."
+  ],
+  "End date must be a real ISO date: YYYY-MM-DD.": [
+    "Bitiş tarihi geçerli bir ISO tarihi olmalıdır: YYYY-MM-DD.",
+    "La date de fin doit être une date ISO valide : YYYY-MM-DD.",
+    "La fecha de finalización debe ser una fecha ISO real: AAAA-MM-DD."
+  ],
+  "Time windows must be positive and at most 24 hours. Overnight intervals require an explicit next-day end_date.": [
+    "Saat aralıkları pozitif ve en fazla 24 saat olmalıdır. Gece yarısını aşan aralıklar için açık bir ertesi gün end_date değeri gerekir.",
+    "Les intervalles doivent être positifs et durer au maximum 24 heures. Les intervalles de nuit nécessitent une end_date explicite au lendemain.",
+    "Las ventanas horarias deberán ser positivas y como máximo de 24 horas. Los intervalos nocturnos requieren una fecha de finalización explícita del día siguiente."
+  ],
+  "Resources": [
+    "Kaynaklar",
+    "Ressources",
+    "Recursos"
+  ],
+  "Projects": [
+    "Projeler",
+    "Projets",
+    "Proyectos"
+  ],
+  "Resource demands": [
+    "Kaynak ihtiyaçları",
+    "Besoins en ressources",
+    "Demandas de recursos"
+  ],
+  "Compatibility & limits": [
+    "Uyumluluk ve sınırlar",
+    "Compatibilité et limites",
+    "Compatibilidad y límites"
+  ],
+  "Resource ID": [
+    "Kaynak kimliği",
+    "Identifiant de ressource",
+    "ID de recurso"
+  ],
+  "Project ID": [
+    "Proje kimliği",
+    "Identifiant de projet",
+    "ID del proyecto"
+  ],
+  "Resource type": [
+    "Kaynak türü",
+    "Type de ressource",
+    "Tipo de recurso"
+  ],
+  "Resource unit": [
+    "Kaynak birimi",
+    "Unité de ressource",
+    "Unidad de recursos"
+  ],
+  "Capacity": [
+    "Kapasite",
+    "Capacité",
+    "Capacidad"
+  ],
+  "Cost per resource unit": [
+    "Kaynak birimi başına maliyet",
+    "Coût par unité de ressource",
+    "Costo por unidad de recurso"
+  ],
+  "Whole units only": [
+    "Yalnızca tam birimler",
+    "Unités entières uniquement",
+    "Solo unidades enteras"
+  ],
+  "Output unit": [
+    "Çıktı birimi",
+    "Unité de production",
+    "Unidad de salida"
+  ],
+  "Minimum output": [
+    "Minimum çıktı",
+    "Production minimale",
+    "Salida mínima"
+  ],
+  "Maximum output": [
+    "Maksimum çıktı",
+    "Production maximale",
+    "Salida máxima"
+  ],
+  "Value per output": [
+    "Çıktı başına değer",
+    "Valeur par unité produite",
+    "Valor por salida"
+  ],
+  "Priority weight (optional)": [
+    "Öncelik ağırlığı (isteğe bağlı)",
+    "Poids de priorité (facultatif)",
+    "Peso de prioridad (opcional)"
+  ],
+  "Resource units per output": [
+    "Çıktı başına kaynak birimi",
+    "Unités de ressource par unité produite",
+    "Unidades de recursos por producto"
+  ],
+  "Compatible": [
+    "Uyumlu",
+    "Compatible",
+    "Compatible"
+  ],
+  "Minimum allocation": [
+    "Minimum tahsis",
+    "Allocation minimale",
+    "Asignación mínima"
+  ],
+  "Maximum allocation": [
+    "Maksimum tahsis",
+    "Allocation maximale",
+    "Asignación máxima"
+  ],
+  "Yes": [
+    "Evet",
+    "Oui",
+    "Sí"
+  ],
+  "No": [
+    "Hayır",
+    "Non",
+    "No"
+  ],
+  "Allocation model": [
+    "Tahsis modeli",
+    "Modèle d’allocation",
+    "Modelo de asignación"
+  ],
+  "Objective": [
+    "Amaç",
+    "Objectif",
+    "Objetivo"
+  ],
+  "Minimize cost": [
+    "Maliyeti en aza indir",
+    "Minimiser le coût",
+    "Minimizar costo"
+  ],
+  "Maximize priority-weighted value": [
+    "Öncelik ağırlıklı değeri en yükseğe çıkar",
+    "Maximiser la valeur pondérée par priorité",
+    "Maximizar el valor ponderado por prioridad"
+  ],
+  "Planning period": [
+    "Planlama dönemi",
+    "Période de planification",
+    "Período de planificación"
+  ],
+  "For example: November delivery plan": [
+    "Örneğin: Kasım teslimat planı",
+    "Exemple : plan de livraison de novembre",
+    "Por ejemplo: plan de entrega de noviembre"
+  ],
+  "Budget (blank = no budget limit)": [
+    "Bütçe (boş = bütçe sınırı yok)",
+    "Budget (vide = sans limite budgétaire)",
+    "Presupuesto (en blanco = sin límite de presupuesto)"
+  ],
+  "Resource catalogs": [
+    "Kaynak katalogları",
+    "Catalogues de ressources",
+    "Catálogos de recursos"
+  ],
+  "Meet minimum outputs at minimum cost. Optional projects with zero minimum need not receive resources.": [
+    "Minimum çıktıları en düşük maliyetle sağlayın. Minimumu sıfır olan isteğe bağlı projelere kaynak tahsisi zorunlu değildir.",
+    "Atteindre les productions minimales au moindre coût. Les projets facultatifs dont le minimum est nul peuvent ne recevoir aucune ressource.",
+    "Cumplir con los resultados mínimos al mínimo costo. Los proyectos opcionales con mínimo cero no necesitan recibir recursos."
+  ],
+  "Maximize value × priority × output. Costs are reported and obey the budget, but are not minimized in this objective.": [
+    "Değer × öncelik × çıktıyı en yükseğe çıkarın. Maliyetler raporlanır ve bütçeye uyar; bu amaçta en aza indirilmez.",
+    "Maximiser valeur × priorité × production. Les coûts sont indiqués et respectent le budget, mais cet objectif ne les minimise pas.",
+    "Maximizar valor × prioridad × salida. Los costos se reportan y obedecen al presupuesto, pero no se minimizan en este objetivo."
+  ],
+  "Capacities and costs apply to the same planning period. Resource type and unit must match demand exactly.": [
+    "Kapasiteler ve maliyetler aynı planlama dönemi içindir. Kaynak türü ve birimi ihtiyaçla tam eşleşmelidir.",
+    "Capacités et coûts concernent la même période. Le type et l’unité de ressource doivent correspondre exactement au besoin.",
+    "Las capacidades y los costos se aplican al mismo período de planificación. El tipo de recurso y la unidad deben coincidir exactamente con la demanda."
+  ],
+  "Set minimum and maximum outputs. Use whole units and maximum 1 for an indivisible project. Blank priority means weight 1.": [
+    "Minimum ve maksimum çıktıları belirleyin. Bölünemez projeler için tam birim ve maksimum 1 kullanın. Boş öncelik, 1 ağırlığıdır.",
+    "Définissez les productions minimale et maximale. Pour un projet indivisible, utilisez des unités entières et un maximum de 1. Une priorité vide correspond au poids 1.",
+    "Establecer salidas mínimas y máximas. Utilice unidades enteras y máximo 1 para un proyecto indivisible. La prioridad en blanco significa peso 1."
+  ],
+  "Each row is a positive resource requirement per one unit of project output.": [
+    "Her satır, bir proje çıktı birimi için pozitif kaynak ihtiyacıdır.",
+    "Chaque ligne définit un besoin positif en ressource par unité produite.",
+    "Cada fila es un requisito de recursos positivo por unidad de resultado del proyecto."
+  ],
+  "Only explicit compatible links allow allocation. Limits are total quantities for this planning period, not per output.": [
+    "Yalnızca açıkça uyumlu bağlantılar tahsise izin verir. Sınırlar çıktı başına değil, bu dönemdeki toplam miktarlardır.",
+    "Seuls les liens explicitement compatibles autorisent l’allocation. Les limites sont les quantités totales de la période, pas celles par unité produite.",
+    "Sólo los enlaces compatibles explícitos permiten la asignación. Los límites son cantidades totales para este período de planificación, no por salida."
+  ],
+  "No records. Add your own data or explicitly load the sample.": [
+    "Kayıt yok. Kendi verilerinizi ekleyin veya örneği yükleyin.",
+    "Aucun enregistrement. Ajoutez vos données ou chargez explicitement l’exemple.",
+    "Sin registros. Agregue sus propios datos o cargue explícitamente la muestra."
+  ],
+  "Use decimal points in edited cells. Enter unlimited explicitly for unlimited capacity or upper limits; empty required cells are invalid.": [
+    "Düzenlenen hücrelerde ondalık nokta kullanın. Sınırsız kapasite veya üst sınırlar için unlimited yazın; zorunlu boş hücreler geçersizdir.",
+    "Utilisez le point décimal. Saisissez unlimited pour une capacité ou une borne supérieure illimitée ; les cellules obligatoires vides sont invalides.",
+    "Utilice puntos decimales en celdas editadas. Ingrese ilimitado explícitamente para capacidad ilimitada o límites superiores; Las celdas requeridas vacías no son válidas."
+  ],
+  "No allocation has been generated.": [
+    "Henüz tahsis oluşturulmadı.",
+    "Aucune allocation n’a été générée.",
+    "No se ha generado ninguna asignación."
+  ],
+  "Validate your inputs and run the optimizer to see a real solution.": [
+    "Gerçek bir çözüm için girdileri doğrulayın ve optimizasyonu çalıştırın.",
+    "Validez les données et lancez l’optimiseur pour obtenir une solution réelle.",
+    "Valide sus entradas y ejecute el optimizador para ver una solución real."
+  ],
+  "Solver status": [
+    "Çözücü durumu",
+    "Statut du solveur",
+    "Estado del solucionador"
+  ],
+  "All hard constraints passed independent validation.": [
+    "Tüm kesin kısıtlar bağımsız doğrulamadan geçti.",
+    "Toutes les contraintes impératives ont passé la validation indépendante.",
+    "Todas las restricciones estrictas pasaron la validación independiente."
+  ],
+  "Cost objective": [
+    "Maliyet amacı",
+    "Objectif de coût",
+    "Objetivo de costo"
+  ],
+  "Priority-weighted value objective": [
+    "Öncelik ağırlıklı değer amacı",
+    "Objectif de valeur pondérée",
+    "Objetivo de valor ponderado por prioridad"
+  ],
+  "weighted": [
+    "ağırlıklı",
+    "pondéré",
+    "ponderado"
+  ],
+  "Total resource cost": [
+    "Toplam kaynak maliyeti",
+    "Coût total des ressources",
+    "Costo total de recursos"
+  ],
+  "Gross project value": [
+    "Brüt proje değeri",
+    "Valeur brute des projets",
+    "Valor bruto del proyecto"
+  ],
+  "Binding constraints": [
+    "Aktif kısıtlar",
+    "Contraintes actives",
+    "Restricciones vinculantes"
+  ],
+  "Within numerical tolerance": [
+    "Sayısal tolerans dahilinde",
+    "Dans la tolérance numérique",
+    "Dentro de la tolerancia numérica"
+  ],
+  "Export allocations CSV": [
+    "Tahsisleri CSV olarak indir",
+    "Exporter les allocations en CSV",
+    "Exportar asignaciones CSV"
+  ],
+  "Export project outputs CSV": [
+    "Proje çıktılarını CSV olarak indir",
+    "Exporter les productions en CSV",
+    "Exportar resultados del proyecto CSV"
+  ],
+  "Resource utilization": [
+    "Kaynak kullanım oranı",
+    "Utilisation des ressources",
+    "Utilización de recursos"
+  ],
+  "Unlimited": [
+    "Sınırsız",
+    "Illimité",
+    "Ilimitado"
+  ],
+  "Project outputs": [
+    "Proje çıktıları",
+    "Productions des projets",
+    "Resultados del proyecto"
+  ],
+  "Project": [
+    "Proje",
+    "Projet",
+    "Proyecto"
+  ],
+  "Resource": [
+    "Kaynak",
+    "Ressource",
+    "Recurso"
+  ],
+  "Output": [
+    "Çıktı",
+    "Production",
+    "Producción"
+  ],
+  "Allocations": [
+    "Tahsisler",
+    "Allocations",
+    "Asignaciones"
+  ],
+  "Quantity": [
+    "Miktar",
+    "Quantité",
+    "Cantidad"
+  ],
+  "Unit": [
+    "Birim",
+    "Unité",
+    "Unidad"
+  ],
+  "Cost": [
+    "Maliyet",
+    "Coût",
+    "Costo"
+  ],
+  "The valid solution allocates zero resources.": [
+    "Geçerli çözüm sıfır kaynak tahsis ediyor.",
+    "La solution valide n’alloue aucune ressource.",
+    "La solución válida asigna cero recursos."
+  ],
+  "Constraint activity & slack": [
+    "Kısıt değerleri ve boşluk",
+    "Activité et marge des contraintes",
+    "Actividad de restricción y holgura"
+  ],
+  "Binding means zero slack; equalities always bind. This is not a shadow price or proof of scarcity.": [
+    "Aktif kısıt, sıfır boşluk demektir; eşitlikler her zaman aktiftir. Bu bir gölge fiyat veya kıtlık kanıtı değildir.",
+    "Active signifie une marge nulle ; les égalités sont toujours actives. Ce n’est ni un prix dual ni une preuve de rareté.",
+    "La unión significa cero holgura; las igualdades siempre unen. Este no es un precio sombra ni una prueba de escasez."
+  ],
+  "Binding only": [
+    "Yalnızca aktif kısıtlar",
+    "Contraintes actives uniquement",
+    "Solo vinculante"
+  ],
+  "Constraint": [
+    "Kısıt",
+    "Contrainte",
+    "Restricción"
+  ],
+  "Reference": [
+    "Referans",
+    "Référence",
+    "Referencia"
+  ],
+  "Activity": [
+    "Değer",
+    "Activité",
+    "Actividad"
+  ],
+  "Lower bound": [
+    "Alt sınır",
+    "Borne inférieure",
+    "límite inferior"
+  ],
+  "Upper bound": [
+    "Üst sınır",
+    "Borne supérieure",
+    "límite superior"
+  ],
+  "Slack": [
+    "Boşluk",
+    "Marge",
+    "Flojo"
+  ],
+  "Project output": [
+    "Proje çıktısı",
+    "Production du projet",
+    "Resultado del proyecto"
+  ],
+  "Resource capacity": [
+    "Kaynak kapasitesi",
+    "Capacité de ressource",
+    "Capacidad de recursos"
+  ],
+  "Allocation limit": [
+    "Tahsis sınırı",
+    "Limite d’allocation",
+    "Límite de asignación"
+  ],
+  "Demand balance": [
+    "İhtiyaç dengesi",
+    "Équilibre du besoin",
+    "Saldo de la demanda"
+  ],
+  "Budget": [
+    "Bütçe",
+    "Budget",
+    "Presupuesto"
+  ],
+  "RESOURCE ALLOCATION / SMART IMPORT": [
+    "KAYNAK TAHSİSİ / AKILLI İÇE AKTARMA",
+    "ALLOCATION DES RESSOURCES / IMPORT INTELLIGENT",
+    "ASIGNACIÓN DE RECURSOS / IMPORTACIÓN INTELIGENTE"
+  ],
+  "Map real resources to a valid model.": [
+    "Gerçek kaynakları geçerli bir modele eşleyin.",
+    "Associez vos ressources à un modèle valide.",
+    "Asigne recursos reales a un modelo válido."
+  ],
+  "Four datasets: resources, projects, demands, and compatibility links. Files stay in this browser. Unmapped columns remain available for review.": [
+    "Dört veri kümesi: kaynaklar, projeler, ihtiyaçlar ve uyumluluk bağlantıları. Dosyalar bu tarayıcıda kalır. Eşlenmeyen sütunlar incelenebilir.",
+    "Quatre jeux de données : ressources, projets, besoins et liens de compatibilité. Les fichiers restent dans ce navigateur. Les colonnes non associées restent consultables.",
+    "Cuatro conjuntos de datos: recursos, proyectos, demandas y enlaces de compatibilidad. Los archivos permanecen en este navegador. Las columnas no asignadas permanecen disponibles para su revisión."
+  ],
+  "No allocation data": [
+    "Tahsis verisi yok",
+    "Aucune donnée d’allocation",
+    "Sin datos de asignación"
+  ],
+  "Use at most 10 CSV files.": [
+    "En fazla 10 CSV dosyası kullanın.",
+    "Utilisez au maximum 10 fichiers CSV.",
+    "Utilice como máximo 10 archivos CSV."
+  ],
+  "Use 1–10 files and at most 10,000 source rows.": [
+    "1–10 dosya ve en fazla 10.000 kaynak satırı kullanın.",
+    "Utilisez 1 à 10 fichiers et au maximum 10 000 lignes source.",
+    "Utilice entre 1 y 10 archivos y como máximo 10 000 filas de origen."
+  ],
+  "Select a dataset for each file; column names alone do not establish its meaning.": [
+    "Her dosya için veri kümesi seçin; sütun adları tek başına anlamı belirlemez.",
+    "Choisissez un jeu de données pour chaque fichier ; les noms de colonnes seuls ne déterminent pas son sens.",
+    "Seleccione un conjunto de datos para cada archivo; Los nombres de las columnas por sí solos no establecen su significado."
+  ],
+  "Unrelated data": [
+    "İlgisiz veriler",
+    "Données sans rapport",
+    "Datos no relacionados"
+  ],
+  "I confirm this dataset and its column meanings.": [
+    "Bu veri kümesini ve sütunların anlamını onaylıyorum.",
+    "Je confirme ce jeu de données et le sens de ses colonnes.",
+    "Confirmo este conjunto de datos y el significado de sus columnas."
+  ],
+  "Replace the current corrected preview with a new transformation?": [
+    "Düzeltilmiş önizleme yeni bir dönüşümle değiştirilsin mi?",
+    "Remplacer l’aperçu corrigé par une nouvelle transformation ?",
+    "¿Reemplazar la vista previa corregida actual con una nueva transformación?"
+  ],
+  "Upload and confirm sources, then transform before approving this import.": [
+    "Kaynakları yükleyip onaylayın; içe aktarmayı onaylamadan önce dönüştürün.",
+    "Importez et confirmez les sources, puis transformez-les avant d’approuver cet import.",
+    "Cargue y confirme las fuentes, luego transfórmelas antes de aprobar esta importación."
+  ],
+  "I reviewed the data and settings. Replace the resource workspace with this validated import.": [
+    "Verileri ve ayarları inceledim. Kaynak çalışma alanını bu doğrulanmış içe aktarımla değiştir.",
+    "J’ai vérifié les données et les paramètres. Remplacer l’espace ressources par cet import validé.",
+    "Revisé los datos y la configuración. Reemplace el espacio de trabajo de recursos con esta importación validada."
+  ],
+  "Save & use resource data": [
+    "Kaynak verilerini kaydet ve kullan",
+    "Enregistrer et utiliser les ressources",
+    "Guardar y usar datos de recursos"
+  ],
+  "OPTIFLOW v0.2 / RESOURCE ALLOCATION": [
+    "OPTIFLOW v0.2 / KAYNAK TAHSİSİ",
+    "OPTIFLOW v0.2 / ALLOCATION DES RESSOURCES",
+    "OPTIFLOW v0.2 / ASIGNACIÓN DE RECURSOS"
+  ],
+  "Turn capacity into a practical plan.": [
+    "Kapasiteyi uygulanabilir bir plana dönüştürün.",
+    "Transformez la capacité en plan concret.",
+    "Convierta la capacidad en un plan práctico."
+  ],
+  "A real local LP/MILP solver. Explicit demands, hard limits, and independently checked results.": [
+    "Gerçek, yerel LP/MILP çözücüsü. Açık ihtiyaçlar, kesin sınırlar ve bağımsız doğrulanan sonuçlar.",
+    "Un vrai solveur LP/MILP local. Besoins explicites, limites impératives et résultats vérifiés indépendamment.",
+    "Un verdadero solucionador local de LP/MILP. Demandas explícitas, límites estrictos y resultados verificados de forma independiente."
+  ],
+  "Fictional sample data": [
+    "Kurgusal örnek veriler",
+    "Données d’exemple fictives",
+    "Datos de muestra ficticios"
+  ],
+  "Imported data": [
+    "İçe aktarılan veriler",
+    "Données importées",
+    "Datos importados"
+  ],
+  "Manual-entry workspace": [
+    "Manuel veri giriş alanı",
+    "Espace de saisie manuelle",
+    "Espacio de trabajo de entrada manual"
+  ],
+  "Load labeled sample": [
+    "Etiketli örneği yükle",
+    "Charger l’exemple étiqueté",
+    "Cargar muestra etiquetada"
+  ],
+  "Start manual entry": [
+    "Elle girişe başla",
+    "Commencer la saisie manuelle",
+    "Iniciar entrada manual"
+  ],
+  "Save locally": [
+    "Yerel olarak kaydet",
+    "Enregistrer localement",
+    "Guardar localmente"
+  ],
+  "Resource data saved locally.": [
+    "Kaynak verileri yerel olarak kaydedildi.",
+    "Données de ressources enregistrées localement.",
+    "Datos de recursos guardados localmente."
+  ],
+  "Resources substitute only within an identical type and unit. Missing compatibility links prohibit allocation. No hard constraints are relaxed.": [
+    "Kaynaklar yalnızca aynı tür ve birim içinde birbirinin yerine geçer. Eksik uyumluluk bağlantıları tahsisi engeller. Kesin kısıtlar gevşetilmez.",
+    "Les ressources sont substituables uniquement à type et unité identiques. L’absence de lien de compatibilité interdit l’allocation. Aucune contrainte impérative n’est assouplie.",
+    "Los recursos se sustituyen sólo dentro de un tipo y unidad idénticos. Los enlaces de compatibilidad faltantes prohíben la asignación. No se relajan restricciones estrictas."
+  ],
+  "Input validation": [
+    "Girdi doğrulaması",
+    "Validation des entrées",
+    "Validación de entrada"
+  ],
+  "Inputs are valid. Feasibility and optimality still require a solver run.": [
+    "Girdiler geçerli. Uygulanabilirlik ve optimallik için çözücü çalıştırılmalıdır.",
+    "Les entrées sont valides. La faisabilité et l’optimalité nécessitent encore l’exécution du solveur.",
+    "Las entradas son válidas. La viabilidad y la optimización aún requieren una ejecución del solucionador."
+  ],
+  "Optimize resource allocation": [
+    "Kaynak tahsisini optimize et",
+    "Optimiser l’allocation des ressources",
+    "Optimizar la asignación de recursos"
+  ],
+  "Export input catalogs": [
+    "Girdi kataloglarını indir",
+    "Exporter les catalogues d’entrée",
+    "Exportar catálogos de entrada"
+  ],
+  "Model, units & solver guarantees": [
+    "Model, birimler ve çözücü güvenceleri",
+    "Modèle, unités et garanties du solveur",
+    "Garantías de modelos, unidades y solucionadores"
+  ],
+  "All capacities, link limits, costs, and budgets refer to one planning period. Demand is resource units per unit of project output. Allocation equals demand × output for each project/type/unit.": [
+    "Tüm kapasiteler, bağlantı sınırları, maliyetler ve bütçeler tek bir planlama dönemi içindir. İhtiyaç, proje çıktı birimi başına kaynak birimidir. Her proje/tür/birim için tahsis = ihtiyaç × çıktı.",
+    "Capacités, limites des liens, coûts et budgets concernent une période unique. Le besoin est exprimé en unités de ressource par unité produite. L’allocation égale besoin × production pour chaque projet/type/unité.",
+    "Todas las capacidades, límites de enlaces, costos y presupuestos se refieren a un período de planificación. La demanda son unidades de recursos por unidad de producción del proyecto. La asignación es igual a la demanda × la producción para cada proyecto/tipo/unidad."
+  ],
+  "Whole-unit resource allocations and project outputs use integer variables. Unlimited upper limits must be explicit. Priorities multiply value only; they never override hard constraints.": [
+    "Tam birimli tahsisler ve proje çıktıları tamsayı değişkenler kullanır. Sınırsız üst sınırlar açıkça belirtilmelidir. Öncelikler yalnızca değeri çarpar; kesin kısıtları geçersiz kılmaz.",
+    "Les allocations et productions entières utilisent des variables entières. Les bornes illimitées doivent être explicites. Les priorités pondèrent uniquement la valeur et ne remplacent jamais les contraintes impératives.",
+    "Las asignaciones de recursos de toda la unidad y los resultados del proyecto utilizan variables enteras. Los límites superiores ilimitados deben ser explícitos. Las prioridades sólo multiplican el valor; nunca anulan las restricciones estrictas."
+  ],
+  "Optimal is shown only for GLPK_OPT with zero requested MIP gap. Feasible means validated but not proven optimal. Infeasible, unbounded, unknown, and failed validation never display an accepted allocation.": [
+    "Optimal yalnızca GLPK_OPT ve sıfır talep edilen MIP farkıyla gösterilir. Uygulanabilir, doğrulanmış ancak optimalliği kanıtlanmamış demektir. Diğer durumlarda kabul edilmiş tahsis gösterilmez.",
+    "Optimal apparaît uniquement pour GLPK_OPT avec un écart MIP demandé de zéro. Faisable signifie validé sans preuve d’optimalité. Aucun résultat accepté n’est affiché pour les autres statuts ou un échec de validation.",
+    "Óptimo se muestra solo para GLPK_OPT con cero espacio MIP solicitado. Viable significa validado pero no probado como óptimo. Las validaciones inviables, ilimitadas, desconocidas y fallidas nunca muestran una asignación aceptada."
+  ],
+  "GLPK uses floating-point arithmetic: hard constraints and integrality are checked within 0.000001 units. Scale data sensibly. Browser data is local to this device and is not an automatic backup.": [
+    "GLPK kayan noktalı aritmetik kullanır: kesin kısıtlar ve tamsayılılık 0,000001 birim toleransla doğrulanır. Verileri uygun ölçeklendirin. Tarayıcı verileri bu cihazda yereldir; otomatik yedek değildir.",
+    "GLPK utilise l’arithmétique flottante : contraintes et intégralité sont vérifiées à 0,000001 unité près. Échelonnez les données raisonnablement. Les données locales ne constituent pas une sauvegarde automatique.",
+    "GLPK utiliza aritmética de punto flotante: las restricciones estrictas y la integralidad se verifican dentro de 0,000001 unidades. Escale los datos con sensatez. Los datos del navegador son locales para este dispositivo y no constituyen una copia de seguridad automática."
+  ],
+  "The solve limit is 20 seconds. Indeterminate mixed-integer models remain Unknown; an unbounded LP relaxation alone is not a proof about the integer model.": [
+    "Çözüm süresi 20 saniyedir. Belirsiz karma tamsayılı modeller Bilinmiyor kalır; sınırsız LP gevşetmesi tek başına tamsayılı model için kanıt değildir.",
+    "La limite de résolution est de 20 secondes. Les modèles mixtes indéterminés restent Inconnus ; une relaxation LP non bornée ne prouve rien à elle seule sur le modèle entier.",
+    "El límite de resolución es de 20 segundos. Los modelos indeterminados de enteros mixtos siguen siendo desconocidos; una relajación LP ilimitada por sí sola no es una prueba sobre el modelo entero."
+  ],
+  "Inputs changed during optimization. Run the model again.": [
+    "Optimizasyon sırasında girdiler değişti. Modeli yeniden çalıştırın.",
+    "Les données ont changé pendant l’optimisation. Relancez le modèle.",
+    "Las entradas cambiaron durante la optimización. Ejecute el modelo nuevamente."
+  ],
+  "Replace the current resource workspace?": [
+    "Mevcut kaynak çalışma alanı değiştirilsin mi?",
+    "Remplacer l’espace de ressources actuel ?",
+    "¿Reemplazar el espacio de trabajo de recursos actual?"
+  ],
+  "Validated resource data saved locally. Run the optimizer to generate an allocation.": [
+    "Doğrulanmış kaynak verileri yerel kaydedildi. Tahsis oluşturmak için optimizasyonu çalıştırın.",
+    "Les ressources validées ont été enregistrées localement. Lancez l’optimiseur pour générer une allocation.",
+    "Datos de recursos validados guardados localmente. Ejecute el optimizador para generar una asignación."
+  ],
+  "Showing the first 100 issues. Correct these and revalidate.": [
+    "İlk 100 sorun gösteriliyor. Düzeltip yeniden doğrulayın.",
+    "Les 100 premiers problèmes sont affichés. Corrigez-les puis validez à nouveau.",
+    "Mostrando los primeros 100 números. Corregirlos y revalidar."
+  ],
+  "Choose a valid objective.": [
+    "Geçerli bir amaç seçin.",
+    "Choisissez un objectif valide.",
+    "Elija un objetivo válido."
+  ],
+  "Enter a planning-period label.": [
+    "Planlama dönemi etiketi girin.",
+    "Indiquez un libellé de période.",
+    "Introduzca una etiqueta de período de planificación."
+  ],
+  "Budget must be nonnegative, or explicitly unlimited.": [
+    "Bütçe negatif olmamalı veya açıkça sınırsız olmalıdır.",
+    "Le budget doit être positif ou nul, ou explicitement illimité.",
+    "El presupuesto debe ser no negativo o explícitamente ilimitado."
+  ],
+  "Use between 1 and 50 resources.": [
+    "1 ile 50 arasında kaynak kullanın.",
+    "Utilisez entre 1 et 50 ressources.",
+    "Utiliza entre 1 y 50 recursos."
+  ],
+  "Use between 1 and 50 projects.": [
+    "1 ile 50 arasında proje kullanın.",
+    "Utilisez entre 1 et 50 projets.",
+    "Utilice entre 1 y 50 proyectos."
+  ],
+  "Use at most 500 demands and 2,500 compatibility links.": [
+    "En fazla 500 ihtiyaç ve 2.500 uyumluluk bağlantısı kullanın.",
+    "Utilisez au maximum 500 besoins et 2 500 liens de compatibilité.",
+    "Utilice como máximo 500 demandas y 2500 enlaces de compatibilidad."
+  ],
+  "Resource IDs must be nonempty and unique.": [
+    "Kaynak kimlikleri boş olmamalı ve benzersiz olmalıdır.",
+    "Les identifiants de ressource doivent être renseignés et uniques.",
+    "Los ID de recursos no deben estar vacíos y ser únicos."
+  ],
+  "Project IDs must be nonempty and unique.": [
+    "Proje kimlikleri boş olmamalı ve benzersiz olmalıdır.",
+    "Les identifiants de projet doivent être renseignés et uniques.",
+    "Los ID de proyecto no deben estar vacíos y ser únicos."
+  ],
+  "A nonempty text value is required (maximum 150 characters).": [
+    "Boş olmayan metin gerekir (en fazla 150 karakter).",
+    "Un texte non vide est requis (150 caractères maximum).",
+    "Se requiere un valor de texto que no esté vacío (máximo 150 caracteres)."
+  ],
+  "Capacity must be nonnegative or explicitly unlimited.": [
+    "Kapasite negatif olmamalı veya açıkça sınırsız olmalıdır.",
+    "La capacité doit être positive ou nulle, ou explicitement illimitée.",
+    "La capacidad debe ser no negativa o explícitamente ilimitada."
+  ],
+  "Unit cost must be nonnegative.": [
+    "Birim maliyet negatif olmamalıdır.",
+    "Le coût unitaire doit être positif ou nul.",
+    "El costo unitario debe ser no negativo."
+  ],
+  "Choose whether quantities must be whole numbers.": [
+    "Miktarların tamsayı olup olmayacağını seçin.",
+    "Précisez si les quantités doivent être entières.",
+    "Elija si las cantidades deben ser números enteros."
+  ],
+  "Minimum output must be nonnegative.": [
+    "Minimum çıktı negatif olmamalıdır.",
+    "La production minimale doit être positive ou nulle.",
+    "La producción mínima debe ser no negativa."
+  ],
+  "Maximum output must be at least the minimum, or explicitly unlimited.": [
+    "Maksimum çıktı en az minimum kadar veya açıkça sınırsız olmalıdır.",
+    "La production maximale doit être au moins égale au minimum, ou explicitement illimitée.",
+    "La producción máxima debe ser al menos la mínima o explícitamente ilimitada."
+  ],
+  "Value maximization requires an explicit nonnegative value per output.": [
+    "Değer maksimizasyonu için çıktı başına açık, negatif olmayan değer gerekir.",
+    "La maximisation exige une valeur par unité produite explicite, positive ou nulle.",
+    "La maximización del valor requiere un valor explícito no negativo por resultado."
+  ],
+  "Priority must be positive; blank means weight 1.": [
+    "Öncelik pozitif olmalıdır; boş değer 1 ağırlığıdır.",
+    "La priorité doit être positive ; vide signifie un poids de 1.",
+    "La prioridad debe ser positiva; En blanco significa peso 1."
+  ],
+  "Scale value and priority so their product is at most 1,000,000,000.": [
+    "Değer ve önceliği çarpımları en fazla 1.000.000.000 olacak şekilde ölçeklendirin.",
+    "Échelonnez valeur et priorité pour que leur produit ne dépasse pas 1 000 000 000.",
+    "Escale el valor y la prioridad para que su producto sea como máximo 1.000.000.000."
+  ],
+  "Every project needs at least one explicit resource demand.": [
+    "Her proje için en az bir açık kaynak ihtiyacı gerekir.",
+    "Chaque projet exige au moins un besoin en ressource explicite.",
+    "Todo proyecto necesita al menos una demanda explícita de recursos."
+  ],
+  "Demand references an unknown project.": [
+    "İhtiyaç bilinmeyen bir projeye başvuruyor.",
+    "Le besoin fait référence à un projet inconnu.",
+    "La demanda hace referencia a un proyecto desconocido."
+  ],
+  "Demand type and unit are required.": [
+    "İhtiyaç türü ve birimi zorunludur.",
+    "Le type et l’unité du besoin sont obligatoires.",
+    "Se requiere tipo de demanda y unidad."
+  ],
+  "Demand per output must be positive.": [
+    "Çıktı başına ihtiyaç pozitif olmalıdır.",
+    "Le besoin par unité produite doit être positif.",
+    "La demanda por producto debe ser positiva."
+  ],
+  "Duplicate demand for the same project, resource type, and unit.": [
+    "Aynı proje, kaynak türü ve birim için yinelenen ihtiyaç.",
+    "Besoin en double pour le même projet, type de ressource et unité.",
+    "Demanda duplicada para el mismo proyecto, tipo de recurso y unidad."
+  ],
+  "Only exactly matching resource types and units can supply this demand. No unit conversion is applied.": [
+    "Yalnızca tam eşleşen kaynak türleri ve birimleri bu ihtiyacı karşılar. Birim dönüşümü uygulanmaz.",
+    "Seuls les types et unités identiques peuvent satisfaire ce besoin. Aucune conversion d’unité n’est appliquée.",
+    "Sólo los tipos y unidades de recursos que coincidan exactamente pueden satisfacer esta demanda. No se aplica ninguna conversión de unidades."
+  ],
+  "Link references an unknown resource.": [
+    "Bağlantı bilinmeyen bir kaynağa başvuruyor.",
+    "Le lien fait référence à une ressource inconnue.",
+    "El enlace hace referencia a un recurso desconocido."
+  ],
+  "Link references an unknown project.": [
+    "Bağlantı bilinmeyen bir projeye başvuruyor.",
+    "Le lien fait référence à un projet inconnu.",
+    "El enlace hace referencia a un proyecto desconocido."
+  ],
+  "Duplicate resource-to-project link.": [
+    "Yinelenen kaynak-proje bağlantısı.",
+    "Lien ressource-projet en double.",
+    "Enlace duplicado de recurso a proyecto."
+  ],
+  "Explicit compatibility is required.": [
+    "Açık uyumluluk seçimi gereklidir.",
+    "La compatibilité doit être explicite.",
+    "Se requiere compatibilidad explícita."
+  ],
+  "Minimum allocation must be nonnegative.": [
+    "Minimum tahsis negatif olmamalıdır.",
+    "L’allocation minimale doit être positive ou nulle.",
+    "La asignación mínima debe ser no negativa."
+  ],
+  "Maximum allocation must be at least the minimum, or explicitly unlimited.": [
+    "Maksimum tahsis en az minimum kadar veya açıkça sınırsız olmalıdır.",
+    "L’allocation maximale doit être au moins égale au minimum, ou explicitement illimitée.",
+    "La asignación máxima debe ser al menos la mínima o explícitamente ilimitada."
+  ],
+  "An incompatible link cannot have a positive minimum allocation.": [
+    "Uyumsuz bağlantının pozitif minimum tahsisi olamaz.",
+    "Un lien incompatible ne peut pas avoir une allocation minimale positive.",
+    "Un enlace incompatible no puede tener una asignación mínima positiva."
+  ],
+  "Compatible links must match an explicit demand type and unit.": [
+    "Uyumlu bağlantılar açık ihtiyaç türü ve birimiyle eşleşmelidir.",
+    "Les liens compatibles doivent correspondre à un type et une unité de besoin explicites.",
+    "Los enlaces compatibles deben coincidir con un tipo de demanda y una unidad explícitos."
+  ],
+  "Use true/false or explicitly recognized YES/NO for this boolean field.": [
+    "Bu mantıksal alan için true/false veya tanınan YES/NO değerlerini kullanın.",
+    "Utilisez true/false ou YES/NO reconnus pour ce champ booléen.",
+    "Utilice verdadero/falso o SÍ/NO explícitamente reconocido para este campo booleano."
+  ],
+  "Confirm the dataset and column meanings before transforming.": [
+    "Dönüştürmeden önce veri kümesini ve sütun anlamlarını onaylayın.",
+    "Confirmez le jeu de données et le sens des colonnes avant transformation.",
+    "Confirme el conjunto de datos y los significados de las columnas antes de transformar."
+  ],
+  "Conflicting or incompatible column mappings must be resolved.": [
+    "Çakışan veya uyumsuz sütun eşlemeleri çözülmelidir.",
+    "Résolvez les correspondances de colonnes contradictoires ou incompatibles.",
+    "Se deben resolver las asignaciones de columnas conflictivas o incompatibles."
+  ],
+  "Browser storage is full or unavailable. Nothing was confirmed.": [
+    "Tarayıcı depolaması dolu veya kullanılamıyor. Hiçbir şey onaylanmadı.",
+    "Le stockage du navigateur est plein ou indisponible. Rien n’a été confirmé.",
+    "El almacenamiento del navegador está lleno o no está disponible. No se confirmó nada."
+  ],
+  "Saved resource data failed validation. Review or replace it before optimization.": [
+    "Kaydedilmiş kaynak verileri doğrulanamadı. Optimizasyondan önce inceleyin veya değiştirin.",
+    "Les ressources enregistrées n’ont pas passé la validation. Vérifiez-les ou remplacez-les avant optimisation.",
+    "Los datos de recursos guardados no superaron la validación. Revíselo o reemplácelo antes de la optimización."
+  ],
+  "No validated allocation is available to export.": [
+    "Dışa aktarılacak doğrulanmış tahsis yok.",
+    "Aucune allocation validée à exporter.",
+    "No hay ninguna asignación validada disponible para exportar."
+  ],
+  "A valid allocation was found, but optimality was not proven.": [
+    "Geçerli tahsis bulundu ancak optimallik kanıtlanmadı.",
+    "Une allocation valide a été trouvée, mais son optimalité n’a pas été prouvée.",
+    "Se encontró una asignación válida, pero no se demostró la optimización."
+  ],
+  "No allocation satisfies all hard constraints. Review minimum outputs, shared capacities, compatibility, allocation limits, integer requirements, and budget.": [
+    "Tüm kesin kısıtları sağlayan tahsis yok. Minimum çıktıları, ortak kapasiteleri, uyumluluğu, tahsis sınırlarını, tamsayı koşullarını ve bütçeyi inceleyin.",
+    "Aucune allocation ne satisfait toutes les contraintes. Vérifiez minima, capacités partagées, compatibilité, limites d’allocation, exigences entières et budget.",
+    "Ninguna asignación satisface todas las restricciones estrictas. Revise los resultados mínimos, las capacidades compartidas, la compatibilidad, los límites de asignación, los requisitos de números enteros y el presupuesto."
+  ],
+  "The objective has no finite optimum under these explicit limits. Add a finite capacity, output limit, or budget where the business requires one.": [
+    "Bu açık sınırlar altında sonlu optimum yok. İş gereksinimine göre sonlu kapasite, çıktı sınırı veya bütçe ekleyin.",
+    "L’objectif n’a pas d’optimum fini avec ces limites. Ajoutez une capacité, une limite de production ou un budget fini selon les besoins métier.",
+    "El objetivo no tiene un óptimo finito bajo estos límites explícitos. Agregue una capacidad finita, un límite de producción o un presupuesto cuando el negocio lo requiera."
+  ],
+  "The solver did not establish a usable solution or a definitive status. No allocation is displayed. Try a smaller or better-scaled model.": [
+    "Çözücü kullanılabilir çözüm veya kesin durum belirleyemedi. Tahsis gösterilmiyor. Daha küçük veya uygun ölçekli model deneyin.",
+    "Le solveur n’a établi ni solution utilisable ni statut définitif. Aucune allocation n’est affichée. Essayez un modèle plus petit ou mieux échelonné.",
+    "El solucionador no estableció una solución utilizable ni un estado definitivo. No se muestra ninguna asignación. Pruebe con un modelo más pequeño o mejor escalado."
+  ],
+  "The solver result failed independent validation. No allocation was accepted.": [
+    "Çözücü sonucu bağımsız doğrulamadan geçemedi. Tahsis kabul edilmedi.",
+    "Le résultat a échoué à la validation indépendante. Aucune allocation n’a été acceptée.",
+    "El resultado del solucionador no superó la validación independiente. No se aceptó ninguna asignación."
+  ],
+  "Import destination": [
+    "İçe aktarma hedefi",
+    "Destination de l’import",
+    "Destino de importación"
+  ],
+  "Open resource allocation": [
+    "Kaynak tahsisini aç",
+    "Ouvrir l’allocation des ressources",
+    "Asignación de recursos abiertos"
+  ],
+  "Turn existing CSV files into validated operational data.": [
+    "Mevcut CSV dosyalarını doğrulanmış operasyon verilerine dönüştürün.",
+    "Transformez vos CSV en données opérationnelles validées.",
+    "Convierta archivos CSV existentes en datos operativos validados."
+  ],
+  "Scheduling and Resource Allocation are functional. The other four modules are planned features.": [
+    "Vardiya Planlama ve Kaynak Tahsisi çalışır durumdadır. Diğer dört modül planlanmaktadır.",
+    "La planification et l’allocation des ressources sont fonctionnelles. Les quatre autres modules sont prévus.",
+    "La programación y la asignación de recursos son funcionales. Los otros cuatro módulos son características planificadas."
+  ],
+  "Business-system integrations, validated scenario comparisons, and four additional optimization modules.": [
+    "İş sistemi entegrasyonları, doğrulanmış senaryo karşılaştırmaları ve dört ek optimizasyon modülü.",
+    "Intégrations métier, comparaisons de scénarios validées et quatre modules d’optimisation supplémentaires.",
+    "Integraciones de sistemas empresariales, comparaciones de escenarios validados y cuatro módulos de optimización adicionales."
+  ],
+  "OptiFlow v0.2 · Built for better decisions": [
+    "OptiFlow v0.2 · Daha iyi kararlar için",
+    "OptiFlow v0.2 · Pour de meilleures décisions",
+    "OptiFlow v0.2 · Creado para tomar mejores decisiones"
+  ],
+  "UNBOUNDED": [
+    "SINIRSIZ",
+    "NON BORNÉ",
+    "ILIMITADO"
+  ],
+  "ERROR": [
+    "HATA",
+    "ERREUR",
+    "ERROR"
+  ],
+  "Optimizing…": [
+    "Optimize ediliyor…",
+    "Optimisation en cours…",
+    "Optimizando…"
+  ],
+  "Drop CSV or Excel files here": [
+    "CSV veya Excel dosyalarını buraya bırakın",
+    "Déposez des fichiers CSV ou Excel ici",
+    "Suelte archivos CSV o Excel aquí"
+  ],
+  "Choose CSV or Excel files": [
+    "CSV veya Excel dosyalarını seçin",
+    "Choisir des fichiers CSV ou Excel",
+    "Elija archivos CSV o Excel"
+  ],
+  "JOINT MULTI-PERIOD PLANNING": [
+    "BİRLİKTE ÇOK DÖNEMLİ PLANLAMA",
+    "PLANIFICATION MULTIPÉRIODE CONJOINTE",
+    "PLANIFICACIÓN CONJUNTA MULTIPERIODO"
+  ],
+  "From spreadsheet to verified decisions": [
+    "Elektronik tablodan doğrulanmış kararlara",
+    "Du tableur aux décisions vérifiées",
+    "De la hoja de cálculo a las decisiones verificadas"
+  ],
+  "One model across all periods. Explicit resource policies, immutable run snapshots, and independent verification.": [
+    "Tüm dönemler için tek model. Açık kaynak politikaları, değiştirilemez çalışma kayıtları ve bağımsız doğrulama.",
+    "Un modèle pour toutes les périodes. Politiques de ressources explicites, instantanés immuables et vérification indépendante.",
+    "Un modelo para todos los períodos. Políticas de recursos explícitas, instantáneas de ejecución inmutables y verificación independiente."
+  ],
+  "Model & constraints": [
+    "Model ve kısıtlar",
+    "Modèle et contraintes",
+    "Modelo y restricciones"
+  ],
+  "Scenarios & run history": [
+    "Senaryolar ve çalışma geçmişi",
+    "Scénarios et historique des exécutions",
+    "Escenarios e historial de ejecución"
+  ],
+  "Compare runs": [
+    "Çalışmaları karşılaştır",
+    "Comparer les exécutions",
+    "Comparar ejecuciones"
+  ],
+  "Download fictional sample workbook": [
+    "Örnek çalışma kitabını indir",
+    "Télécharger le classeur d’exemple",
+    "Descargar libro de trabajo de muestra ficticio"
+  ],
+  "Import CSV / Excel into selected period": [
+    "Seçili döneme CSV / Excel aktar",
+    "Importer CSV / Excel dans la période choisie",
+    "Importar CSV/Excel al período seleccionado"
+  ],
+  "seconds": [
+    "saniye",
+    "secondes",
+    "artículos de segunda clase"
+  ],
+  "observed simplex objective": [
+    "gözlenen simpleks amaç değeri",
+    "valeur objective simplex observée",
+    "objetivo simplex observado"
+  ],
+  "not a verified result": [
+    "doğrulanmış bir sonuç değil",
+    "résultat non vérifié",
+    "no es un resultado verificado"
+  ],
+  "Cancel optimization": [
+    "Optimizasyonu iptal et",
+    "Annuler l’optimisation",
+    "Cancelar optimización"
+  ],
+  "Scenario name": [
+    "Senaryo adı",
+    "Nom du scénario",
+    "Nombre del escenario"
+  ],
+  "Save scenario": [
+    "Senaryoyu kaydet",
+    "Enregistrer le scénario",
+    "Guardar escenario"
+  ],
+  "Save as new scenario": [
+    "Yeni senaryo olarak kaydet",
+    "Enregistrer comme nouveau scénario",
+    "Guardar como nuevo escenario"
+  ],
+  "Replace the working model with a labeled fictional sample?": [
+    "Çalışma modelini etiketli örnek verilerle değiştirmek istiyor musunuz?",
+    "Remplacer le modèle actif par un exemple fictif étiqueté ?",
+    "¿Reemplazar el modelo funcional con una muestra ficticia etiquetada?"
+  ],
+  "Start an empty model? Saved scenarios and runs remain available.": [
+    "Boş bir model başlatılsın mı? Kaydedilen senaryolar ve çalışmalar erişilebilir kalır.",
+    "Démarrer un modèle vide ? Les scénarios et exécutions enregistrés resteront disponibles.",
+    "¿Iniciar un modelo vacío? Los escenarios y ejecuciones guardados siguen estando disponibles."
+  ],
+  "Maximize explicitly weighted output": [
+    "Açıkça ağırlıklandırılmış çıktıyı en üst düzeye çıkar",
+    "Maximiser la production explicitement pondérée",
+    "Maximizar la producción ponderada explícitamente"
+  ],
+  "Maximize net value (gross value − cost)": [
+    "Net değeri en üst düzeye çıkar (brüt değer − maliyet)",
+    "Maximiser la valeur nette (valeur brute − coût)",
+    "Maximizar el valor neto (valor bruto − costo)"
+  ],
+  "Legacy priority-weighted value": [
+    "Eski öncelik ağırlıklı değer",
+    "Ancienne valeur pondérée par priorité",
+    "Valor ponderado por prioridad heredado"
+  ],
+  "Horizon budget (blank = no additional limit)": [
+    "Planlama bütçesi (boş = ek sınır yok)",
+    "Budget de l’horizon (vide = aucune limite supplémentaire)",
+    "Presupuesto horizonte (en blanco = sin límite adicional)"
+  ],
+  "Solve limit (1–120 seconds)": [
+    "Çözüm süresi sınırı (1–120 saniye)",
+    "Limite de résolution (1 à 120 secondes)",
+    "Límite de resolución (1 a 120 segundos)"
+  ],
+  "Period costs are costs of consumption. Receipts are fixed inputs, not purchase decisions. Output weights are explicit unit conversions; priorities never change monetary net value.": [
+    "Dönem maliyetleri tüketim maliyetleridir. Girişler sabit verilerdir; satın alma kararları değildir. Çıktı ağırlıkları açık birim dönüşümleridir; öncelikler parasal net değeri değiştirmez.",
+    "Les coûts de période sont des coûts de consommation. Les réceptions sont des données fixes, pas des décisions d’achat. Les poids de production sont des conversions d’unité explicites ; les priorités ne changent jamais la valeur nette monétaire.",
+    "Los costos del período son costos de consumo. Los recibos son insumos fijos, no decisiones de compra. Las ponderaciones de salida son conversiones de unidades explícitas; Las prioridades nunca cambian el valor monetario neto."
+  ],
+  "Planning periods": [
+    "Planlama dönemleri",
+    "Périodes de planification",
+    "Períodos de planificación"
+  ],
+  "Upload locally, let AI propose the model, then verify only what needs attention. No invented values or constraints.": [
+    "Dosyayı yerel olarak yükleyin, modeli yapay zekâ önersin ve yalnızca dikkat gerektiren noktaları doğrulayın. Değer veya kısıt üretilmez.",
+    "Importez localement, laissez l’IA proposer le modèle, puis vérifiez uniquement les points nécessaires. Aucune valeur ni contrainte n’est inventée.",
+    "Cargue localmente, deje que AI proponga el modelo y luego verifique solo lo que necesita atención. Sin valores ni restricciones inventados."
+  ],
+  "I consent to sending minimized column metadata and redacted representative values to the configured AI provider for this import.": [
+    "Bu içe aktarma için azaltılmış sütun meta verilerinin ve maskelenmiş örnek değerlerin yapılandırılmış yapay zekâ sağlayıcısına gönderilmesini kabul ediyorum.",
+    "J’accepte l’envoi de métadonnées de colonnes minimisées et de valeurs représentatives masquées au fournisseur d’IA configuré pour cet import.",
+    "Doy mi consentimiento para enviar metadatos de columnas minimizados y valores representativos redactados al proveedor de IA configurado para esta importación."
+  ],
+  "Files are parsed locally. Full rows are not sent; likely personal, payroll, and identifier values are redacted before the request.": [
+    "Dosyalar yerel olarak ayrıştırılır. Tam satırlar gönderilmez; olası kişisel, ücret ve kimlik değerleri istekten önce maskelenir.",
+    "Les fichiers sont analysés localement. Les lignes complètes ne sont pas envoyées ; les données personnelles, salariales et d’identification probables sont masquées avant la requête.",
+    "Los archivos se analizan localmente. No se envían filas completas; Los valores personales, de nómina y de identificador probables se redactan antes de la solicitud."
+  ],
+  "AI Processing": [
+    "Yapay Zekâ İşleme",
+    "Traitement par l’IA",
+    "Procesamiento de IA"
+  ],
+  "Verify AI results": [
+    "Yapay zekâ sonuçlarını doğrula",
+    "Vérifier les résultats de l’IA",
+    "Verificar los resultados de la IA"
+  ],
+  "Start AI processing": [
+    "Yapay zekâ işlemeyi başlat",
+    "Démarrer le traitement par l’IA",
+    "Iniciar el procesamiento de IA"
+  ],
+  "AI is analyzing the import…": [
+    "Yapay zekâ içe aktarmayı inceliyor…",
+    "L’IA analyse l’import…",
+    "La IA analiza la importación…"
+  ],
+  "Identifying datasets, column meanings, transformations, and unresolved information.": [
+    "Veri kümeleri, sütun anlamları, dönüşümler ve çözümlenmemiş bilgiler belirleniyor.",
+    "Identification des jeux de données, du sens des colonnes, des transformations et des informations non résolues.",
+    "Identificar conjuntos de datos, significados de columnas, transformaciones e información no resuelta."
+  ],
+  "Cancel AI processing": [
+    "Yapay zekâ işlemini iptal et",
+    "Annuler le traitement par l’IA",
+    "Cancelar el procesamiento de IA"
+  ],
+  "AI processing is required": [
+    "Yapay zekâ işlemesi gerekli",
+    "Le traitement par l’IA est requis",
+    "Se requiere procesamiento de IA"
+  ],
+  "Retry AI processing to continue. OptiFlow will not silently substitute rule-based mapping.": [
+    "Devam etmek için yapay zekâ işlemesini yeniden deneyin. OptiFlow sessizce kural tabanlı eşlemeye geçmez.",
+    "Relancez le traitement par l’IA pour continuer. OptiFlow ne le remplacera pas silencieusement par un mappage fondé sur des règles.",
+    "Vuelva a intentar el procesamiento de IA para continuar. OptiFlow no sustituirá silenciosamente el mapeo basado en reglas."
+  ],
+  "Retry AI processing": [
+    "Yapay zekâ işlemesini yeniden dene",
+    "Relancer le traitement par l’IA",
+    "Reintentar el procesamiento de IA"
+  ],
+  "Corrections requiring approval": [
+    "Onay gerektiren düzeltmeler",
+    "Corrections nécessitant une approbation",
+    "Correcciones que requieren aprobación"
+  ],
+  "AI proposals are never applied automatically. Correct the affected source or preview value yourself before saving.": [
+    "Yapay zekâ önerileri otomatik uygulanmaz. Kaydetmeden önce ilgili kaynak veya önizleme değerini kendiniz düzeltin.",
+    "Les propositions de l’IA ne sont jamais appliquées automatiquement. Corrigez vous-même la source ou la valeur d’aperçu concernée avant l’enregistrement.",
+    "Las propuestas de IA nunca se aplican automáticamente. Corrija la fuente afectada o obtenga una vista previa del valor usted mismo antes de guardar."
+  ],
+  "I reviewed these proposals. Keep original values unless I explicitly edit them.": [
+    "Bu önerileri inceledim. Açıkça düzenlemediğim sürece özgün değerleri koru.",
+    "J’ai examiné ces propositions. Conserver les valeurs d’origine sauf modification explicite de ma part.",
+    "Revisé estas propuestas. Mantenga los valores originales a menos que los edite explícitamente."
+  ],
+  "Complete verification & build preview": [
+    "Doğrulamayı tamamla ve önizlemeyi oluştur",
+    "Terminer la vérification et créer l’aperçu",
+    "Verificación completa y vista previa de compilación"
+  ],
+  "AI processing completed. The validated preview is ready.": [
+    "Yapay zekâ işlemesi tamamlandı. Doğrulanmış önizleme hazır.",
+    "Le traitement par l’IA est terminé. L’aperçu validé est prêt.",
+    "Procesamiento de IA completado. La vista previa validada está lista."
+  ],
+  "AI processing completed. Complete the highlighted information.": [
+    "Yapay zekâ işlemesi tamamlandı. Vurgulanan bilgileri tamamlayın.",
+    "Le traitement par l’IA est terminé. Complétez les informations signalées.",
+    "Procesamiento de IA completado. Complete la información resaltada."
+  ],
+  "AI processing completed. Review only the unresolved items.": [
+    "Yapay zekâ işlemesi tamamlandı. Yalnızca çözümlenmemiş öğeleri inceleyin.",
+    "Le traitement par l’IA est terminé. Examinez uniquement les éléments non résolus.",
+    "Procesamiento de IA completado. Revise sólo los elementos no resueltos."
+  ],
+  "AI import processing needs a configured private server.": [
+    "Yapay zekâ ile içe aktarma için yapılandırılmış özel bir sunucu gerekir.",
+    "Le traitement d’import par l’IA nécessite un serveur privé configuré.",
+    "El procesamiento de importaciones de IA necesita un servidor privado configurado."
+  ],
+  "AI import rate limit reached. Wait before retrying.": [
+    "Yapay zekâ içe aktarma istek sınırına ulaşıldı. Yeniden denemeden önce bekleyin.",
+    "La limite de requêtes d’import par l’IA est atteinte. Patientez avant de réessayer.",
+    "Se alcanzó el límite de la tasa de importación de IA. Espere antes de volver a intentarlo."
+  ],
+  "AI import processing is not configured on the server.": [
+    "Sunucuda yapay zekâ ile içe aktarma yapılandırılmamış.",
+    "Le traitement d’import par l’IA n’est pas configuré sur le serveur.",
+    "El procesamiento de importación de IA no está configurado en el servidor."
+  ],
+  "AI import processing failed. Retry without changing the source data.": [
+    "Yapay zekâ ile içe aktarma başarısız oldu. Kaynak verileri değiştirmeden yeniden deneyin.",
+    "Le traitement d’import par l’IA a échoué. Réessayez sans modifier les données sources.",
+    "Falló el procesamiento de importación de IA. Vuelva a intentarlo sin cambiar los datos de origen."
+  ],
+  "AI returned an invalid structured response.": [
+    "Yapay zekâ geçersiz bir yapılandırılmış yanıt döndürdü.",
+    "L’IA a renvoyé une réponse structurée non valide.",
+    "AI devolvió una respuesta estructurada no válida."
+  ],
+  "AI returned an invalid source reference.": [
+    "Yapay zekâ geçersiz bir kaynak başvurusu döndürdü.",
+    "L’IA a renvoyé une référence source non valide.",
+    "AI devolvió una referencia de fuente no válida."
+  ],
+  "AI returned an invalid column mapping.": [
+    "Yapay zekâ geçersiz bir sütun eşlemesi döndürdü.",
+    "L’IA a renvoyé un mappage de colonne non valide.",
+    "AI devolvió una asignación de columnas no válida."
+  ],
+  "AI returned an invalid correction proposal.": [
+    "Yapay zekâ geçersiz bir düzeltme önerisi döndürdü.",
+    "L’IA a renvoyé une proposition de correction non valide.",
+    "AI devolvió una propuesta de corrección no válida."
+  ],
+  "AI did not analyze every source file.": [
+    "Yapay zekâ her kaynak dosyayı incelemedi.",
+    "L’IA n’a pas analysé chaque fichier source.",
+    "La IA no analizó todos los archivos fuente."
+  ],
+  "AI left this column unresolved.": [
+    "Yapay zekâ bu sütunu çözümsüz bıraktı.",
+    "L’IA n’a pas résolu cette colonne.",
+    "AI dejó esta columna sin resolver."
+  ],
+  "Fix parsing errors before AI processing.": [
+    "Yapay zekâ işlemesinden önce ayrıştırma hatalarını düzeltin.",
+    "Corrigez les erreurs d’analyse avant le traitement par l’IA.",
+    "Corrija errores de análisis antes del procesamiento de IA."
+  ],
+  "Verify or edit source mappings": [
+    "Kaynak eşlemelerini doğrula veya düzenle",
+    "Vérifier ou modifier les correspondances sources",
+    "Verificar o editar asignaciones de origen"
+  ],
+  "AI Interpretation": [
+    "Yapay Zekâ Yorumlama",
+    "Interprétation par l’IA",
+    "Interpretación de IA"
+  ],
+  "Missing Information": [
+    "Eksik Bilgiler",
+    "Informations manquantes",
+    "Información faltante"
+  ],
+  "Optional Verification": [
+    "İsteğe Bağlı Doğrulama",
+    "Vérification facultative",
+    "Verificación opcional"
+  ],
+  "Preview": [
+    "Önizleme",
+    "Aperçu",
+    "Avance"
+  ],
+  "Save": [
+    "Kaydet",
+    "Enregistrer",
+    "Ahorrar"
+  ],
+  "Answer only the questions required to complete a trustworthy model. OptiFlow never invents missing rules.": [
+    "Güvenilir bir modeli tamamlamak için yalnızca gerekli soruları yanıtlayın. OptiFlow eksik kuralları asla uydurmaz.",
+    "Répondez uniquement aux questions nécessaires pour compléter un modèle fiable. OptiFlow n’invente jamais les règles manquantes.",
+    "Responda solo las preguntas necesarias para completar un modelo confiable. OptiFlow nunca inventa reglas que faltan."
+  ],
+  "Select an answer": [
+    "Bir yanıt seçin",
+    "Sélectionner une réponse",
+    "Seleccione una respuesta"
+  ],
+  "Continue to optional verification": [
+    "İsteğe bağlı doğrulamaya devam et",
+    "Continuer vers la vérification facultative",
+    "Continuar con la verificación opcional"
+  ],
+  "Continue to save": [
+    "Kaydetmeye devam et",
+    "Continuer vers l’enregistrement",
+    "Continuar guardando"
+  ],
+  "Saved model ID": [
+    "Kaydedilen model kimliği",
+    "Identifiant du modèle enregistré",
+    "ID de modelo guardado"
+  ],
+  "Decision variables": [
+    "Karar değişkenleri",
+    "Variables de décision",
+    "Variables de decisión"
+  ],
+  "None identified": [
+    "Hiçbiri belirlenmedi",
+    "Aucune identifiée",
+    "Ninguno identificado"
+  ],
+  "Constraints": ["Kısıtlar", "Contraintes", "Restricciones"],
+  "Gemini rate limit reached. Wait before retrying.": ["Gemini istek sınırına ulaşıldı. Yeniden denemeden önce bekleyin.", "Limite de requêtes Gemini atteinte. Patientez avant de réessayer.", "Se alcanzó el límite de solicitudes de Gemini. Espere antes de volver a intentarlo."],
+  "Gemini import processing is not configured on the server.": ["Gemini ile içe aktarma sunucuda yapılandırılmamış.", "L’import Gemini n’est pas configuré sur le serveur.", "La importación con Gemini no está configurada en el servidor."],
+  "Gemini import processing failed. Retry without changing the source data.": ["Gemini ile içe aktarma başarısız oldu. Kaynak verileri değiştirmeden tekrar deneyin.", "L’import Gemini a échoué. Réessayez sans modifier les données sources.", "La importación con Gemini falló. Inténtelo de nuevo sin modificar los datos de origen."],
+  "Missing information could not be saved.": ["Eksik bilgiler kaydedilemedi.", "Les informations manquantes n’ont pas pu être enregistrées.", "No se pudo guardar la información faltante."],
+  "Model preview validation failed.": ["Model önizlemesi doğrulanamadı.", "La validation de l’aperçu du modèle a échoué.", "Falló la validación de la vista previa del modelo."],
+  "The validated model could not be saved.": ["Doğrulanmış model kaydedilemedi.", "Le modèle validé n’a pas pu être enregistré.", "No se pudo guardar el modelo validado."],
+  "AI interpretation is explanatory. Deterministic validation remains authoritative.": [
+    "Yapay zekâ yorumu açıklama amaçlıdır. Belirleyici doğrulama esas olmaya devam eder.",
+    "L’interprétation par l’IA est explicative. La validation déterministe reste l’autorité.",
+    "La interpretación de la IA es explicativa. La validación determinista sigue siendo autorizada."
+  ]
+}

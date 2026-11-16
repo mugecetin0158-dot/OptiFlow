@@ -1,0 +1,8 @@
+﻿"resource_id","project_id","compatible","minimum_allocation","maximum_allocation"
+"ENG","WEB","true","0","unlimited"
+"EXT","WEB","true","0","unlimited"
+"DES","WEB","true","0","unlimited"
+"ENG","AUDIT","true","0","unlimited"
+"EXT","AUDIT","true","0","unlimited"
+"DES","AUDIT","true","0","unlimited"
+"KIT","AUDIT","true","0","unlimited"
