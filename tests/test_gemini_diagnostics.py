@@ -1,3 +1,4 @@
+import io
 import json
 import urllib.error
 import urllib.parse
@@ -115,6 +116,118 @@ def test_generation_probe_compares_versions_and_sanitizes_provider_errors(client
     }
     assert KEY not in response.text
     assert "spreadsheet data" not in response.text and sensitive not in response.text
+
+
+def test_structured_output_probe_is_protected_synthetic_and_uses_same_request_context(client, monkeypatch):
+    monkeypatch.setattr(diagnostics, "model_transport", fake_model_response)
+    requests = []
+
+    def fake_generation(request, timeout):
+        requests.append(request)
+        return {"candidates": [{"content": {"parts": [{"text": '{"ok":true}'}]}}]}
+
+    monkeypatch.setattr(diagnostics, "_urlopen_json", fake_generation)
+    unauthorized = client.get("/diagnostics/gemini?structured_output_probe=true")
+    assert unauthorized.status_code == 401
+    assert requests == []
+
+    response = client.get(
+        "/diagnostics/gemini?structured_output_probe=true&target=allocation",
+        headers={"Authorization": f"Bearer {TOKEN}"},
+    )
+    assert response.status_code == 200
+    assert len(requests) == 2
+    assert requests[0].full_url == requests[1].full_url == (
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+    )
+    assert all(request.get_method() == "POST" for request in requests)
+    assert all(request.get_header("X-goog-api-key") == KEY for request in requests)
+    bodies = [json.loads(request.data) for request in requests]
+    assert bodies[0]["generationConfig"]["responseJsonSchema"] == {
+        "type": "object",
+        "properties": {"ok": {"type": "boolean"}},
+        "required": ["ok"],
+    }
+    assert bodies[1]["generationConfig"]["responseJsonSchema"] == (
+        diagnostics.import_foundations.interpretation_schema("allocation")
+    )
+    for body in bodies:
+        assert body["systemInstruction"] == bodies[0]["systemInstruction"]
+        assert body["contents"] == bodies[0]["contents"]
+        assert "synthetic" in body["contents"][0]["parts"][0]["text"]
+        assert "spreadsheet" not in body["contents"][0]["parts"][0]["text"].lower()
+        assert KEY not in json.dumps(body)
+    assert {
+        key: value
+        for key, value in bodies[0]["generationConfig"].items()
+        if key != "responseJsonSchema"
+    } == {
+        key: value
+        for key, value in bodies[1]["generationConfig"].items()
+        if key != "responseJsonSchema"
+    }
+
+    result = response.json()["structured_output_probe"]
+    assert result["api_version"] == "v1beta"
+    assert result["target"] == "allocation"
+    assert result["comparison"] == "both_succeeded"
+    assert result["minimal_schema"] == {"http_status": 200, "category": "success"}
+    assert result["smart_import_schema"] == {"http_status": 200, "category": "success"}
+    assert KEY not in response.text and '{"ok":true}' not in response.text
+
+
+@pytest.mark.parametrize(
+    ("provider_message", "category"),
+    [
+        ("Structured response schema exceeds the state complexity limit.", "schema_complexity"),
+        ("Invalid JSON payload. Unknown name 'providerSecret' at schema.properties.", "unsupported_schema_property"),
+        ("Invalid generation parameter: temperature value.", "request_parameter"),
+    ],
+)
+def test_structured_output_probe_returns_only_sanitized_error_categories(
+    client, monkeypatch, caplog, provider_message, category
+):
+    monkeypatch.setattr(diagnostics, "model_transport", fake_model_response)
+    calls = []
+    sensitive_response = json.dumps({
+        "error": {
+            "message": provider_message,
+            "details": [{"debug": f"{KEY} private spreadsheet contents"}],
+        }
+    })
+
+    def fail_smart_import_schema(request, timeout):
+        calls.append(request)
+        body = json.loads(request.data)
+        if body["generationConfig"]["responseJsonSchema"].get("required") == ["ok"]:
+            return {"candidates": [{"content": {"parts": [{"text": '{"ok":true}'}]}}]}
+        raise urllib.error.HTTPError(
+            request.full_url,
+            400,
+            "Bad Request",
+            {},
+            io.BytesIO(sensitive_response.encode()),
+        )
+
+    monkeypatch.setattr(diagnostics, "_urlopen_json", fail_smart_import_schema)
+    with caplog.at_level("WARNING", logger="optiflow.gemini"):
+        response = client.get(
+            "/diagnostics/gemini?structured_output_probe=true",
+            headers={"Authorization": f"Bearer {TOKEN}"},
+        )
+
+    assert response.status_code == 200
+    result = response.json()["structured_output_probe"]
+    assert result["comparison"] == "smart_import_schema_rejected"
+    assert result["minimal_schema"] == {"http_status": 200, "category": "success"}
+    assert result["smart_import_schema"] == {"http_status": 400, "category": category}
+    assert len(calls) == 2
+    assert KEY not in response.text
+    assert "private spreadsheet contents" not in response.text
+    assert provider_message not in response.text
+    assert KEY not in caplog.text
+    assert "private spreadsheet contents" not in caplog.text
+    assert sensitive_response not in caplog.text
 
 
 def test_configured_model_unavailable(client, monkeypatch):

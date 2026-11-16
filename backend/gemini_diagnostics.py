@@ -5,6 +5,7 @@ import hmac
 import json
 import logging
 import os
+import re
 import socket
 import urllib.error
 import urllib.parse
@@ -14,7 +15,13 @@ from typing import Any, Callable, Literal
 from fastapi import APIRouter, Header, HTTPException
 
 from backend import import_foundations
-from backend.import_foundations import AIProviderFailure, _provider_error_category, _urlopen_json
+from backend.import_foundations import (
+    AIProviderFailure,
+    Target,
+    _provider_error_category,
+    _urlopen_json,
+    interpretation_schema,
+)
 
 logger = logging.getLogger("optiflow.gemini")
 MODEL_LIST_URL = "https://generativelanguage.googleapis.com/v1beta/models"
@@ -158,10 +165,125 @@ def probe_generation(api_key: str, model: str):
     }
 
 
+def _structured_error_category(status: int, error: urllib.error.HTTPError):
+    detail = ""
+    try:
+        body = error.read(8192)
+        document = json.loads(body) if body else {}
+        provider_error = document.get("error", {}) if isinstance(document, dict) else {}
+        if isinstance(provider_error, dict) and isinstance(provider_error.get("message"), str):
+            detail = provider_error["message"].lower()
+    except (OSError, ValueError, TypeError, json.JSONDecodeError):
+        pass
+    finally:
+        error.close()
+
+    if re.search(r"schema.{0,80}(complex|complexity|state limit|branching|nesting)|"
+                 r"(complex|complexity|state limit|branching|nesting).{0,80}schema", detail):
+        return "schema_complexity"
+    if re.search(r"unknown name|unknown field|unsupported (?:schema )?(?:property|keyword|field)|"
+                 r"(?:property|keyword|field).{0,40}not supported", detail):
+        return "unsupported_schema_property"
+    if re.search(r"schema|responsejsonschema|responseschema|responseformat", detail):
+        return "schema_rejected"
+    if status == 400:
+        return "request_parameter"
+    if status in {401, 403}:
+        return "authorization"
+    if status == 404:
+        return "model_or_endpoint"
+    if status == 429:
+        return "rate_limit"
+    if 500 <= status <= 599:
+        return "provider_server_error"
+    return "provider_error"
+
+
+def _probe_structured_schema(
+    api_key: str,
+    model: str,
+    api_version: Literal["v1beta", "v1"],
+    schema: dict[str, Any],
+    transport: ModelTransport | None = None,
+):
+    timeout = max(3.0, min(60.0, float(os.environ.get("GEMINI_TIMEOUT_SECONDS", "20"))))
+    body = {
+        "systemInstruction": {
+            "parts": [{
+                "text": "This is a synthetic provider compatibility check. Return the smallest valid JSON object for the response schema. Use no external or personal data.",
+            }]
+        },
+        "contents": [{
+            "role": "user",
+            "parts": [{"text": "Return the smallest valid response for this synthetic structured-output diagnostic."}],
+        }],
+        "generationConfig": {
+            "temperature": 0,
+            "maxOutputTokens": 4096,
+            "responseMimeType": "application/json",
+            "responseJsonSchema": schema,
+        },
+    }
+    request = urllib.request.Request(
+        import_foundations._generation_url(model, api_version),
+        json.dumps(body).encode(),
+        headers={"Content-Type": "application/json", "x-goog-api-key": api_key},
+        method="POST",
+    )
+    try:
+        response = (transport or _urlopen_json)(request, timeout)
+    except urllib.error.HTTPError as error:
+        return {"http_status": error.code, "category": _structured_error_category(error.code, error)}
+    except (urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError, OSError):
+        return {"http_status": 502, "category": "network_or_transport_error"}
+    except (json.JSONDecodeError, UnicodeDecodeError, TypeError):
+        return {"http_status": 502, "category": "malformed_response"}
+
+    candidates = response.get("candidates") if isinstance(response, dict) else None
+    if not isinstance(candidates, list) or not candidates:
+        return {"http_status": 200, "category": "malformed_response"}
+    return {"http_status": 200, "category": "success"}
+
+
+def probe_structured_output(
+    api_key: str,
+    model: str,
+    target: Target = "scheduling",
+    api_version: Literal["v1beta", "v1"] = "v1beta",
+    transport: ModelTransport | None = None,
+):
+    """Compare JSON mode against the production Smart Import schema using synthetic input only."""
+    minimal_schema = {
+        "type": "object",
+        "properties": {"ok": {"type": "boolean"}},
+        "required": ["ok"],
+    }
+    smart_import_schema = interpretation_schema(target)
+    minimal = _probe_structured_schema(api_key, model, api_version, minimal_schema, transport)
+    smart_import = _probe_structured_schema(api_key, model, api_version, smart_import_schema, transport)
+    if minimal["category"] == "success" and smart_import["category"] == "success":
+        comparison = "both_succeeded"
+    elif minimal["category"] == "success":
+        comparison = "smart_import_schema_rejected"
+    elif smart_import["category"] == "success":
+        comparison = "minimal_schema_rejected"
+    else:
+        comparison = "both_rejected"
+    return {
+        "api_version": api_version,
+        "target": target,
+        "minimal_schema": minimal,
+        "smart_import_schema": smart_import,
+        "comparison": comparison,
+    }
+
+
 @router.get("/diagnostics/gemini")
 def gemini_diagnostics(
     authorization: str | None = Header(default=None),
     probe: bool = False,
+    structured_output_probe: bool = False,
+    target: Target = "scheduling",
 ):
     """Discover accessible generation models; requires a server-only bearer token."""
     diagnostic_token = os.environ.get("GEMINI_DIAGNOSTIC_TOKEN", "").strip()
@@ -180,6 +302,12 @@ def gemini_diagnostics(
     result = discover_models(api_key, configured_model)
     if probe:
         result["generation_probe"] = probe_generation(api_key, configured_model)
+    if structured_output_probe:
+        result["structured_output_probe"] = probe_structured_output(
+            api_key,
+            configured_model,
+            target,
+        )
     return result
 
 
