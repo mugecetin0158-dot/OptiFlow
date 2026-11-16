@@ -1,6 +1,11 @@
 import { ImportSource, ImportDraft, Issue, emptyDraft } from "./types";
 import { mappingConflicts } from "./recognition";
-import { missingMappings, transformRow } from "./transformations";
+import {
+  canonicalField,
+  mappingOutputs,
+  missingMappings,
+  transformRow,
+} from "./transformations";
 export function transformSources(sources: ImportSource[]): {
   draft: ImportDraft;
   issues: Issue[];
@@ -77,7 +82,6 @@ export function transformSources(sources: ImportSource[]): {
         message: "Confirm or clear all suggested mappings.",
         source,
       });
-      continue;
     }
     const usedRows = new Set<number>();
     for (const kind of file.kinds) {
@@ -131,6 +135,15 @@ export function transformSources(sources: ImportSource[]): {
         }
         const ref = { ...source, row: file.parsed.lineNumbers[index] };
         const { values, pending } = transformRow(file, row, kind);
+        file.mappings.forEach((mapping, column) => {
+          if (mapping.state !== "suggested") return;
+          for (const output of mappingOutputs(mapping)) {
+            const field = canonicalField(output, kind);
+            if (field && values[field])
+              pending[field] ||=
+                "Confirm this suggested source-column mapping before accepting its value.";
+          }
+        });
         if (Object.values(values).every((v) => !v)) return;
         usedRows.add(index);
         if (kind === "employees") {

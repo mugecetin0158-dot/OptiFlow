@@ -423,7 +423,7 @@ test("employee-only AI imports retain employee data and report genuinely missing
   );
 });
 
-test("ambiguous AI mappings wait for clarification instead of creating guessed records", () => {
+test("ambiguous AI mappings populate provisional records and block acceptance pending clarification", () => {
   const ambiguous: SyntheticFile[] = [{
     ...syntheticFiles[0],
     text: "employee_id,name,rate,max_weekly_hours,roles\nEMP-001,Example Worker,20,40,Picker",
@@ -441,9 +441,18 @@ test("ambiguous AI mappings wait for clarification instead of creating guessed r
   });
   const prepared = prepareAIImport(sources, analysis);
   assert.equal(prepared.requiresMappingReview, true);
-  assert.deepEqual(prepared.draft.employees, []);
+  assert.equal(prepared.draft.employees.length, 1);
+  assert.equal(prepared.draft.employees[0].values.hourly_rate, "20");
+  assert.match(
+    prepared.draft.employees[0].pending?.hourly_rate || "",
+    /Confirm this suggested source-column mapping/,
+  );
   assert.equal(prepared.sources[0].mappings[2].state, "suggested");
-  assert.ok(prepared.issues.some((issue) => issue.code === "classification"));
+  assert.ok(prepared.issues.some((issue) => issue.code === "confirmation"));
+  assert.equal(
+    validateDraft(prepared.draft, emptyRules, "employees").valid,
+    false,
+  );
 });
 
 test("invalid AI-mapped values remain visible with source provenance and block validation", () => {

@@ -292,12 +292,7 @@ export function prepareAIImport(
   const applied = applyImportAnalysis(sources, result);
   const prepared = applied.map((source) => ({
     ...source,
-    confirmed:
-      !source.kinds.length ||
-      !source.mappings.some(
-        (mapping) =>
-          mapping.state === "suggested" || mapping.state === "unmapped",
-      ),
+    confirmed: true,
   }));
   return {
     sources: prepared,

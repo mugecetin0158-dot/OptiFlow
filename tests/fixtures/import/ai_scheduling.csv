@@ -1,0 +1,2 @@
+employee_id,name,hourly_rate,max_weekly_hours,roles,availability_date,availability_start_time,availability_end_time,availability_status,shift_id,shift_date,shift_start_time,shift_end_time,required_count,required_role
+EMP-001,Example Worker,20,40,"[""Picker""]",2026-11-16,09:00,17:00,available,SHIFT-001,2026-11-16,09:00,17:00,1,Picker

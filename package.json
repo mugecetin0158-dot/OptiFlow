@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
-    "test": "node --import tsx tests/solver.test.ts && node --import tsx tests/i18n.test.ts && node --import tsx tests/import.test.ts && node --import tsx tests/import-transformations.test.ts && node --import tsx tests/import-ui.test.tsx && node --import tsx tests/allocation.test.ts && node --import tsx tests/allocation-ui.test.tsx && node --import tsx tests/planning.test.ts && node --import tsx tests/planning-ui.test.tsx && node --import tsx tests/spreadsheet.test.ts && node --import tsx tests/automation.test.ts",
+    "test": "node --import tsx tests/solver.test.ts && node --import tsx tests/i18n.test.ts && node --import tsx tests/import.test.ts && node --import tsx tests/import-transformations.test.ts && node --import tsx tests/import-ui.test.tsx && node --import tsx tests/import-e2e.test.tsx && node --import tsx tests/allocation.test.ts && node --import tsx tests/allocation-ui.test.tsx && node --import tsx tests/planning.test.ts && node --import tsx tests/planning-ui.test.tsx && node --import tsx tests/spreadsheet.test.ts && node --import tsx tests/automation.test.ts",
     "typecheck": "tsc --noEmit",
     "check:production": "node scripts/check-production.mjs"
   },
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
+    "jsdom": "^26.1.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   },
