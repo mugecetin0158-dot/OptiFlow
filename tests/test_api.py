@@ -4,6 +4,7 @@ import logging
 import urllib.error
 import urllib.request
 from pathlib import Path
+import pytest
 from pydantic import ValidationError
 from backend.main import Scenario,minutes,solve
 from backend.import_foundations import ParsedUploadRequest, InterpretRequest, AnswerRequest, PreviewRequest, validate_parsed_upload, interpret, answer_questions, preview_model, save_model
@@ -120,6 +121,26 @@ def test_malformed_gemini_response_is_safe(monkeypatch):
     except AIProviderFailure as error:
         assert 'malformed structured response' in str(error)
 
+def test_compact_schema_does_not_bypass_strict_pydantic_output_limits(monkeypatch):
+    from backend.import_foundations import GeminiClient, InterpretRequest, AIProviderFailure
+    monkeypatch.setenv('GEMINI_API_KEY', 'test-only')
+    invalid = ai_fixture()
+    invalid['model']['constraints'] = [{
+        'kind': 'capacity',
+        'description': 'A source-supported capacity limit.',
+        'source_fields': [],
+        'hard': True,
+        'confidence': .9,
+    }] * 61
+    client_impl = GeminiClient(lambda request, timeout: {
+        'candidates': [{'content': {'parts': [{'text': json.dumps(invalid)}]}}],
+    })
+    try:
+        client_impl.interpret(InterpretRequest.model_validate(import_request()))
+        assert False
+    except AIProviderFailure as error:
+        assert 'malformed structured response' in str(error)
+
 def test_gemini_request_uses_supported_default_model_and_v1beta_body(monkeypatch):
     from backend.import_foundations import GeminiClient, InterpretRequest
     monkeypatch.setenv('GEMINI_API_KEY', 'test-only-key')
@@ -140,8 +161,8 @@ def test_gemini_request_uses_supported_default_model_and_v1beta_body(monkeypatch
     assert "The selected import destination is 'scheduling'" in instruction
     assert 'destination_note' in instruction
     schema = seen['body']['generationConfig']['responseJsonSchema']
-    assert set(schema['$defs']['FileInterpretation']['properties']['datasets']['items']['enum']) == {'employees','availability','shifts'}
-    assert 'destination_note' in schema['$defs']['FileInterpretation']['required']
+    assert set(schema['properties']['files']['items']['properties']['datasets']['items']['enum']) == {'employees','availability','shifts'}
+    assert 'destination_note' in schema['properties']['files']['items']['required']
 
 def test_allocation_destination_is_enforced_by_gemini_schema_and_validation(monkeypatch):
     from backend import import_foundations as foundations
@@ -155,7 +176,7 @@ def test_allocation_destination_is_enforced_by_gemini_schema_and_validation(monk
     valid = GeminiClient(transport).interpret(request)
     foundations.validate_interpretation(request, valid)
     schema = seen['body']['generationConfig']['responseJsonSchema']
-    allowed = schema['$defs']['FileInterpretation']['properties']['datasets']['items']['enum']
+    allowed = schema['properties']['files']['items']['properties']['datasets']['items']['enum']
     assert set(allowed) == {'resources','projects','demands','links'}
     instruction = seen['body']['systemInstruction']['parts'][0]['text']
     assert "selected import destination is 'allocation'" in instruction
@@ -171,6 +192,73 @@ def test_allocation_destination_is_enforced_by_gemini_schema_and_validation(monk
     except HTTPException as error:
         assert error.status_code == 502
         assert 'matching destination' in error.detail
+
+def test_gemini_response_schema_is_compact_without_losing_import_contract():
+    from backend import import_foundations as foundations
+    from pydantic import ValidationError
+
+    original_size = len(json.dumps(foundations.AIInterpretation.model_json_schema(), separators=(',', ':')))
+    for target, expected_datasets in [
+        ('scheduling', {'employees', 'availability', 'shifts'}),
+        ('allocation', {'resources', 'projects', 'demands', 'links'}),
+    ]:
+        schema = foundations.interpretation_schema(target)
+        assert len(json.dumps(schema, separators=(',', ':'))) < original_size * .6
+        assert not any(key in json.dumps(schema) for key in ('$defs', '$ref'))
+
+        def property_names(node):
+            names = set()
+            if isinstance(node, dict):
+                names.update(node)
+                for value in node.values():
+                    names.update(property_names(value))
+            elif isinstance(node, list):
+                for value in node:
+                    names.update(property_names(value))
+            return names
+
+        assert not property_names(schema).intersection({
+            'title', 'default', 'minLength', 'maxLength', 'minItems', 'maxItems',
+        })
+        assert set(schema['properties']['files']['items']['properties']['datasets']['items']['enum']) == expected_datasets
+        file_properties = schema['properties']['files']['items']['properties']
+        assert {'source_id', 'datasets', 'destination_note', 'columns', 'corrections'} <= set(file_properties)
+        assert {'column', 'field', 'transform', 'confidence', 'reason'} <= set(
+            file_properties['columns']['items']['properties']
+        )
+        assert {'column', 'source_value', 'proposed_value', 'reason', 'substantive'} <= set(
+            file_properties['corrections']['items']['properties']
+        )
+        model_properties = schema['properties']['model']['properties']
+        assert {'objective', 'decision_variables', 'constraints', 'relationships'} <= set(model_properties)
+        assert {'kind', 'description', 'source_fields', 'confidence'} <= set(
+            model_properties['objective']['properties']
+        )
+        assert {'name', 'meaning', 'unit', 'source_fields', 'confidence'} <= set(
+            model_properties['decision_variables']['items']['properties']
+        )
+        assert {'kind', 'description', 'source_fields', 'hard', 'confidence'} <= set(
+            model_properties['constraints']['items']['properties']
+        )
+        assert {'from_dataset', 'from_field', 'to_dataset', 'to_field', 'kind', 'confidence'} <= set(
+            model_properties['relationships']['items']['properties']
+        )
+        assert {'id', 'prompt', 'answer_type', 'options', 'target', 'required'} <= set(
+            schema['properties']['questions']['items']['properties']
+        )
+        confidence = model_properties['objective']['properties']['confidence']
+        assert confidence['minimum'] == 0 and confidence['maximum'] == 1
+
+    question = {
+        'id': 'missing:sheet-1:employees:name',
+        'prompt': 'Which supplied column contains the employee name?',
+        'target': 'employees.name',
+    }
+    with pytest.raises(ValidationError):
+        foundations.AIInterpretation.model_validate({
+            **ai_fixture(),
+            'questions': [question] * 41,
+        })
 
 def test_unmatched_destination_requires_actionable_note_and_no_mapping():
     from backend import import_foundations as foundations

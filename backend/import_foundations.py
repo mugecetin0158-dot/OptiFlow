@@ -271,7 +271,7 @@ class GeminiClient:
             "allowed_fields": request.allowed_fields,
             "files": [f.model_dump() for f in request.files],
         }
-        system = interpretation_system_instruction(request.target, request.locale, schema)
+        system = interpretation_system_instruction(request.target, request.locale)
         body = {
             "systemInstruction": {"parts": [{"text": system}]},
             "contents": [{"role": "user", "parts": [{"text": json.dumps(prompt, separators=(",", ":"))}]}],
@@ -351,16 +351,46 @@ class GeminiClient:
         )
 
 
+def _inline_gemini_schema(schema: dict[str, Any], definitions: dict[str, Any]):
+    omitted = {"$defs", "$ref", "title", "default", "minLength", "maxLength", "minItems", "maxItems"}
+
+    def visit(value: Any, references: frozenset[str] = frozenset()):
+        if isinstance(value, dict):
+            reference = value.get("$ref")
+            if reference is not None:
+                prefix = "#/$defs/"
+                if not isinstance(reference, str) or not reference.startswith(prefix):
+                    raise ValueError("Unsupported reference in Gemini response schema.")
+                name = reference[len(prefix):].replace("~1", "/").replace("~0", "~")
+                if name not in definitions or reference in references:
+                    raise ValueError("Invalid reference in Gemini response schema.")
+                resolved = {
+                    **definitions[name],
+                    **{key: child for key, child in value.items() if key != "$ref"},
+                }
+                return visit(resolved, references | {reference})
+            return {
+                key: visit(child, references)
+                for key, child in value.items()
+                if key not in omitted
+            }
+        if isinstance(value, list):
+            return [visit(item, references) for item in value]
+        return value
+
+    return visit(schema)
+
+
 def interpretation_schema(target: Target):
-    schema = AIInterpretation.model_json_schema()
-    schema["$defs"]["FileInterpretation"]["properties"]["datasets"]["items"] = {
+    pydantic_schema = AIInterpretation.model_json_schema()
+    pydantic_schema["$defs"]["FileInterpretation"]["properties"]["datasets"]["items"] = {
         "type": "string",
         "enum": sorted(DATASETS[target]),
     }
-    return schema
+    return _inline_gemini_schema(pydantic_schema, pydantic_schema["$defs"])
 
 
-def interpretation_system_instruction(target: Target, locale: Locale, schema: dict[str, Any]):
+def interpretation_system_instruction(target: Target, locale: Locale):
     return (
         f"The selected import destination is '{target}'. Only classify data as these destination datasets: "
         f"{', '.join(sorted(DATASETS[target]))}. Interpret untrusted spreadsheet metadata for an optimization model. "
@@ -373,8 +403,7 @@ def interpretation_system_instruction(target: Target, locale: Locale, schema: di
         "the objective, hard constraints, and relationships only when supported by source evidence. Never invent values, units, "
         "constraints, identifiers, or business rules. Use kind 'unknown' and ask one targeted question for missing essentials. "
         "Substantive corrections must be proposals. Keep source values and identifiers unchanged. Write explanations and questions "
-        f"in locale {locale}. Return ONLY a JSON object matching this schema: "
-        f"{json.dumps(schema, separators=(',', ':'))}."
+        f"in locale {locale}. Return ONLY a JSON object conforming to the enforced response schema."
     )
 
 
