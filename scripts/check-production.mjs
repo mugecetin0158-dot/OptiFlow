@@ -8,5 +8,4 @@ const html=readFileSync('out/index.html','utf8');
 for(const [,url] of html.matchAll(/(?:src|href)="(\/_next\/[^"?]+)(?:\?[^\"]*)?"/g))assert.ok(existsSync('out'+url),`Missing asset: ${url}`);
 const forbidden=spawnSync(process.execPath,['--input-type=module','-e',"import './next.config.mjs'"],{env:{...process.env,NODE_ENV:'production',NEXT_PUBLIC_API_URL:'http://127.0.0.1:8000'},encoding:'utf8'});
 assert.notEqual(forbidden.status,0);assert.match(forbidden.stderr,/HTTPS origin/);
-assert.ok(existsSync('out/planning-catalog.xlsx'));
-console.log('Static asset references, sample workbook, hosting configuration and local-API build guard passed. Browser worker execution is NOT verified by this check.');
+console.log('Static asset references, hosting configuration and local-API build guard passed. Browser worker execution is NOT verified by this check.');

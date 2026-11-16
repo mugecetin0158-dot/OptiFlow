@@ -6,11 +6,11 @@ A runnable business optimization prototype with a landing page, dashboard, six-m
 
 ## Spreadsheet-to-optimization upgrade
 
-Resource Allocation now supports joint multi-period LP/MILP planning, explicit renewable/consumable policies, cost/output/net-value objectives, independent verification, saved scenarios, immutable local run history, cancellation, comparisons and CSV/Excel exports. Both Smart Import destinations accept CSV and XLSX; Excel worksheets are normalized independently and automatically. See the [upgrade guide, mathematical formulation, test instructions and limitations](docs/PLANNING_UPGRADE.md).
+Resource Allocation now supports joint multi-period LP/MILP planning, explicit renewable/consumable policies, cost/output/net-value objectives, independent verification, saved scenarios, immutable local run history, cancellation, comparisons and CSV/Excel exports. Both Smart Import destinations accept multiple CSV files, with AI-first interpretation and deterministic validation. See the [upgrade guide, mathematical formulation, test instructions and limitations](docs/PLANNING_UPGRADE.md).
 
 ## Smart Import
 
-OptiFlow includes browser-local CSV/XLSX parsing followed, after explicit consent, by backend-only Gemini interpretation. Deterministic transformation and validation remain authoritative; missing facts become targeted questions and are never invented. See [AI-first setup and limits](docs/ai-first-import.md) and the [schema guide](docs/SMART_IMPORT.md).
+OptiFlow includes browser-local CSV parsing followed, after explicit consent, by backend-only Gemini interpretation. Deterministic transformation and validation remain authoritative; missing facts become targeted questions and are never invented. See [AI-first setup and limits](docs/ai-first-import.md) and the [schema guide](docs/SMART_IMPORT.md).
 
 ## Resource Allocation
 
@@ -61,7 +61,7 @@ The server uses `GEMINI_IMPORT_MODEL`, `GEMINI_TIMEOUT_SECONDS`, `GEMINI_MAX_RET
 
 ## Languages
 
-Use the language selector in the app header or landing-page navigation to switch between English, Türkçe, and Français. Your preference is stored under `optiflow-language` in this browser. Navigation, forms, validation, solver messages, guide content, and CSV headings are translated. Dates, numbers, and USD amounts follow the selected locale; changing language never converts currencies or alters assignments, employee names, or solver inputs. New run timestamps are stored as ISO instants and displayed in Europe/Istanbul time. CSV dates and numeric values remain in an unambiguous, machine-readable format. Exported files include a UTF-8 BOM for Turkish and French characters. Existing run timestamps saved by v0.1 retain their original display format.
+Use the language selector in the app header or landing-page navigation to switch between English, Türkçe, Français, and Español. Your preference is stored under `optiflow-language` in this browser. Navigation, forms, validation, solver messages, guide content, and CSV headings are translated. Dates, numbers, and USD amounts follow the selected locale; changing language never converts currencies or alters assignments, employee names, or solver inputs. New run timestamps are stored as ISO instants and displayed in Europe/Istanbul time. CSV dates and numeric values remain in an unambiguous, machine-readable format. Exported files include a UTF-8 BOM for non-ASCII characters. Existing run timestamps saved by v0.1 retain their original display format.
 
 Translation catalog: `lib/translations.json`; formatting and dynamic messages: `lib/i18n.ts`.
 
@@ -152,4 +152,4 @@ See [deployment readiness and authorization steps](docs/DEPLOYMENT_READINESS.md)
 
 ## Smart Import automation
 
-CSV/XLSX sources parse locally, then Gemini proposes schema-checked mappings and model semantics after explicit consent. Missing information and uncertain mappings remain reviewable; deterministic validation gates preview and save. See [AI-first setup and limits](docs/ai-first-import.md).
+CSV sources parse locally, then Gemini proposes schema-checked mappings and model semantics after explicit consent. Missing information and uncertain mappings remain reviewable; deterministic validation gates preview and save. See [AI-first setup and limits](docs/ai-first-import.md).

@@ -24,7 +24,7 @@ test("planning workspace exposes editable periods, explicit policies and objecti
     assert.ok(html.includes(text), text);
   assert.ok(!html.includes("Verification: passed"));
 });
-test("allocation import uses three-stage AI navigation and accepts real workbook selection", () => {
+test("allocation import uses three-stage AI navigation and accepts CSV files", () => {
   const html = renderToStaticMarkup(
     <AllocationImport
       initialSettings={emptyDraft().settings}
@@ -40,6 +40,7 @@ test("allocation import uses three-stage AI navigation and accepts real workbook
     assert.ok(html.includes(label));
   assert.ok(!html.includes("Map columns"));
   assert.ok(html.includes("I consent to sending minimized column metadata"));
-  assert.ok(html.includes('accept=".xlsx,.csv,.tsv,text/csv"'));
+  assert.ok(html.includes('accept=".csv,text/csv"'));
+  assert.ok(html.includes("multiple"));
   assert.ok(html.includes("Mapping validation"));
 });

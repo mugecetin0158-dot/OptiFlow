@@ -29,7 +29,6 @@ import {
   Field,
   Mapping,
 } from "../lib/import/types";
-import { readWorkbook } from "../lib/spreadsheet/read";
 import { readFileSync } from "node:fs";
 import { writeCSV, parseCSV } from "../lib/import/csv";
 const staff =
@@ -86,13 +85,10 @@ test("allocation catalog with distinctive complete fields is classified; partial
     false,
   );
 });
-test("Excel worksheets and CSV feed the same deterministic path", async () => {
-  const bytes = readFileSync("public/planning-catalog.xlsx");
-  const sheets = await readWorkbook(new Uint8Array(bytes).buffer);
-  assert.ok(sheets.length > 1);
-  const csv = writeCSV(sheets[0].rows[0], sheets[0].rows.slice(1));
+test("Resource Allocation CSV catalogs use the deterministic import path", () => {
+  const csv = readFileSync("tests/fixtures/allocation/resources.csv", "utf8");
   assert.equal(parseCSV(csv).issues.length, 0);
-  const source = createAllocationSource("x", "workbook", csv);
+  const source = createAllocationSource("x", "resources.csv", csv);
   assert.equal(autoAllocation(source, sampleDraft().settings).confirmed, true);
 });
 test("untrusted AI responses cannot inject unknown fields or records", () => {

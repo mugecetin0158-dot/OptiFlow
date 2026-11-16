@@ -10,7 +10,7 @@ import {
   saveAIImportModel,
   submitMissingAnswers,
 } from "../../lib/import/automation";
-import { useSpreadsheetUpload } from "../SpreadsheetPicker";
+import { useCSVUpload } from "../CsvPicker";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Upload,
@@ -266,15 +266,6 @@ export default function SmartImport({
             delimiter,
           ),
         );
-        const worksheetRows = (file as File & { worksheetRows?: number[] })
-          .worksheetRows;
-        const imported = added[added.length - 1];
-        if (
-          worksheetRows &&
-          !imported.parsed.issues.length &&
-          worksheetRows.length === imported.parsed.rows.length
-        )
-          imported.parsed.lineNumbers = worksheetRows;
       }
       const next = replaceId
         ? sources.map((s) => (s.id === replaceId ? added[0] : s))
@@ -393,7 +384,7 @@ export default function SmartImport({
     }
   }
   const steps = ["Upload", "AI Interpretation", "Missing Information", "Optional Verification", "Preview", "Save"];
-  const { upload, picker } = useSpreadsheetUpload(consumeFiles, t);
+  const { upload, picker } = useCSVUpload(consumeFiles, t);
   return (
     <div className="smart-import">
       {picker}
@@ -593,8 +584,6 @@ export default function SmartImport({
                   <option value="auto">{t("Detect from header")}</option>
                   <option value=",">{t("Comma")}</option>
                   <option value=";">{t("Semicolon")}</option>
-                  <option value={"\t"}>Tab</option>
-                  <option value="|">|</option>
                 </select>
               </label>
               <label>
@@ -626,7 +615,7 @@ export default function SmartImport({
               }}
             >
               <Upload size={32} />
-              <h3>{t("Drop CSV or Excel files here")}</h3>
+              <h3>{t("Drop CSV files here")}</h3>
               <p>{t("Up to 10 files · 2 MB per file · 5,000 rows per file")}</p>
               <button
                 className="btn primary"
@@ -634,12 +623,12 @@ export default function SmartImport({
                 onClick={() => input.current?.click()}
               >
                 {busy ? <Loader2 className="spin" size={16} /> : <PlusIcon />}
-                {t(busy ? "Reading files…" : "Choose CSV or Excel files")}
+                {t(busy ? "Reading files…" : "Choose CSV files")}
               </button>
               <input
                 ref={input}
                 type="file"
-                accept=".xlsx,.csv,.tsv,text/csv,text/tab-separated-values"
+                accept=".csv,text/csv"
                 multiple={!replaceId}
                 hidden
                 onChange={(e) => void upload(Array.from(e.target.files || []))}

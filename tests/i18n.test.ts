@@ -80,6 +80,28 @@ test("four-language catalog has complete nonempty translations", () => {
   assert.match(formatMoney("es", 12345.5), /12\.345,50/);
 });
 
+test("CSV-only import removes obsolete Excel messages and retains export translations", () => {
+  const obsoleteKeys = [
+    "Drop CSV or Excel files here",
+    "Choose CSV or Excel files",
+    "Unsupported file type. Choose an .xlsx, .csv or .tsv file.",
+    "Encrypted workbooks are unsupported.",
+    "Reading workbook locally…",
+    "Worksheet has no tabular data to import.",
+    "Import CSV / Excel into selected period",
+    "Download fictional sample workbook",
+  ];
+  for (const key of obsoleteKeys)
+    assert.equal(catalog[key as keyof typeof catalog], undefined, key);
+
+  assert.ok(catalog["From spreadsheet to verified decisions"]);
+  assert.ok(
+    catalog[
+      "Spreadsheet formula-like text is preserved. Import exports as text in spreadsheet software."
+    ],
+  );
+});
+
 test("literal UI translation calls resolve in all four languages", () => {
   function files(directory: string): string[] {
     return readdirSync(directory, { withFileTypes: true }).flatMap((entry) =>

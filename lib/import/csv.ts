@@ -74,7 +74,7 @@ export function parseCSV(text: string, chosen = "auto"): ParsedCSV {
       fail("Delimiter is ambiguous. Choose a delimiter explicitly.");
     delimiter = entries[0][1] ? entries[0][0] : ",";
   }
-  if (![",", ";", "\t", "|"].includes(delimiter)) {
+  if (![",", ";"].includes(delimiter)) {
     fail("Unsupported delimiter.");
     return { headers: [], rows: [], lineNumbers: [], delimiter, issues };
   }
@@ -88,7 +88,7 @@ export function parseCSV(text: string, chosen = "auto"): ParsedCSV {
     start = 1;
   const finish = () => {
     row.push(cell);
-    if (row.some((v) => v.trim() !== "")) {
+    if (row.length > 1 || closed || row.some((v) => v.trim() !== "")) {
       records.push(row);
       lines.push(start);
     }
@@ -110,7 +110,13 @@ export function parseCSV(text: string, chosen = "auto"): ParsedCSV {
         }
       } else {
         cell += c;
-        if (c === "\n") line++;
+        if (c === "\r") {
+          if (text[i + 1] === "\n") {
+            cell += "\n";
+            i++;
+          }
+          line++;
+        } else if (c === "\n") line++;
       }
       continue;
     }

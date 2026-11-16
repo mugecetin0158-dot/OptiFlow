@@ -14,7 +14,6 @@ import {
   recover,
 } from "../lib/planning/history";
 import { runSheets, sheetCSV, excel } from "../lib/planning/export";
-import { readWorkbook } from "../lib/spreadsheet/read";
 import { parseCSV } from "../lib/import/csv";
 const g = GLPK();
 function plan(): Plan {
@@ -396,10 +395,12 @@ test("CSV and Excel exports include snapshots and verification and preserve text
       rows: [["001", '=HYPERLINK("x")']],
     },
   ]);
-  const workbook = await readWorkbook(new Uint8Array(bytes as any).buffer);
-  assert.equal(workbook[0].rows[1][0], "001");
-  assert.equal(workbook[0].rows[1][1], '=HYPERLINK("x")');
-  assert.equal(workbook[0].formulas.length, 0);
+  const module = await import("exceljs");
+  const ExcelJS = module.default ?? module;
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(bytes);
+  assert.equal(workbook.worksheets[0].getCell("A2").value, "001");
+  assert.equal(workbook.worksheets[0].getCell("B2").value, '=HYPERLINK("x")');
   const failed = {
     ...run,
     status: "ERROR" as const,
@@ -407,26 +408,6 @@ test("CSV and Excel exports include snapshots and verification and preserve text
   };
   assert.ok(!runSheets(failed).some((s) => s.name === "Allocations"));
 });
-test("Excel worksheets, formulas, zero-padded IDs and ambiguous precision remain explicit", async () => {
-  const module = await import("exceljs");
-  const ExcelJS = module.default ?? module;
-  const w = new ExcelJS.Workbook(),
-    s = w.addWorksheet("Staff");
-  s.addRow(["Badge", "Cost"]);
-  s.addRow([1, { formula: "1+1", result: 2 }]);
-  s.getCell("A2").numFmt = "000";
-  w.addWorksheet("Other").addRow(["Header"]);
-  const bytes = await w.xlsx.writeBuffer();
-  const result = await readWorkbook(new Uint8Array(bytes as any).buffer);
-  assert.equal(result.length, 2);
-  assert.equal(result[0].rows[1][0], "001");
-  assert.deepEqual(result[0].formulas, [{ row: 1, col: 1, cached: "2" }]);
-  await assert.rejects(
-    readWorkbook(new Uint8Array([1, 2, 3]).buffer),
-    /archive/,
-  );
-});
-
 test("allocation profiles reuse normalized reordered headers, require reconfirmation and revalidate new values", async () => {
   const {
     createAllocationSource,
@@ -479,56 +460,6 @@ test("allocation profiles reuse normalized reordered headers, require reconfirma
         profile,
       ),
     /same source headers/,
-  );
-});
-test("worksheet clock/date values enter the existing deterministic scheduling transformation pipeline", async () => {
-  const { default: ExcelJS } = await import("exceljs");
-  const w = new ExcelJS.Workbook(),
-    s = w.addWorksheet("Windows");
-  s.addRow(["Badge", "Day", "Time Window", "Can Work?"]);
-  s.addRow(["W001", "2026-11-16", "14:00-22:00", "YES"]);
-  s.addRow(["W002", "11/17/2026", "09:00-17:00", "NO"]);
-  const clock = w.addWorksheet("Times");
-  clock.addRow(["clock", "date"]);
-  clock.addRow([
-    new Date("1899-12-30T09:00:00Z"),
-    new Date("2026-11-16T00:00:00Z"),
-  ]);
-  clock.getCell("A2").numFmt = "hh:mm";
-  clock.getCell("B2").numFmt = "yyyy-mm-dd";
-  const bytes = await w.xlsx.writeBuffer(),
-    sheets = await readWorkbook(new Uint8Array(bytes as any).buffer);
-  assert.deepEqual(sheets[1].rows[1], ["09:00", "2026-11-16"]);
-  const { writeCSV } = await import("../lib/import/csv");
-  const { createSource } = await import("../lib/import/recognition");
-  const { transformSources } = await import("../lib/import/pipeline");
-  const source = createSource(
-    "xlsx",
-    "Windows worksheet",
-    writeCSV(sheets[0].rows[0], sheets[0].rows.slice(1)),
-  );
-  source.kinds = ["availability"];
-  source.confirmed = true;
-  source.mappings = source.mappings.map((m) => ({ ...m, state: "confirmed" }));
-  const transformed = transformSources([source]);
-  assert.deepEqual(
-    transformed.draft.availability.map((r) => r.values),
-    [
-      {
-        employee_id: "W001",
-        date: "2026-11-16",
-        start_time: "14:00",
-        end_time: "22:00",
-        status: "available",
-      },
-      {
-        employee_id: "W002",
-        date: "2026-11-17",
-        start_time: "09:00",
-        end_time: "17:00",
-        status: "unavailable",
-      },
-    ],
   );
 });
 test("scheduling verification exports distinguish manual edits and reject violations", async () => {
@@ -592,33 +523,4 @@ test("exported input snapshots retain their canonical hash across JSON round-tri
     await hashPlan(p),
     await hashPlan(JSON.parse(JSON.stringify(p))),
   );
-});
-test("sample workbook imports all allocation catalogs without hidden defaults", async () => {
-  const { readFileSync } = await import("node:fs");
-  const {
-    createAllocationSource,
-    recognizeAllocation,
-    transformAllocationSources,
-  } = await import("../lib/allocation/import");
-  const { validateDraft } = await import("../lib/allocation/validation");
-  const { writeCSV } = await import("../lib/import/csv");
-  const bytes = readFileSync("public/planning-catalog.xlsx");
-  const sheets = await readWorkbook(
-    bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
-  );
-  const sources = sheets.map((s) => {
-    const file = createAllocationSource(
-      s.name,
-      s.name,
-      writeCSV(s.rows[0], s.rows.slice(1)),
-    );
-    file.kind = s.name as any;
-    file.mappings = recognizeAllocation(file.parsed.headers, file.kind as any);
-    file.confirmed = true;
-    return file;
-  });
-  const result = transformAllocationSources(sources, sampleDraft().settings);
-  assert.deepEqual(result.issues, []);
-  assert.equal(validateDraft(result.draft).valid, true);
-  assert.equal(solve(migrate(result.draft)).report!.cost, 1380);
 });

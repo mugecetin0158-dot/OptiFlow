@@ -1,6 +1,6 @@
 # Spreadsheet-to-optimization upgrade
 
-Implemented locally; deployment is a separate approval step. The existing scheduling optimizer, manual adjustments, demo data, language controls and import rules remain available. New planning and workbook controls currently use English; the existing Turkish/French interface and catalogs remain intact.
+Implemented locally; deployment is a separate approval step. The existing scheduling optimizer, manual adjustments, demo data, language controls and import rules remain available. New planning controls currently use English; the existing localized interface and catalogs remain intact.
 
 ## Run and test
 
@@ -14,19 +14,19 @@ npm run typecheck
 npm run build
 ```
 
-Open Resource Allocation. The default workspace is the multi-period planner; the legacy single-period editor remains accessible. There is no account or remote data service. XLSX support uses the approved, pinned MIT dependency ExcelJS 4.4.0, loaded only on workbook import/export. GLPK remains the existing local WebAssembly worker solver. No optimizer calls an AI API.
+Open Resource Allocation. The default workspace is the multi-period planner; the legacy single-period editor remains accessible. There is no account or remote data service. CSV is the only supported import format; ExcelJS 4.4.0 remains for Excel workbook exports. GLPK remains the existing local WebAssembly worker solver. No optimizer calls an AI API.
 
 ### Import walkthrough
 
-1. Open Resource Allocation → **Import CSV / Excel into selected period** (or Smart Import → Resource Allocation).
-2. Upload resource, project, demand and compatibility catalogs. Existing sample CSV fixtures are in `tests/fixtures/allocation`. The workspace also links to the explicitly fictional `public/planning-catalog.xlsx` workbook; its import and cost optimum are regression-tested. For XLSX, explicitly select worksheets and their header rows. Review/edit cells using the paginated preview.
+1. Open Resource Allocation → **Import CSV into selected period** (or Smart Import → Resource Allocation).
+2. Upload one or multiple CSV files containing resource, project, demand and compatibility catalogs. Existing sample CSV fixtures are in `tests/fixtures/allocation`. Comma and semicolon delimiters are supported. Review/edit cells using the paginated preview.
 3. In **Map columns**, explicitly identify each dataset. Review rule-based suggestions, override mappings and decimal conventions, and confirm meanings. Unrelated columns stay in source context. Mapping profiles can be saved, inspected, reused, edited and deleted locally; applying a profile always requires renewed confirmation and value validation.
 4. Transform, then correct errors in **Validate & correct**. Configure currency, a period label and optional budget in **Configure rules**. Confirm and save in **Preview & save**. Parsing success alone does not establish readiness.
-5. The validated catalog replaces the selected period's catalogs. Import one period at a time; automatic grouping of rows by a `period_id` column is not implemented. Select the destination period before importing; never combine multiple periods in a single period catalog. Workbook/worksheet/header-row names and source row references are retained, along with source columns, mapping choices and normalized tables.
+5. The validated catalog replaces the selected period's catalogs. Import one period at a time; automatic grouping of rows by a `period_id` column is not implemented. Select the destination period before importing; never combine multiple periods in a single period catalog. CSV filenames/header rows and source row references are retained, along with source columns, mapping choices and normalized tables.
 6. Add periods or explicitly copy an existing period's assumptions. Enter ordered, non-overlapping dates; classify resources and configure inventory policies, receipts, period budgets and horizon constraints.
 7. Optimize all periods together. Inspect solver status, independent checks, allocations, outputs, capacity usage, binding constraints and inventory balances. Save/duplicate scenarios and compare two historical runs. Reopening a run restores its original inputs; rerunning creates a new run.
 
-The scheduling Smart Import uses the same workbook picker and preserves its five steps, transformations, rules wizard and dataset validation. Imported scheduling optimization remains deliberately gated: the current demo engine does not enforce every imported role/rest/timezone rule. No schedule is fabricated. Demo scheduling gains independent-check CSV and Excel exports; manual edits never inherit an optimality claim in those exports.
+The scheduling Smart Import uses the same CSV-only picker and preserves its AI-first steps, transformations, rules wizard and dataset validation. Imported scheduling optimization remains deliberately gated: the current demo engine does not enforce every imported role/rest/timezone rule. No schedule is fabricated. Demo scheduling gains independent-check CSV and Excel exports; manual edits never inherit an optimality claim in those exports.
 
 ## Mathematical model
 
@@ -87,7 +87,7 @@ Solving runs in the existing GLPK worker. The UI reports real elapsed time and p
 
 CSV exports cover allocations, outputs, period summaries, stock movements, verification, raw solver variables, scenario snapshots and comparisons. Excel run workbooks contain the same sheets, with source text stored as literal cell values (formulas are not executed). Input JSON is chunked to keep each Excel cell within its limit; concatenate chunks in index order to reconstruct the snapshot. CSV exports preserve source text; import text columns explicitly when opening CSV in spreadsheet software.
 
-Workbook limits: 10 MB compressed, 100 MB declared expanded archive size, 50 worksheets, 80 columns. Downstream CSV limits still apply to each selected worksheet: 2 MB and 5,000 data rows, 10 sources/10,000 combined rows. Excess input produces errors, not truncated success. ZIP preflight is a size guard, not a security audit. `.xls`, `.xlsm`, password protection and formula recalculation are unsupported. Cached formula results require explicit acceptance; formulas without results must be replaced. Excel formatting beyond safe zero-padded identifiers and recognized date/time cells is not interpreted. Numeric precision already lost in the workbook cannot be recovered.
+Import limits: 10 CSV files, 2 MB and 5,000 data rows per file, 80 columns per file, and 10,000 combined source rows. Excess input produces errors, not truncated success.
 
 Planning limits: 24 periods; each period retains 50 resources, 50 projects, 500 demand records and 2,500 compatibility links; solve limit 1–120 seconds. There is no automatic unit/currency conversion, project-output inventory, precedence, purchasing, stochastic demand, nonlinear objective, arbitrary free-text constraint execution, or dual-price sensitivity analysis. Scheduling's existing limits and imported-data gate remain.
 
@@ -99,4 +99,4 @@ Browser-driven interaction tests (including IndexedDB transaction/quota behavior
 
 The upgrade was checked with `npm test` (107 passing JavaScript tests), `npm run typecheck`, and `npm run build`. The existing optional Python API suite passed all 3 tests; its first sandboxed invocation stalled, and the successful rerun used normal local-process permissions. The backend reports an existing Starlette/httpx deprecation warning. No new Python dependency was added.
 
-Tests include real GLPK objective solutions and infeasibility/unbounded statuses, corrupted-candidate verification, explicit stock carryover, source mappings/profiles, workbook cells and exports, immutable snapshot/hash behavior, controller cancellation and failed persistence via an injected repository, and server-rendered UI regressions. IndexedDB transactions and browser worker/click interactions still require real-browser testing; those are not claimed as tested. No separate lint script is configured.
+Tests include real GLPK objective solutions and infeasibility/unbounded statuses, corrupted-candidate verification, explicit stock carryover, source mappings/profiles, Excel exports, immutable snapshot/hash behavior, controller cancellation and failed persistence via an injected repository, and server-rendered UI regressions. IndexedDB transactions and browser worker/click interactions still require real-browser testing; those are not claimed as tested. No separate lint script is configured.

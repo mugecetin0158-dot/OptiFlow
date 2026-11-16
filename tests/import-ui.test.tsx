@@ -26,9 +26,9 @@ test("upload workflow renders in all three languages without employee data or fa
         onSaved={() => {}}
       />,
     );
-    assert.ok(html.includes(translate(language, "Choose CSV or Excel files")));
-    assert.ok(html.includes('type="file"'));
-    assert.ok(!html.includes("Select worksheets and review cells"));
+    assert.ok(html.includes(translate(language, "Choose CSV files")));
+    assert.ok(html.includes('accept=".csv,text/csv"'));
+    assert.ok(!html.includes(".xlsx"));
     assert.ok(
       html.includes(escapeHTML(translate(language, "What you'll need"))),
     );

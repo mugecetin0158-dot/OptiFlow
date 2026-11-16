@@ -18,22 +18,22 @@ The existing `public/optiflow-source.zip` intentionally distributes source under
 
 - No API keys or private-key material were found by pattern scanning application source and generated output. This is a bounded review, not a guarantee that no secret exists anywhere in Git history. The apparent long `sk-` match in a minified library was not a credential.
 - No application API routes or production database exist. Spreadsheet contents remain in the browser. Google Fonts requests disclose normal request metadata to Google; they do not send spreadsheet contents.
-- Imports are bounded and parsed locally; cached formulas require confirmation, and formulas are not executed. ZIP size checks are not a security boundary against every malicious workbook. Avoid untrusted uploads during beta, and test resource exhaustion before broad release.
-- Security headers add MIME sniffing, referrer, framing and unused-device restrictions. A strict CSP is not added untested: GLPK uses Blob workers and WebAssembly, Excel uses a bundled worker, and Next static HTML uses inline hydration scripts. A restrictive policy can break computation silently. Test a report-only policy before enforcing one.
+- CSV imports are bounded and parsed locally. Test resource exhaustion before broad release.
+- Security headers add MIME sniffing, referrer, framing and unused-device restrictions. A strict CSP is not added untested: GLPK uses Blob workers and WebAssembly, and Next static HTML uses inline hydration scripts. A restrictive policy can break computation silently. Test a report-only policy before enforcing one.
 - PostCSS is pinned via override to 8.5.23 to address the reported source-map/file-disclosure and stringify advisories without changing mathematical models or upgrading Next across major versions.
 - ExcelJS retains an indirect uuid advisory. The reported vulnerability concerns v3/v5/v6 with caller-supplied buffers; ExcelJS's inspected use is v4 for conditional-format IDs. No application code invokes those affected APIs. This remains a dependency risk, not a claim that the package is advisory-free. Do not apply npm's suggested major downgrade blindly.
 - CSV exports preserve text, including spreadsheet formula-looking content. Opening CSV directly in Excel may interpret formulas. Use text import or the XLSX export, whose string cells remain literal. Source files and local browser storage can contain sensitive business data: there is no encryption at rest or shared-account isolation.
 
 ## Functional verification and remaining release gates
 
-Automated tests cover real GLPK scheduling and allocation solutions, infeasible/unbounded cases, independent verification, multi-period constraints, import mapping and validation, workbook parsing/export, scenarios, snapshots, cancellation-controller behavior and server-rendered UI. Passing these does not establish browser worker correctness.
+Automated tests cover real GLPK scheduling and allocation solutions, infeasible/unbounded cases, independent verification, multi-period constraints, CSV parsing/import mapping and validation, Excel export, scenarios, snapshots, cancellation-controller behavior and server-rendered UI. Passing these does not establish browser worker correctness.
 
 Browser automation is unavailable in this environment. Production compilation checks worker bundling, but actual worker startup, cancellation, IndexedDB behavior, downloads, accessibility and mobile layout MUST be checked on a preview deployment before calling the public release fully verified. No real-browser test results are claimed.
 
 Preview acceptance checklist (Chrome desktop, Safari/iPhone, and Android; 375px and 1440px widths):
 
 1. Open Resource Allocation, load the labeled sample, optimize cost; verify objective 1380 and independent checks passing. Confirm Network has no missing JS/WASM/worker files, and Console has no worker/CSP errors.
-2. Import the provided sample workbook, select all four worksheets, confirm meanings/mappings, validate, configure and save. Solve and compare with the sample optimum. Also test malformed CSV, ambiguous values, missing formulas and errors beyond the first preview page.
+2. Import the four sample allocation CSV files together, confirm meanings/mappings, validate, configure and save. Solve and compare with the sample optimum. Also test malformed CSV, ambiguous values, and errors beyond the first preview page.
 3. Add a dated second period, explicitly classify resources, set receipts/carryover and horizon constraints. Verify outputs/capacities/budgets and inventory balances. Try an infeasible model; no accepted recommendation should appear.
 4. Cancel a running solve; ensure the UI stays responsive and the run is cancelled. Reload, reopen a historical run, reverify, and duplicate/compare scenarios. Test storage denial/quota behavior.
 5. Export CSV and Excel, reopen them and compare amounts, IDs and verification status. Test text starting with `=` using XLSX or CSV text import.
@@ -49,7 +49,7 @@ A visible MVP Beta notice now explains local persistence and human review. Indep
 - `npm test`: 107 passed.
 - `npm run build`: passed; static export generated.
 - `npm run typecheck`: passed after build completion. A concurrent attempt initially encountered regenerated `.next/types` files; run these commands sequentially.
-- `npm run check:production`: passed (referenced static assets, workbook availability, Vercel output configuration and local-API build rejection). This is not a browser test.
+- `npm run check:production`: passed (referenced static assets, Vercel output configuration and local-API build rejection). This is not a browser test.
 - `npm audit --omit=dev`: two moderate findings (ExcelJS/uuid), zero high or critical after the PostCSS patch. Audit exits nonzero because these findings remain.
 - `git diff --check`: passed. No standalone lint command/configuration exists; no separate lint success is claimed.
 - The optional Python backend was not modified or rerun during this audit. Its three tests passed in the preceding implementation validation.

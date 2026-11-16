@@ -206,9 +206,9 @@ export function cleanImportAnalysis(raw: unknown, sources: ImportSource[]): AIIm
         !Array.isArray(item.datasets))
       throw Error("AI returned an invalid destination assessment.");
     if (item.datasets.some((dataset: unknown) => !["employees", "availability", "shifts"].includes(String(dataset))))
-      throw Error("AI returned a dataset type incompatible with Scheduling. Select the matching destination or upload a Scheduling spreadsheet.");
+      throw Error("AI returned a dataset type incompatible with Scheduling. Select the matching destination or upload a Scheduling CSV file.");
     if (item.datasets.length === 0 && !item.destination_note.trim())
-      throw Error("AI could not match this file to Scheduling. Choose a compatible destination or upload a matching spreadsheet.");
+      throw Error("AI could not match this file to Scheduling. Choose a compatible destination or upload a matching CSV file.");
     const headerSet = new Set(source.parsed.headers), fieldSet = new Set<string>(schedulingFields);
     const columns = Array.isArray(item.columns) ? item.columns.map((column: any) => {
       if (!column || !headerSet.has(column.column) || (column.field && column.field !== "ignore" && !fieldSet.has(column.field)) ||

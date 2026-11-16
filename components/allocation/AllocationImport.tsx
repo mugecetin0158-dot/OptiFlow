@@ -1,7 +1,7 @@
 "use client";
 import { autoAllocationWithProfiles } from "../../lib/import/automation";
 import { profileSourcesForAI } from "../../lib/import/automation";
-import { useSpreadsheetUpload } from "../SpreadsheetPicker";
+import { useCSVUpload } from "../CsvPicker";
 import { useMemo, useRef, useState } from "react";
 import { Upload, ArrowRight } from "lucide-react";
 import { decodeCSV, MAX_BYTES } from "../../lib/import/csv";
@@ -124,9 +124,9 @@ export default function AllocationImport({
             typeof file.destination_note !== "string" || file.destination_note.length > 400)
           throw Error("AI returned an invalid source reference.");
         if (file.datasets.some((dataset: unknown) => typeof dataset !== "string" || !tables.includes(dataset as Table)))
-          throw Error("AI returned a dataset type incompatible with Resource Allocation. Select the matching destination or upload a Resource Allocation spreadsheet.");
+          throw Error("AI returned a dataset type incompatible with Resource Allocation. Select the matching destination or upload a Resource Allocation CSV file.");
         if (file.datasets.length === 0 && !file.destination_note.trim())
-          throw Error("AI could not match this file to Resource Allocation. Choose a compatible destination or upload a matching spreadsheet.");
+          throw Error("AI could not match this file to Resource Allocation. Choose a compatible destination or upload a matching CSV file.");
         if (file.destination_note) destinationNotes.push({ file: source.name, note: file.destination_note });
         for (const c of Array.isArray(file.corrections) ? file.corrections : []) {
           const column = source.parsed.headers.indexOf(c.column);
@@ -201,15 +201,6 @@ export default function AllocationImport({
             cachedProfiles,
           ),
         );
-        const worksheetRows = (file as File & { worksheetRows?: number[] })
-          .worksheetRows;
-        const imported = next[next.length - 1];
-        if (
-          worksheetRows &&
-          !imported.parsed.issues.length &&
-          worksheetRows.length === imported.parsed.rows.length
-        )
-          imported.parsed.lineNumbers = worksheetRows;
       }
       if (
         [...sources, ...next].reduce((n, s) => n + s.parsed.rows.length, 0) >
@@ -235,7 +226,7 @@ export default function AllocationImport({
     setPreview(d);
     setAccepted(false);
   }
-  const { upload, picker } = useSpreadsheetUpload(consumeFiles, t);
+  const { upload, picker } = useCSVUpload(consumeFiles, t);
   return (
     <div className="smart-import allocation-import">
       <ol className="import-steps">
@@ -350,9 +341,9 @@ export default function AllocationImport({
               onChange={(e) => setDelimiter(e.target.value)}
             >
               <option value="auto">{t("Detect from header")}</option>
-              {[",", ";", "\t", "|"].map((v) => (
+              {[",", ";"].map((v) => (
                 <option value={v} key={v}>
-                  {v === "\t" ? "TAB" : v}
+                  {v}
                 </option>
               ))}
             </select>
@@ -367,7 +358,7 @@ export default function AllocationImport({
           }}
         >
           <Upload />
-          <h3>{t("Drop CSV or Excel files here")}</h3>
+          <h3>{t("Drop CSV files here")}</h3>
           <p>
             {t(
               "Select a dataset for each file; column names alone do not establish its meaning.",
@@ -378,12 +369,12 @@ export default function AllocationImport({
             disabled={busy}
             onClick={() => fileInput.current?.click()}
           >
-            {t(busy ? "Reading files…" : "Choose CSV or Excel files")}
+            {t(busy ? "Reading files…" : "Choose CSV files")}
           </button>
           <input
             ref={fileInput}
             type="file"
-            accept=".xlsx,.csv,.tsv,text/csv"
+            accept=".csv,text/csv"
             multiple
             hidden
             onChange={(e) => void upload(Array.from(e.target.files || []))}
@@ -478,9 +469,9 @@ export default function AllocationImport({
                   }
                 >
                   <option value="auto">{t("Detect from header")}</option>
-                  {[",", ";", "\t", "|"].map((v) => (
+                  {[",", ";"].map((v) => (
                     <option key={v} value={v}>
-                      {v === "\t" ? "TAB" : v}
+                      {v}
                     </option>
                   ))}
                 </select>

@@ -261,11 +261,8 @@ export default function Workbench({
                 : t("Compare runs")}
           </button>
         ))}
-        <a className="btn" href="/planning-catalog.xlsx" download>
-          {t("Download fictional sample workbook")}
-        </a>
         <button className="btn" onClick={onImport}>
-          {t("Import CSV / Excel into selected period")}
+          {t("Import CSV into selected period")}
         </button>
       </div>
       {error && (

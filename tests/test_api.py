@@ -58,7 +58,7 @@ def test_overlap_and_unequal_duration():
 
 def import_request():
     return {'target':'scheduling','locale':'en','allowed_fields':['employee_id','date','start_time','end_time','status'],'files':[{
-        'source_id':'sheet-1','name':'availability.xlsx / Sheet1','row_count':2,'columns':[
+        'source_id':'availability','name':'availability.csv','row_count':2,'columns':[
             {'header':'Badge','inferred_type':'text','samples':['<redacted:text:4>'],'blank_count':0,'unique_count':2},
             {'header':'Day','inferred_type':'date','samples':['2026-11-16'],'blank_count':0,'unique_count':2},
             {'header':'Window','inferred_type':'time_range','samples':['09:00-17:00'],'blank_count':0,'unique_count':2},
@@ -66,7 +66,7 @@ def import_request():
         ]}]}
 
 def ai_fixture():
-    return {'files':[{'source_id':'sheet-1','datasets':['availability'],'destination_note':'','columns':[
+    return {'files':[{'source_id':'availability','datasets':['availability'],'destination_note':'','columns':[
         {'column':'Badge','field':'employee_id','transform':'direct','confidence':.99,'reason':'Identifier'},
         {'column':'Day','field':'date','transform':'date','confidence':.99,'reason':'Date'},
         {'column':'Window','field':'start_time','transform':'time_range','confidence':.95,'reason':'Time range'},
@@ -87,8 +87,14 @@ def allocation_ai_fixture():
     ],'corrections':[]}], 'model':{'objective':{'kind':'unknown','description':'No objective is present.','source_fields':[],'confidence':1},'decision_variables':[],'constraints':[],'relationships':[]},'questions':[]}
 
 def test_parse_validation_and_missing_credentials(monkeypatch):
-    parsed=validate_parsed_upload(ParsedUploadRequest.model_validate({'sheets':[{'source_id':'s','file':'a.csv','worksheet':'CSV','headers':['A','B'],'rows':[['1','2']],'line_numbers':[2]}]}))
+    parsed=validate_parsed_upload(ParsedUploadRequest.model_validate({'files':[{'source_id':'s','file':'a.csv','headers':['A','B'],'rows':[['1','2']],'line_numbers':[2]}]}))
     assert parsed['valid']
+    with pytest.raises(ValidationError):
+        ParsedUploadRequest.model_validate({'files':[{'source_id':'s','file':'a.xlsx','headers':['A'],'rows':[['1']]}]})
+    incompatible=import_request()
+    incompatible['files'][0]['name']='availability.xlsx'
+    with pytest.raises(ValidationError):
+        InterpretRequest.model_validate(incompatible)
     monkeypatch.delenv('GEMINI_API_KEY',raising=False)
     from fastapi import HTTPException
     try: interpret(InterpretRequest.model_validate(import_request())); assert False
@@ -250,7 +256,7 @@ def test_gemini_response_schema_is_compact_without_losing_import_contract():
         assert confidence['minimum'] == 0 and confidence['maximum'] == 1
 
     question = {
-        'id': 'missing:sheet-1:employees:name',
+        'id': 'missing:availability:employees:name',
         'prompt': 'Which supplied column contains the employee name?',
         'target': 'employees.name',
     }
@@ -268,7 +274,7 @@ def test_unmatched_destination_requires_actionable_note_and_no_mapping():
     unmatched = foundations.AIInterpretation.model_validate({
         **ai_fixture(),
         'files': [{
-            'source_id':'sheet-1','datasets':[],'destination_note':'This looks like resource planning data. Choose Resource Allocation or upload a scheduling spreadsheet.',
+            'source_id':'availability','datasets':[],'destination_note':'This looks like resource planning data. Choose Resource Allocation or upload a scheduling CSV file.',
             'columns':[{'column':'Badge','field':'','transform':'direct','confidence':.99,'reason':'Not a Scheduling field'}],
             'corrections':[],
         }],
@@ -333,7 +339,7 @@ def test_gemini_http_failure_logs_only_safe_diagnostics(monkeypatch, caplog):
     monkeypatch.setattr(diagnostics, '_urlopen_json', fail_request)
     diagnostics.configure_gemini_provider()
     request = import_request()
-    request['files'][0]['name'] = 'Private Person.xlsx'
+    request['files'][0]['name'] = 'Private Person.csv'
     with caplog.at_level(logging.WARNING, logger='optiflow.gemini'):
         response = TestClient(app).post('/import/interpret', json=request)
     assert response.status_code == 502
@@ -343,7 +349,7 @@ def test_gemini_http_failure_logs_only_safe_diagnostics(monkeypatch, caplog):
     assert 'category=model_or_method_not_found' in caplog.text
     assert 'private-api-key' not in caplog.text
     assert 'private spreadsheet value' not in caplog.text
-    assert 'Private Person.xlsx' not in caplog.text
+    assert 'Private Person.csv' not in caplog.text
     assert 'private-api-key' not in response.text
     assert 'private spreadsheet value' not in response.text
 

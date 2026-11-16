@@ -81,8 +81,12 @@ test("CSV quoting, delimiters, newlines, escaped quotes, empty cells and trace l
   assert.equal(p.rows[1][2], "");
   assert.deepEqual(p.lineNumbers, [2, 4]);
   assert.equal(p.issues.length, 0);
-  assert.equal(parseCSV("a\tb\n1\t2").delimiter, "\t");
-  assert.equal(parseCSV("a|b\n1|2").delimiter, "|");
+  assert.deepEqual(
+    parseCSV('name;note\rÉmile;"café\r\n""déjà vu""; ¡hola!"').rows,
+    [["Émile", 'café\r\n"déjà vu"; ¡hola!']],
+  );
+  assert.equal(parseCSV("a\tb\n1\t2").issues[0].message, "Unsupported delimiter.");
+  assert.equal(parseCSV("a|b\n1|2").issues[0].message, "Unsupported delimiter.");
 });
 test("malformed, empty, inconsistent rows and duplicate headers are rejected", () => {
   for (const text of [
@@ -97,6 +101,12 @@ test("malformed, empty, inconsistent rows and duplicate headers are rejected", (
       text,
     );
   assert.ok(parseCSV("a,b;c\n1,2;3").issues.length);
+});
+test("blank physical lines are skipped but explicit empty-field records are retained", () => {
+  const parsed = parseCSV("id,name\n\n,\n");
+  assert.deepEqual(parsed.rows, [["", ""]]);
+  assert.deepEqual(parsed.lineNumbers, [3]);
+  assert.equal(parsed.issues.length, 0);
 });
 test("Unicode and explicit legacy encodings preserve names", () => {
   assert.equal(

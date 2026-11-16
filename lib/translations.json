@@ -3739,135 +3739,15 @@
     "Optimisation en cours…",
     "Optimizando…"
   ],
-  "Drop CSV or Excel files here": [
-    "CSV veya Excel dosyalarını buraya bırakın",
-    "Déposez des fichiers CSV ou Excel ici",
-    "Suelte archivos CSV o Excel aquí"
-  ],
-  "Choose CSV or Excel files": [
-    "CSV veya Excel dosyalarını seçin",
-    "Choisir des fichiers CSV ou Excel",
-    "Elija archivos CSV o Excel"
-  ],
-  "Unsupported file type. Choose an .xlsx, .csv or .tsv file.": [
-    "Desteklenmeyen dosya türü. Bir .xlsx, .csv veya .tsv dosyası seçin.",
-    "Type de fichier non pris en charge. Choisissez un fichier .xlsx, .csv ou .tsv.",
-    "Tipo de archivo no compatible. Elija un archivo .xlsx, .csv o .tsv."
+  "Unsupported file type. Upload .csv files only.": [
+    "Desteklenmeyen dosya türü. Yalnızca .csv dosyaları yükleyin.",
+    "Type de fichier non pris en charge. Importez uniquement des fichiers .csv.",
+    "Tipo de archivo no compatible. Cargue únicamente archivos .csv."
   ],
   "The file is empty. Choose a file containing data.": [
     "Dosya boş. Veri içeren bir dosya seçin.",
     "Le fichier est vide. Choisissez un fichier contenant des données.",
     "El archivo está vacío. Elija un archivo que contenga datos."
-  ],
-  "Encrypted workbooks are unsupported.": [
-    "Şifrelenmiş çalışma kitapları desteklenmiyor.",
-    "Les classeurs chiffrés ne sont pas pris en charge.",
-    "No se admiten libros de trabajo cifrados."
-  ],
-  "Workbook archive is invalid or expands beyond 100 MB.": [
-    "Çalışma kitabı arşivi geçersiz veya açıldığında 100 MB sınırını aşıyor.",
-    "L’archive du classeur est invalide ou dépasse 100 Mo après décompression.",
-    "El archivo del libro no es válido o supera los 100 MB al descomprimirse."
-  ],
-  "XLSX limit: 10 MB.": [
-    "XLSX sınırı: 10 MB.",
-    "Limite XLSX : 10 Mo.",
-    "Límite de XLSX: 10 MB."
-  ],
-  "This Excel file could not be read. Its workbook metadata may be missing, damaged or unsupported. Open it in Excel or LibreOffice, save a new .xlsx copy, and try again.": [
-    "Bu Excel dosyası okunamadı. Çalışma kitabı meta verileri eksik, hasarlı veya desteklenmiyor olabilir. Dosyayı Excel ya da LibreOffice'te açıp yeni bir .xlsx kopyası olarak kaydedin ve tekrar deneyin.",
-    "Impossible de lire ce fichier Excel. Les métadonnées du classeur sont peut-être absentes, endommagées ou non prises en charge. Ouvrez-le dans Excel ou LibreOffice, enregistrez une nouvelle copie .xlsx, puis réessayez.",
-    "No se pudo leer este archivo de Excel. Es posible que falten metadatos del libro, que estén dañados o que no sean compatibles. Ábralo en Excel o LibreOffice, guarde una copia .xlsx nueva e inténtelo de nuevo."
-  ],
-  "The workbook has no readable worksheets. Save it as an Excel .xlsx workbook and try again.": [
-    "Çalışma kitabında okunabilir çalışma sayfası yok. Excel .xlsx çalışma kitabı olarak kaydedip tekrar deneyin.",
-    "Le classeur ne contient aucune feuille lisible. Enregistrez-le au format Excel .xlsx, puis réessayez.",
-    "El libro no contiene hojas legibles. Guárdelo como un libro de Excel .xlsx e inténtelo de nuevo."
-  ],
-  "Workbook limit: 50 worksheets.": [
-    "Çalışma kitabı sınırı: 50 çalışma sayfası.",
-    "Limite du classeur : 50 feuilles.",
-    "Límite del libro: 50 hojas."
-  ],
-  "Worksheet exceeds 10,000 data rows or 80 columns.": [
-    "Çalışma sayfası 10.000 veri satırı veya 80 sütun sınırını aşıyor.",
-    "La feuille dépasse la limite de 10 000 lignes de données ou de 80 colonnes.",
-    "La hoja supera el límite de 10.000 filas de datos o 80 columnas."
-  ],
-  "Elapsed-duration cells need an explicit duration, not a clock time.": [
-    "Geçen süre hücreleri saat değeri değil, açık bir süre gerektirir.",
-    "Les cellules de durée écoulée nécessitent une durée explicite, et non une heure.",
-    "Las celdas de duración transcurrida requieren una duración explícita, no una hora del día."
-  ],
-  "Unsupported cell value; replace it with an explicit literal value.": [
-    "Desteklenmeyen hücre değeri; bunu açık bir sabit değerle değiştirin.",
-    "Valeur de cellule non prise en charge ; remplacez-la par une valeur littérale explicite.",
-    "Valor de celda no compatible; reemplácelo por un valor literal explícito."
-  ],
-  "Nonfinite numeric cell.": [
-    "Sayısal hücrede sonlu olmayan bir değer var.",
-    "La cellule numérique contient une valeur non finie.",
-    "La celda numérica contiene un valor no finito."
-  ],
-  "Formula has no cached result. Recalculate the workbook and save it before importing.": [
-    "Formülün önbelleğe alınmış sonucu yok. İçe aktarmadan önce çalışma kitabını yeniden hesaplayıp kaydedin.",
-    "La formule ne possède aucun résultat mis en cache. Recalculez et enregistrez le classeur avant l’importation.",
-    "La fórmula no tiene un resultado almacenado. Recalcule y guarde el libro antes de importarlo."
-  ],
-  "Worksheet metadata is missing or invalid. Save a new .xlsx copy and try again.": [
-    "Çalışma sayfası meta verileri eksik veya geçersiz. Yeni bir .xlsx kopyası kaydedip tekrar deneyin.",
-    "Les métadonnées de la feuille sont absentes ou invalides. Enregistrez une nouvelle copie .xlsx, puis réessayez.",
-    "Faltan metadatos de la hoja o no son válidos. Guarde una copia .xlsx nueva e inténtelo de nuevo."
-  ],
-  "The workbook is empty. Add a header row and records before importing.": [
-    "Çalışma kitabı boş. İçe aktarmadan önce bir başlık satırı ve kayıt ekleyin.",
-    "Le classeur est vide. Ajoutez une ligne d’en-tête et des enregistrements avant l’importation.",
-    "El libro está vacío. Agregue una fila de encabezados y registros antes de importarlo."
-  ],
-  "Workbook parsing timed out.": [
-    "Çalışma kitabının okunması zaman aşımına uğradı.",
-    "Le délai de lecture du classeur a expiré.",
-    "Se agotó el tiempo de lectura del libro."
-  ],
-  "The workbook parser returned unreadable data. Please try again.": [
-    "Çalışma kitabı okuyucusu okunamayan veri döndürdü. Lütfen tekrar deneyin.",
-    "Le lecteur du classeur a renvoyé des données illisibles. Veuillez réessayer.",
-    "El lector del libro devolvió datos ilegibles. Inténtelo de nuevo."
-  ],
-  "Workbook could not be parsed.": [
-    "Çalışma kitabı okunamadı.",
-    "Impossible d’analyser le classeur.",
-    "No se pudo analizar el libro."
-  ],
-  "Import was not accepted. Review the upload error and check the workbook data.": [
-    "İçe aktarma kabul edilmedi. Yükleme hatasını inceleyin ve çalışma kitabı verilerini kontrol edin.",
-    "L’importation n’a pas été acceptée. Vérifiez l’erreur et contrôlez les données du classeur.",
-    "No se aceptó la importación. Revise el error y compruebe los datos del libro."
-  ],
-  "Reading workbook locally…": [
-    "Çalışma kitabı yerel olarak okunuyor…",
-    "Lecture locale du classeur…",
-    "Leyendo el libro localmente…"
-  ],
-  "Workbook import cancelled.": [
-    "Çalışma kitabı içe aktarımı iptal edildi.",
-    "Importation du classeur annulée.",
-    "Se canceló la importación del libro."
-  ],
-  "The workbook has no tabular data to import.": [
-    "Çalışma kitabında içe aktarılacak tablo verisi yok.",
-    "Le classeur ne contient aucune donnée tabulaire à importer.",
-    "El libro no contiene datos tabulares para importar."
-  ],
-  "Worksheet has no tabular data to import.": [
-    "Çalışma sayfasında içe aktarılacak tablo verisi yok.",
-    "La feuille ne contient aucune donnée tabulaire à importer.",
-    "La hoja no contiene datos tabulares para importar."
-  ],
-  "Worksheet data has no corresponding column header.": [
-    "Çalışma sayfasındaki verilerin karşılık gelen bir sütun başlığı yok.",
-    "Les données de la feuille n’ont pas d’en-tête de colonne correspondant.",
-    "Los datos de la hoja no tienen un encabezado de columna correspondiente."
   ],
   "Cancel": [
     "İptal",
@@ -3903,16 +3783,6 @@
     "Çalışmaları karşılaştır",
     "Comparer les exécutions",
     "Comparar ejecuciones"
-  ],
-  "Download fictional sample workbook": [
-    "Örnek çalışma kitabını indir",
-    "Télécharger le classeur d’exemple",
-    "Descargar libro de trabajo de muestra ficticio"
-  ],
-  "Import CSV / Excel into selected period": [
-    "Seçili döneme CSV / Excel aktar",
-    "Importer CSV / Excel dans la période choisie",
-    "Importar CSV/Excel al período seleccionado"
   ],
   "seconds": [
     "saniye",
@@ -4209,16 +4079,69 @@
     "Aucune identifiée",
     "Ninguno identificado"
   ],
-  "Constraints": ["Kısıtlar", "Contraintes", "Restricciones"],
-  "Gemini rate limit reached. Wait before retrying.": ["Gemini istek sınırına ulaşıldı. Yeniden denemeden önce bekleyin.", "Limite de requêtes Gemini atteinte. Patientez avant de réessayer.", "Se alcanzó el límite de solicitudes de Gemini. Espere antes de volver a intentarlo."],
-  "Gemini import processing is not configured on the server.": ["Gemini ile içe aktarma sunucuda yapılandırılmamış.", "L’import Gemini n’est pas configuré sur le serveur.", "La importación con Gemini no está configurada en el servidor."],
-  "Gemini import processing failed. Retry without changing the source data.": ["Gemini ile içe aktarma başarısız oldu. Kaynak verileri değiştirmeden tekrar deneyin.", "L’import Gemini a échoué. Réessayez sans modifier les données sources.", "La importación con Gemini falló. Inténtelo de nuevo sin modificar los datos de origen."],
-  "Missing information could not be saved.": ["Eksik bilgiler kaydedilemedi.", "Les informations manquantes n’ont pas pu être enregistrées.", "No se pudo guardar la información faltante."],
-  "Model preview validation failed.": ["Model önizlemesi doğrulanamadı.", "La validation de l’aperçu du modèle a échoué.", "Falló la validación de la vista previa del modelo."],
-  "The validated model could not be saved.": ["Doğrulanmış model kaydedilemedi.", "Le modèle validé n’a pas pu être enregistré.", "No se pudo guardar el modelo validado."],
+  "Constraints": [
+    "Kısıtlar",
+    "Contraintes",
+    "Restricciones"
+  ],
+  "Gemini rate limit reached. Wait before retrying.": [
+    "Gemini istek sınırına ulaşıldı. Yeniden denemeden önce bekleyin.",
+    "Limite de requêtes Gemini atteinte. Patientez avant de réessayer.",
+    "Se alcanzó el límite de solicitudes de Gemini. Espere antes de volver a intentarlo."
+  ],
+  "Gemini import processing is not configured on the server.": [
+    "Gemini ile içe aktarma sunucuda yapılandırılmamış.",
+    "L’import Gemini n’est pas configuré sur le serveur.",
+    "La importación con Gemini no está configurada en el servidor."
+  ],
+  "Gemini import processing failed. Retry without changing the source data.": [
+    "Gemini ile içe aktarma başarısız oldu. Kaynak verileri değiştirmeden tekrar deneyin.",
+    "L’import Gemini a échoué. Réessayez sans modifier les données sources.",
+    "La importación con Gemini falló. Inténtelo de nuevo sin modificar los datos de origen."
+  ],
+  "Missing information could not be saved.": [
+    "Eksik bilgiler kaydedilemedi.",
+    "Les informations manquantes n’ont pas pu être enregistrées.",
+    "No se pudo guardar la información faltante."
+  ],
+  "Model preview validation failed.": [
+    "Model önizlemesi doğrulanamadı.",
+    "La validation de l’aperçu du modèle a échoué.",
+    "Falló la validación de la vista previa del modelo."
+  ],
+  "The validated model could not be saved.": [
+    "Doğrulanmış model kaydedilemedi.",
+    "Le modèle validé n’a pas pu être enregistré.",
+    "No se pudo guardar el modelo validado."
+  ],
   "AI interpretation is explanatory. Deterministic validation remains authoritative.": [
     "Yapay zekâ yorumu açıklama amaçlıdır. Belirleyici doğrulama esas olmaya devam eder.",
     "L’interprétation par l’IA est explicative. La validation déterministe reste l’autorité.",
     "La interpretación de la IA es explicativa. La validación determinista sigue siendo autorizada."
+  ],
+  "Import CSV into selected period": [
+    "Seçili döneme CSV aktar",
+    "Importer un CSV dans la période sélectionnée",
+    "Importar CSV al período seleccionado"
+  ],
+  "AI returned a dataset type incompatible with Scheduling. Select the matching destination or upload a Scheduling CSV file.": [
+    "Yapay zekâ, Planlama ile uyumsuz bir veri kümesi türü döndürdü. Uygun hedefi seçin veya Planlama CSV dosyası yükleyin.",
+    "L’IA a renvoyé un type de jeu de données incompatible avec la Planification. Choisissez la destination correspondante ou importez un fichier CSV de planification.",
+    "La IA devolvió un tipo de conjunto de datos incompatible con Programación. Elija el destino correspondiente o cargue un archivo CSV de programación."
+  ],
+  "AI could not match this file to Scheduling. Choose a compatible destination or upload a matching CSV file.": [
+    "Yapay zekâ bu dosyayı Planlama ile eşleştiremedi. Uyumlu bir hedef seçin veya uygun bir CSV dosyası yükleyin.",
+    "L’IA n’a pas pu associer ce fichier à la Planification. Choisissez une destination compatible ou importez un fichier CSV correspondant.",
+    "La IA no pudo asociar este archivo con Programación. Elija un destino compatible o cargue un archivo CSV adecuado."
+  ],
+  "AI returned a dataset type incompatible with Resource Allocation. Select the matching destination or upload a Resource Allocation CSV file.": [
+    "Yapay zekâ, Kaynak Tahsisi ile uyumsuz bir veri kümesi türü döndürdü. Uygun hedefi seçin veya Kaynak Tahsisi CSV dosyası yükleyin.",
+    "L’IA a renvoyé un type de jeu de données incompatible avec l’allocation des ressources. Choisissez la destination correspondante ou importez un fichier CSV d’allocation des ressources.",
+    "La IA devolvió un tipo de conjunto de datos incompatible con Asignación de recursos. Elija el destino correspondiente o cargue un archivo CSV de asignación de recursos."
+  ],
+  "AI could not match this file to Resource Allocation. Choose a compatible destination or upload a matching CSV file.": [
+    "Yapay zekâ bu dosyayı Kaynak Tahsisi ile eşleştiremedi. Uyumlu bir hedef seçin veya uygun bir CSV dosyası yükleyin.",
+    "L’IA n’a pas pu associer ce fichier à l’allocation des ressources. Choisissez une destination compatible ou importez un fichier CSV correspondant.",
+    "La IA no pudo asociar este archivo con Asignación de recursos. Elija un destino compatible o cargue un archivo CSV adecuado."
   ]
 }

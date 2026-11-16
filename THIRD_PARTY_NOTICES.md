@@ -2,7 +2,7 @@ OptiFlow uses GLPK and glpk.js, licensed under GPL-3.0. glpk.js 4.0.2 source and
 
 The runnable OptiFlow source accompanies this prototype; see LICENSE. The Python backend uses Google OR-Tools under Apache-2.0. React, Next.js, lucide-react, and other dependencies retain their respective licenses. Refer to each installed package's license for full notices.
 
-Excel workbook support uses ExcelJS 4.4.0 under the MIT license. Its transitive dependencies retain their own licenses; the exact dependency graph is recorded in package-lock.json.
+Excel workbook export uses ExcelJS 4.4.0 under the MIT license. Its transitive dependencies retain their own licenses; the exact dependency graph is recorded in package-lock.json.
 
 The MIT License (MIT)
 

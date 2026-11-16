@@ -1,6 +1,6 @@
 # OptiFlow Smart Import
 
-A browser-local CSV/XLSX import workflow integrated with OptiFlow's existing Next.js application. XLSX files are parsed locally and each worksheet is normalized as its own CSV-equivalent table; worksheet names and source row numbers are retained, and unrelated worksheets are never flattened together. Worksheets without tabular data, or with populated cells that have no matching header, block import instead of being silently skipped. All valid worksheets flow into the existing AI-first import for automatic dataset detection. Formulas are not executed: a cached formula result is used, while a formula without a cached result blocks import instead of becoming a blank. The existing GLPK and Python CP-SAT demo optimizers remain unchanged.
+A browser-local CSV-only import workflow integrated with OptiFlow's existing Next.js application. Upload one or multiple CSV files; UTF-8 and BOM-marked files, comma and semicolon delimiters, quoted fields, escaped quotes, empty cells, and common line endings are supported. Each file remains a separate source through AI-first dataset detection and deterministic validation. Unsupported file types and malformed CSV data block import with actionable errors. The existing GLPK and Python CP-SAT demo optimizers remain unchanged.
 
 ## Run and use
 
@@ -11,7 +11,7 @@ npm run dev
 
 Open http://localhost:3000 and choose **Smart Import** in the sidebar. The destination selector keeps the Scheduling workflow below separate from the new [Resource Allocation import adapter](RESOURCE_ALLOCATION.md#smart-import-integration), whose validated datasets can be optimized directly.
 
-1. **Upload:** drop CSV/TSV or XLSX files or choose files. XLSX worksheets are included automatically and kept separate. Select an explicit legacy encoding if necessary. To replace a source, select it under Upload action and upload one replacement. Remove sources individually, inspect paginated raw records, or correct and reparse raw CSV without reuploading.
+1. **Upload:** drop or choose one or multiple `.csv` files. UTF-8 is detected automatically; select a legacy encoding explicitly if necessary. Comma and semicolon delimiters are supported. To replace a source, select it under Upload action and upload one replacement. Remove sources individually, inspect paginated raw records, or correct and reparse raw CSV without reuploading.
 2. **Map columns:** review exact-alias matches and sample values. Confirm ambiguous suggestions or choose another field, Irrelevant, or Keep unmapped. Explicitly select what the rows represent. Existing employee assignments are not staffing demand. For unrelated files, select no dataset and confirm that classification.
 3. **Normalize:** choose DMY/MDY when numeric dates are ambiguous and a decimal convention for fractional values. Choose a role separator or use one role per cell / a JSON array. If a leave approval status is present, map its exact value to `unavailable`; neither “approved” nor missing values imply availability.
 4. **Validate and correct:** transform, review errors and warnings, and edit canonical cells. Enter dates as YYYY-MM-DD, times as HH:mm, decimals with a period, and roles as a JSON array such as `["Cashier", "Manager"]`. Editing a flagged cell explicitly resolves its normalization question, subject to validation. Add missing records manually or remove conflicting records. No ID, pay, role, hour limit, availability, or staffing demand is invented.
@@ -79,9 +79,9 @@ Raw files and unconfirmed corrections remain in browser memory while navigating 
 
 ## Limits and remaining engine work
 
-- Imports are limited to 10 source tables, 80 columns, and 10,000 source rows total. CSV/TSV tables are limited to 2 MB and 5,000 data rows each. XLSX files are limited to 10 MB, 50 worksheets, 10,000 worksheet rows, and 80 columns; each normalized worksheet table counts toward the same ten-table limit and downstream per-source limits. Browser memory/storage can impose smaller practical limits.
-- UTF-8 and BOM-marked UTF-16 are detected; Windows-1252 and Windows-1254 are explicit choices. Comma, semicolon, tab, and pipe separators are supported. Ambiguous delimiters require selection.
-- PDF, nested tables, headerless files, locale prose dates, thousands separators, and automatic wide-grid unpivoting are not supported. Excel-formatted date/time cells are normalized; unformatted numeric values remain numbers. One header row is required. Role arrays are exported as JSON inside CSV cells.
+- Imports are limited to 10 CSV files, 80 columns per file, 2 MB and 5,000 data rows per file, and 10,000 source rows total. Browser memory/storage can impose smaller practical limits.
+- UTF-8 and BOM-marked UTF-16 are detected; Windows-1252 and Windows-1254 are explicit choices. Comma and semicolon separators are supported. Ambiguous delimiters require selection.
+- PDF, TSV, pipe-delimited files, nested tables, headerless files, locale prose dates, thousands separators, and automatic wide-grid unpivoting are not supported. One header row is required. Role arrays are exported as JSON inside CSV cells.
 - Time windows may cross midnight with an explicit `end_date`; maximum duration is 24 calendar-wall-clock hours. Shift requirements must fit the configured seven-day period. Business timezone is recorded; DST transition interpretation awaits the imported-data optimizer adapter.
 - Availability statuses include YES → available and NO → unavailable. Unknown values require explicit mapping; all distinct values are accessible in paginated controls. Empty values are never defaulted.
 - An explicit rules review is required. Rest/shift-count/cap restrictions are stored; they cannot be enforced on assignments until an imported schedule is actually generated.
