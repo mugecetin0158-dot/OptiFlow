@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
 import urllib.error
 import urllib.request
@@ -209,6 +210,24 @@ def _urlopen_json(request: urllib.request.Request, timeout: float):
 logger = logging.getLogger("optiflow.gemini")
 
 
+def _safe_model_label(model: str):
+    return model if re.fullmatch(r"gemini-[A-Za-z0-9][A-Za-z0-9._-]{0,80}", model) else "<redacted>"
+
+
+def _provider_error_category(status: int):
+    if status == 404:
+        return "model_or_method_not_found"
+    if status == 400:
+        return "invalid_request"
+    if status in {401, 403}:
+        return "authorization"
+    if status == 429:
+        return "rate_limit"
+    if 500 <= status <= 599:
+        return "provider_server_error"
+    return "provider_http_error"
+
+
 class GeminiClient:
     """Small REST client so no provider SDK is required by the application."""
 
@@ -219,7 +238,7 @@ class GeminiClient:
         key = os.environ.get("GEMINI_API_KEY", "").strip()
         if not key:
             raise AIUnavailable("Gemini import processing is not configured.")
-        model = os.environ.get("GEMINI_IMPORT_MODEL", "gemini-3.8-flash").strip()
+        model = os.environ.get("GEMINI_IMPORT_MODEL", "").strip() or "gemini-2.5-flash"
         timeout = max(3.0, min(60.0, float(os.environ.get("GEMINI_TIMEOUT_SECONDS", "20"))))
         retries = max(0, min(4, int(os.environ.get("GEMINI_MAX_RETRIES", "2"))))
         schema = AIInterpretation.model_json_schema()
@@ -268,8 +287,13 @@ class GeminiClient:
                 return AIInterpretation.model_validate_json(text)
             except urllib.error.HTTPError as error:
                 last_error = error
-                # Provider messages can include user data; log status only.
-                logger.warning("Gemini upstream HTTP %s (attempt %s)", error.code, attempt + 1)
+                logger.warning(
+                    "Gemini request failed model=%s status=%s category=%s attempt=%s",
+                    _safe_model_label(model),
+                    error.code,
+                    _provider_error_category(error.code),
+                    attempt + 1,
+                )
                 if error.code not in {429, 500, 502, 503, 504} or attempt == retries:
                     break
                 time.sleep(min(2.0, 0.25 * (2**attempt)))

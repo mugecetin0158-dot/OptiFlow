@@ -1,4 +1,8 @@
+import io
 import json
+import logging
+import urllib.error
+import urllib.request
 from pathlib import Path
 from pydantic import ValidationError
 from backend.main import Scenario,minutes,solve
@@ -102,6 +106,43 @@ def test_malformed_gemini_response_is_safe(monkeypatch):
         assert False
     except AIProviderFailure as error:
         assert 'malformed structured response' in str(error)
+
+def test_gemini_request_uses_supported_default_model_and_v1beta_body(monkeypatch):
+    from backend.import_foundations import GeminiClient, InterpretRequest
+    monkeypatch.setenv('GEMINI_API_KEY', 'test-only-key')
+    monkeypatch.delenv('GEMINI_IMPORT_MODEL', raising=False)
+    seen = {}
+    def transport(request, timeout):
+        seen['url'] = request.full_url
+        seen['headers'] = {key.lower(): value for key, value in request.header_items()}
+        seen['body'] = json.loads(request.data)
+        return {'candidates': [{'content': {'parts': [{'text': json.dumps(ai_fixture())}]}}]}
+    GeminiClient(transport).interpret(InterpretRequest.model_validate(import_request()))
+    assert seen['url'] == 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
+    assert seen['headers']['x-goog-api-key'] == 'test-only-key'
+    assert seen['body']['systemInstruction']['parts'][0]['text']
+    assert seen['body']['contents'][0]['role'] == 'user'
+    assert seen['body']['generationConfig']['responseMimeType'] == 'application/json'
+
+def test_gemini_http_failure_logs_only_safe_diagnostics(monkeypatch, caplog):
+    from backend.import_foundations import GeminiClient, InterpretRequest, AIProviderFailure
+    monkeypatch.setenv('GEMINI_API_KEY', 'private-api-key')
+    monkeypatch.setenv('GEMINI_IMPORT_MODEL', 'gemini-2.5-flash')
+    request_data = urllib.request.Request('https://example.test/generate')
+    provider_body = b'{"error":"private spreadsheet value and private-api-key"}'
+    http_error = urllib.error.HTTPError(request_data.full_url, 404, 'Not Found', {}, io.BytesIO(provider_body))
+    client_impl = GeminiClient(lambda request, timeout: (_ for _ in ()).throw(http_error))
+    with caplog.at_level(logging.WARNING, logger='optiflow.gemini'):
+        try:
+            client_impl.interpret(InterpretRequest.model_validate(import_request()))
+            assert False
+        except AIProviderFailure as error:
+            assert 'HTTP 404' in str(error)
+    assert 'model=gemini-2.5-flash' in caplog.text
+    assert 'status=404' in caplog.text
+    assert 'category=model_or_method_not_found' in caplog.text
+    assert 'private-api-key' not in caplog.text
+    assert 'private spreadsheet value' not in caplog.text
 
 def test_spanish_locale_reaches_gemini_and_questions(monkeypatch):
     from backend import import_foundations as foundations
