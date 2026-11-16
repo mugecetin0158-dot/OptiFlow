@@ -220,13 +220,17 @@ def _safe_model_label(model: str):
 
 def _effective_model():
     model = os.environ.get("GEMINI_IMPORT_MODEL", "").strip() or "gemini-2.5-flash"
-    return model.removeprefix("models/")
+    return _normalize_model_name(model)
 
 
-def _generation_url(model: str):
-    normalized_model = model.strip().removeprefix("models/")
+def _normalize_model_name(model: str):
+    return model.strip().removeprefix("models/")
+
+
+def _generation_url(model: str, api_version: Literal["v1beta", "v1"] = "v1beta"):
+    normalized_model = _normalize_model_name(model)
     return (
-        "https://generativelanguage.googleapis.com/v1beta/models/"
+        f"https://generativelanguage.googleapis.com/{api_version}/models/"
         f"{urllib.parse.quote(normalized_model, safe='-._~')}:generateContent"
     )
 

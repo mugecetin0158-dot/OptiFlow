@@ -9,7 +9,7 @@ import socket
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 from fastapi import APIRouter, Header, HTTPException
 
@@ -96,7 +96,7 @@ def discover_models(api_key: str, configured_model: str, transport: ModelTranspo
                 methods = model.get("supportedGenerationMethods", [])
                 name = model.get("name")
                 if "generateContent" in methods and isinstance(name, str) and name.strip():
-                    models.append(name.removeprefix("models/"))
+                    models.append(import_foundations._normalize_model_name(name))
             next_token = response.get("nextPageToken")
             if not next_token:
                 break
@@ -114,7 +114,7 @@ def discover_models(api_key: str, configured_model: str, transport: ModelTranspo
         logger.warning("Gemini model discovery returned a malformed response")
         raise HTTPException(status_code=502, detail={"error": "Gemini returned a malformed model list. Retry, and check provider status if it persists."}) from None
 
-    configured = configured_model.strip().removeprefix("models/")
+    configured = import_foundations._normalize_model_name(configured_model)
     compatible = sorted(set(models))
     return {
         "configured_model": configured,
@@ -123,11 +123,11 @@ def discover_models(api_key: str, configured_model: str, transport: ModelTranspo
     }
 
 
-def probe_generation(api_key: str, model: str):
-    """Make a minimal generation request and return safe status metadata only."""
+def _probe_generation_version(api_key: str, model: str, api_version: Literal["v1beta", "v1"]):
+    """Make one minimal generation request and return safe status metadata only."""
     timeout = max(3.0, min(60.0, float(os.environ.get("GEMINI_TIMEOUT_SECONDS", "20"))))
     request = urllib.request.Request(
-        import_foundations._generation_url(model),
+        import_foundations._generation_url(model, api_version),
         json.dumps({
             "contents": [{"role": "user", "parts": [{"text": "Reply with exactly: OK"}]}],
             "generationConfig": {"temperature": 0, "maxOutputTokens": 8},
@@ -150,6 +150,14 @@ def probe_generation(api_key: str, model: str):
     return {"http_status": 200, "provider_status": None, "category": "success"}
 
 
+def probe_generation(api_key: str, model: str):
+    """Compare minimal generation requests across supported REST API versions."""
+    return {
+        version: _probe_generation_version(api_key, model, version)
+        for version in ("v1beta", "v1")
+    }
+
+
 @router.get("/diagnostics/gemini")
 def gemini_diagnostics(
     authorization: str | None = Header(default=None),
@@ -166,7 +174,9 @@ def gemini_diagnostics(
     api_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if not api_key:
         raise HTTPException(status_code=503, detail="Gemini API key is not configured on this server.")
-    configured_model = os.environ.get("GEMINI_IMPORT_MODEL", "gemini-2.5-flash").strip()
+    configured_model = import_foundations._normalize_model_name(
+        os.environ.get("GEMINI_IMPORT_MODEL", "gemini-2.5-flash")
+    )
     result = discover_models(api_key, configured_model)
     if probe:
         result["generation_probe"] = probe_generation(api_key, configured_model)

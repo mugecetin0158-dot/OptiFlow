@@ -61,24 +61,23 @@ def test_generation_probe_is_opt_in_and_sends_only_synthetic_prompt(client, monk
         headers={"Authorization": f"Bearer {TOKEN}"},
     )
     assert response.status_code == 200
-    request = generation_requests[0]
-    assert request.full_url == (
-        "https://generativelanguage.googleapis.com/v1beta/models/"
-        "gemini-2.5-flash:generateContent"
-    )
-    assert request.get_method() == "POST"
-    assert request.get_header("X-goog-api-key") == KEY
-    body = json.loads(request.data)
-    assert body["contents"] == [{"role": "user", "parts": [{"text": "Reply with exactly: OK"}]}]
+    assert [request.full_url for request in generation_requests] == [
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent",
+    ]
+    for request in generation_requests:
+        assert request.get_method() == "POST"
+        assert request.get_header("X-goog-api-key") == KEY
+        body = json.loads(request.data)
+        assert body["contents"] == [{"role": "user", "parts": [{"text": "Reply with exactly: OK"}]}]
     assert KEY not in response.text and "OK" not in response.text
     assert response.json()["generation_probe"] == {
-        "http_status": 200,
-        "provider_status": None,
-        "category": "success",
+        "v1beta": {"http_status": 200, "provider_status": None, "category": "success"},
+        "v1": {"http_status": 200, "provider_status": None, "category": "success"},
     }
 
 
-def test_generation_probe_normalizes_model_and_sanitizes_provider_errors(client, monkeypatch):
+def test_generation_probe_compares_versions_and_sanitizes_provider_errors(client, monkeypatch):
     monkeypatch.setenv("GEMINI_IMPORT_MODEL", "models/gemini-2.5-flash")
     monkeypatch.setattr(diagnostics, "model_transport", fake_model_response)
     sensitive = f"upstream response contained {KEY} and spreadsheet data"
@@ -86,7 +85,8 @@ def test_generation_probe_normalizes_model_and_sanitizes_provider_errors(client,
 
     def fail_generation(request, timeout):
         seen.append(request.full_url)
-        raise urllib.error.HTTPError(request.full_url, 404, sensitive, {}, None)
+        status = 404 if "/v1beta/" in request.full_url else 403
+        raise urllib.error.HTTPError(request.full_url, status, sensitive, {}, None)
 
     monkeypatch.setattr(diagnostics, "_urlopen_json", fail_generation)
     response = client.get(
@@ -96,13 +96,22 @@ def test_generation_probe_normalizes_model_and_sanitizes_provider_errors(client,
     assert response.status_code == 200
     assert seen == [
         "https://generativelanguage.googleapis.com/v1beta/models/"
-        "gemini-2.5-flash:generateContent"
+        "gemini-2.5-flash:generateContent",
+        "https://generativelanguage.googleapis.com/v1/models/"
+        "gemini-2.5-flash:generateContent",
     ]
     assert response.json()["configured_model"] == "gemini-2.5-flash"
     assert response.json()["generation_probe"] == {
-        "http_status": 502,
-        "provider_status": 404,
-        "category": "model_or_method_not_found",
+        "v1beta": {
+            "http_status": 502,
+            "provider_status": 404,
+            "category": "model_or_method_not_found",
+        },
+        "v1": {
+            "http_status": 502,
+            "provider_status": 403,
+            "category": "authorization",
+        },
     }
     assert KEY not in response.text
     assert "spreadsheet data" not in response.text and sensitive not in response.text
