@@ -15,7 +15,7 @@ export const titles: Record<Table, string> = {
   demands: "Resource demands",
   links: "Compatibility & limits",
 };
-const labels: Record<string, string> = {
+export const fieldLabels: Record<string, string> = {
   resource_id: "Resource ID",
   project_id: "Project ID",
   name: "Name",
@@ -55,9 +55,17 @@ export function AllocationIssues({
             <small>
               {i.table && t(titles[i.table])}
               {i.record !== undefined && ` · ${i.record + 1}`}
-              {i.field && ` · ${i.field}`}
+              {i.field && ` · ${t(fieldLabels[i.field] || i.field)}`}
               {i.source && ` · ${i.source.file}:${i.source.row}`}
-              {i.detail && ` · ${i.detail}`}
+              {i.detail &&
+                ` · ${
+                  i.detail.includes(".")
+                    ? (() => {
+                        const [table, field] = i.detail.split(".");
+                        return `${t(titles[table as Table] || table)} · ${t(fieldLabels[field] || field)}`;
+                      })()
+                    : t(i.detail)
+                }`}
             </small>
           </div>
         </div>
@@ -235,7 +243,7 @@ export default function CatalogEditor({
               <th>#</th>
               {columns[table].map((f) => (
                 <th key={f}>
-                  {t(labels[f])}
+                  {t(fieldLabels[f])}
                   <small className="source-line">{f}</small>
                 </th>
               ))}
@@ -257,12 +265,15 @@ export default function CatalogEditor({
                         (!i.field || i.field === f) &&
                         i.severity === "error",
                     );
+                    const errorId = `allocation-${table}-${index}-${f}-error`;
                     return (
                       <td key={f}>
                         {f === "integer" || f === "compatible" ? (
                           <select
-                            aria-label={`${t(titles[table])} ${index + 1} ${f}`}
+                            aria-label={`${t(titles[table])} ${index + 1} ${t(fieldLabels[f])}`}
                             aria-invalid={!!bad.length}
+                            aria-describedby={bad.length ? errorId : undefined}
+                            className={bad.length ? "invalid" : ""}
                             value={r.values[f] || ""}
                             onChange={(e) => edit(index, f, e.target.value)}
                           >
@@ -275,13 +286,46 @@ export default function CatalogEditor({
                           </select>
                         ) : (
                           <input
-                            aria-label={`${t(titles[table])} ${index + 1} ${f}`}
+                            aria-label={`${t(titles[table])} ${index + 1} ${t(fieldLabels[f])}`}
                             aria-invalid={!!bad.length}
+                            aria-describedby={bad.length ? errorId : undefined}
                             className={bad.length ? "invalid" : ""}
+                            type={
+                              [
+                                "capacity",
+                                "maximum_output",
+                                "maximum_allocation",
+                              ].includes(f)
+                                ? "text"
+                                : [
+                                    "unit_cost",
+                                    "minimum_output",
+                                    "unit_value",
+                                    "priority",
+                                    "amount_per_output",
+                                    "minimum_allocation",
+                                  ].includes(f)
+                                  ? "number"
+                                  : "text"
+                            }
+                            inputMode={
+                              [
+                                "capacity",
+                                "maximum_output",
+                                "maximum_allocation",
+                              ].includes(f)
+                                ? "decimal"
+                                : undefined
+                            }
                             title={bad.map((i) => t(i.message)).join("\n")}
                             value={r.values[f] || ""}
                             onChange={(e) => edit(index, f, e.target.value)}
                           />
+                        )}
+                        {bad.length > 0 && (
+                          <small className="field-error-text" id={errorId}>
+                            {bad.map((issue) => t(issue.message)).join(" ")}
+                          </small>
                         )}
                       </td>
                     );

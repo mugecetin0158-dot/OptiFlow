@@ -33,6 +33,7 @@ const spanishPatterns: { match: RegExp; render: (m: RegExpMatchArray) => string 
   { match: /^(.+) is unavailable for day (\d+) (Morning|Afternoon)\.$/, render: (m) => `${m[1]} no está disponible el día ${m[2]} por la ${translate("es", m[3]).toLowerCase()}.` },
   { match: /^(.+): ([\d.]+)h exceeds the ([\d.]+)h weekly limit\.$/, render: (m) => `${m[1]}: ${formatNumber("es", +m[2])} h supera el límite semanal de ${formatNumber("es", +m[3])} h.` },
   { match: /^(.+) required staff$/, render: (m) => `${m[1]} empleados necesarios` },
+  { match: /^Showing 100 changes; all (\d+) are saved with the validated dataset\.$/, render: (m) => `Se muestran 100 cambios; los ${m[1]} se guardan con el conjunto de datos validado.` },
   { match: /^(.+): wage must be \$0–\$1,000 with at most two decimals\.$/, render: (m) => `${m[1]}: el salario debe estar entre 0 y 1.000 USD y tener como máximo dos decimales.` },
   { match: /^(.+): maximum hours must be 0–168 in whole minutes\.$/, render: (m) => `${m[1]}: el límite debe estar entre 0 y 168 horas, en minutos enteros.` },
   { match: /^(.+): availability must cover all 14 shifts\.$/, render: (m) => `${m[1]}: debe indicarse la disponibilidad para los 14 turnos.` },
@@ -52,6 +53,15 @@ type MessagePattern = {
 };
 const pick = (l: Language, tr: string, fr: string, es?: string) => (l === "tr" ? tr : l === "fr" ? fr : es || "");
 const patterns: MessagePattern[] = [
+  {
+    match: /^Showing 100 changes; all (\d+) are saved with the validated dataset\.$/,
+    render: (m, l) =>
+      pick(
+        l,
+        `${m[1]} değişikliğin 100 tanesi gösteriliyor; tümü doğrulanmış veri kümesiyle kaydedilir.`,
+        `100 modifications affichées ; les ${m[1]} sont toutes enregistrées avec le jeu de données validé.`,
+      ),
+  },
   {
     match: /^(.+) example loaded$/,
     render: (m, l) =>

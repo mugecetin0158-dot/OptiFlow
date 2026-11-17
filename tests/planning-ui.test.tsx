@@ -24,7 +24,7 @@ test("planning workspace exposes editable periods, explicit policies and objecti
     assert.ok(html.includes(text), text);
   assert.ok(!html.includes("Verification: passed"));
 });
-test("allocation import uses three-stage AI navigation and accepts CSV files", () => {
+test("allocation import uses five-stage AI navigation and accepts CSV files", () => {
   const html = renderToStaticMarkup(
     <AllocationImport
       initialSettings={emptyDraft().settings}
@@ -34,10 +34,18 @@ test("allocation import uses three-stage AI navigation and accepts CSV files", (
   );
   for (const label of [
     "Upload",
-    "AI Processing",
-    "Preview &amp; save",
+    "AI Interpretation",
+    "Missing Information",
+    "Preview",
+    "Save",
   ])
     assert.ok(html.includes(label));
+  const steps = html.match(/<ol class="import-steps">([\s\S]*?)<\/ol>/)?.[1];
+  assert.ok(steps);
+  assert.equal((steps.match(/<li>/g) || []).length, 5);
+  assert.ok(!html.includes("AI Processing"));
+  assert.ok(!html.includes("Preview &amp; save"));
+  assert.ok(!html.includes("Optional Verification"));
   assert.ok(!html.includes("Map columns"));
   assert.ok(html.includes("I consent to sending minimized column metadata"));
   assert.ok(html.includes('accept=".csv,text/csv"'));

@@ -2,7 +2,7 @@
 import { autoAllocationWithProfiles } from "../../lib/import/automation";
 import { profileSourcesForAI } from "../../lib/import/automation";
 import { useCSVUpload } from "../CsvPicker";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Upload, ArrowRight } from "lucide-react";
 import { decodeCSV, MAX_BYTES } from "../../lib/import/csv";
 import {
@@ -25,9 +25,11 @@ import CatalogEditor, {
   AllocationIssues,
   AllocationSettings,
   titles,
+  fieldLabels,
   Translate,
 } from "./CatalogEditor";
 import { emptyDraft } from "../../lib/allocation/types";
+import { requiredColumns } from "../../lib/allocation/import";
 import { downloadText } from "../smart-import/SmartImport";
 import ImportProfiles from "./ImportProfiles";
 import { PROFILE_KEY, AllocationProfile } from "../../lib/allocation/profiles";
@@ -65,6 +67,21 @@ export default function AllocationImport({
     [sources, preview.settings],
   );
   const validation = useMemo(() => validateDraft(preview), [preview]);
+  const unresolvedIssues = [
+    ...transformed.issues,
+    ...validation.issues,
+  ].filter((issue) => issue.severity === "error");
+  const unresolvedCount = new Set(
+    unresolvedIssues.map((issue) =>
+      issue.field
+        ? `${issue.table || ""}:${issue.record ?? ""}:${issue.field}:${issue.source?.fileId || ""}`
+        : `${issue.message}:${issue.source?.fileId || ""}`,
+    ),
+  ).size;
+  const hasMissingInformation = unresolvedCount > 0;
+  useEffect(() => {
+    if (step === 2 && !stale && !hasMissingInformation) setStep(3);
+  }, [step, stale, hasMissingInformation]);
   const valid =
     !stale &&
     validation.valid &&
@@ -157,7 +174,7 @@ export default function AllocationImport({
       if (analyzed.every((s) => s.confirmed) && !proposals.length && !transformed.issues.some((i) => i.severity === "error")) {
         setPreview(transformed.draft);
         setStale(false);
-        setStep(2);
+        setStep(validateDraft(transformed.draft).valid ? 3 : 2);
       }
     } catch (e) {
       if (!controller.signal.aborted) setError((e as Error).message);
@@ -232,14 +249,20 @@ export default function AllocationImport({
       <ol className="import-steps">
         {[
           "Upload",
-          "AI Processing",
-          "Preview & save",
+          "AI Interpretation",
+          "Missing Information",
+          "Preview",
+          "Save",
         ].map((label, i) => (
           <li key={label}>
             <button
               aria-current={step === i ? "step" : undefined}
               className={step === i ? "active" : ""}
-              disabled={i > 0 && !aiComplete && !aiBusy}
+              disabled={
+                (i > 0 && !aiComplete && !aiBusy) ||
+                (i === 2 && !hasMissingInformation) ||
+                (i >= 3 && hasMissingInformation)
+              }
               onClick={() => setStep(i)}
             >
               <span>{i + 1}</span>
@@ -248,6 +271,51 @@ export default function AllocationImport({
           </li>
         ))}
       </ol>
+      {aiComplete && unresolvedCount > 0 && (
+        <div className="notice missing-warning" role="alert">
+          <strong>
+            {t("Required information is missing")}: {unresolvedCount}{" "}
+            {t(unresolvedCount === 1 ? "unresolved field" : "unresolved fields")}
+          </strong>
+          <button
+            className="btn"
+            onClick={() => setStep(2)}
+            aria-label={t("Go to missing-information questions")}
+          >
+            {t("Answer missing questions")}
+          </button>
+        </div>
+      )}
+      {step === 0 && (
+        <section className="panel allocation-requirements">
+          <h3>{t("What Resource Allocation needs")}</h3>
+          <p>{t("Required information comes from the allocation model and its validation rules.")}</p>
+          <div className="allocation-requirement-grid">
+            {tables.map((table) => {
+              const required = requiredColumns(table, preview.settings.mode);
+              const optional = columns[table].filter((field) => !required.includes(field));
+              return (
+                <article key={table}>
+                  <h4>{t(titles[table])}</h4>
+                  {table === "links" && <p>{t("This dataset is optional. When supplied, its required fields apply to each compatibility link.")}</p>}
+                  <strong>{t("Required fields")}</strong>
+                  <p>{required.map((field) => t(fieldLabels[field])).join(", ")}</p>
+                  <strong>{t("Optional fields")}</strong>
+                  <p>{optional.length ? optional.map((field) => t(fieldLabels[field])).join(", ") : t("None")}</p>
+                </article>
+              );
+            })}
+            <article>
+              <h4>{t("Model settings")}</h4>
+              <strong>{t("Required fields")}</strong>
+              <p>{t("Objective")}, {t("Planning period")}, {t("Business currency")}</p>
+              <strong>{t("Optional fields")}</strong>
+              <p>{t("Budget (blank = no budget limit)")}</p>
+            </article>
+          </div>
+          <p className="footnote">{t("Capacity, maximum output, maximum allocation, and project priority may be unlimited or use their documented defaults. Value per output is required only for value maximization.")}</p>
+        </section>
+      )}
       {picker}
       <section className="import-intro">
         <Upload size={28} />
@@ -384,8 +452,8 @@ export default function AllocationImport({
       <div hidden={step !== 1}>
         {aiBusy && <p role="status">{t("AI is analyzing the import…")} <button className="btn" onClick={() => aiAbort.current?.abort()}>{t("Cancel AI processing")}</button></p>}
         {!aiBusy && !aiComplete && sources.length > 0 && <button className="btn primary" disabled={!aiConsent} onClick={() => void processWithAI(sources)}>{t("Retry AI processing")}</button>}
-        {aiComplete && aiDestinationNotes.length > 0 && <div className="notice" role="status">{aiDestinationNotes.map((item) => <p key={item.file}><strong>{item.file}</strong>: {item.note}</p>)}</div>}
-        {aiComplete && aiProposals.length > 0 && <div className="panel import-panel"><h3>{t("Corrections requiring approval")}</h3><p>{t("AI proposals are never applied automatically. Correct the affected source or preview value yourself before saving.")}</p>{aiProposals.map((p, i) => <p key={i}>{p.file} · {p.column}: {p.original} → {p.proposed} · {p.reason}</p>)}<label className="import-confirm"><input type="checkbox" checked={aiProposalsReviewed} onChange={(e) => setAiProposalsReviewed(e.target.checked)} />{t("I reviewed these proposals. Keep original values unless I explicitly edit them.")}</label></div>}
+        {aiComplete && aiDestinationNotes.length > 0 && <div className="notice" role="status">{aiDestinationNotes.map((item) => <p key={item.file}><strong>{item.file}</strong>: {t(item.note)}</p>)}</div>}
+        {aiComplete && aiProposals.length > 0 && <div className="panel import-panel"><h3>{t("Corrections requiring approval")}</h3><p>{t("AI proposals are never applied automatically. Correct the affected source or preview value yourself before saving.")}</p>{aiProposals.map((p, i) => <p key={i}>{p.file} · {p.column}: {p.original} → {p.proposed} · {t(p.reason)}</p>)}<label className="import-confirm"><input type="checkbox" checked={aiProposalsReviewed} onChange={(e) => setAiProposalsReviewed(e.target.checked)} />{t("I reviewed these proposals. Keep original values unless I explicitly edit them.")}</label></div>}
         {aiComplete && <>
         {sources.map((source) => (
           <section className="panel import-panel" key={source.id}>
@@ -408,7 +476,7 @@ export default function AllocationImport({
                 {t("Remove file")}
               </button>
             </div>
-            <ImportProfiles source={source} onApply={update} />
+            <ImportProfiles source={source} onApply={update} t={t} />
             <div className="allocation-toolbar">
               <label>
                 {t("What do these rows represent?")}
@@ -516,7 +584,7 @@ export default function AllocationImport({
                             <option value="">{t("Keep unmapped")}</option>
                             <option value="ignore">{t("Irrelevant")}</option>
                             {columns[source.kind as Table].map((f) => (
-                              <option key={f}>{f}</option>
+                              <option key={f} value={f}>{t(fieldLabels[f] || f)}</option>
                             ))}
                           </select>
                         </td>
@@ -582,9 +650,15 @@ export default function AllocationImport({
                   )
                 )
                   return;
-                setPreview(transformed.draft);
+                const nextDraft = transformed.draft;
+                setPreview(nextDraft);
                 setStale(false);
-                setStep(2);
+                setStep(
+                  transformed.issues.some((issue) => issue.severity === "error") ||
+                    !validateDraft(nextDraft).valid
+                    ? 2
+                    : 3,
+                );
                 setAccepted(false);
               }}
             >
@@ -595,7 +669,44 @@ export default function AllocationImport({
         )}
         </>}
       </div>
-      <div hidden={step !== 2}>
+      {step === 2 && (
+        <section className="panel import-panel missing-information-panel">
+          <h3>{t("Missing Information")}</h3>
+          <p>{t("Complete only the required fields identified by model validation. Optional fields may remain blank.")}</p>
+          {unresolvedIssues.map((issue, index) => {
+            const key = `${issue.table || ""}:${issue.record ?? ""}:${issue.field || issue.message}:${issue.source?.fileId || ""}`;
+            if (unresolvedIssues.some((other, otherIndex) =>
+              otherIndex < index &&
+              other.table === issue.table &&
+              other.record === issue.record &&
+              other.field === issue.field &&
+              other.source?.fileId === issue.source?.fileId &&
+              other.message === issue.message,
+            )) return null;
+            const source = issue.source && sources.find((item) => item.id === issue.source?.fileId);
+            return (
+              <article className="missing-question-card unresolved" key={key}>
+                <h4>{issue.table ? t(titles[issue.table]) : t("Model settings")}</h4>
+                <p>{t(issue.message)}</p>
+                <dl>
+                  <div><dt>{t("Target field")}</dt><dd>{issue.field ? t(fieldLabels[issue.field] || issue.field) : t("Model settings")}</dd></div>
+                  <div><dt>{t("Source dataset")}</dt><dd>{source?.name || (issue.table ? t(titles[issue.table]) : t("Model settings"))}</dd></div>
+                  <div><dt>{t("Suggested mapping")}</dt><dd>{issue.detail ? t("Map or enter the value for this required field.") : t("Enter a value that satisfies this field.")}</dd></div>
+                </dl>
+                {issue.detail && (
+                  <button className="btn" onClick={() => setStep(1)}>
+                    {t("Review source mappings")}
+                  </button>
+                )}
+              </article>
+            );
+          })}
+          <p className="field-error-text" role="status">
+            {t("Unresolved fields")}: {unresolvedCount}
+          </p>
+        </section>
+      )}
+      <div hidden={step !== 2 && step !== 3}>
         <AllocationSettings draft={preview} onChange={changePreview} t={t} />
       </div>
       {stale && (
@@ -607,8 +718,8 @@ export default function AllocationImport({
       )}
       {!stale && (
         <>
-          <AllocationIssues issues={validation.issues} t={t} />
-          <div hidden={step !== 2}>
+          {(step === 2 || step === 3) && <AllocationIssues issues={validation.issues} t={t} />}
+          <div hidden={step !== 2 && step !== 3}>
             <CatalogEditor
               draft={preview}
               onChange={changePreview}
@@ -616,7 +727,7 @@ export default function AllocationImport({
               t={t}
             />
           </div>
-          <div hidden={step !== 2}>
+          <div hidden={step !== 3}>
             <details className="panel import-panel">
               <summary>
                 {t("Unmapped source columns")} ({transformed.unmapped.length})
@@ -632,7 +743,7 @@ export default function AllocationImport({
                 <button
                   className="btn"
                   key={table}
-                  disabled={!valid}
+                  disabled={!valid || hasMissingInformation}
                   onClick={() =>
                     downloadText(`${table}.csv`, exportCatalog(preview, table))
                   }
@@ -641,7 +752,20 @@ export default function AllocationImport({
                 </button>
               ))}
             </div>
-            <div className="import-save">
+            {step === 3 && (
+              <button
+                className="btn primary"
+                disabled={!valid}
+                onClick={() => setStep(4)}
+              >
+                {t("Continue to save")} <ArrowRight size={16} />
+              </button>
+            )}
+          </div>
+        </>
+      )}
+      {step === 4 && !stale && (
+        <div className="import-save">
               <label className="import-confirm">
                 <input
                   type="checkbox"
@@ -655,7 +779,7 @@ export default function AllocationImport({
               </label>
               <button
                 className="btn primary"
-                disabled={!valid || !accepted}
+                disabled={!valid || hasMissingInformation || !accepted}
                 onClick={() => {
                   try {
                     onConfirm(preview);
@@ -666,22 +790,28 @@ export default function AllocationImport({
               >
                 {t("Save & use resource data")}
               </button>
-            </div>
-          </div>
-        </>
+        </div>
       )}
       <div className="allocation-toolbar">
         <button
           className="btn"
           disabled={step === 0}
-          onClick={() => setStep(step - 1)}
+          onClick={() =>
+            setStep(step === 3 && !hasMissingInformation ? 1 : step - 1)
+          }
         >
           {t("Previous")}
         </button>
         <button
           className="btn"
-          disabled={step === 2 || (step === 0 && !aiComplete) || (step === 1 && !aiComplete)}
-          onClick={() => setStep(step + 1)}
+          disabled={
+            step === 4 ||
+            (step === 0 && !aiComplete) ||
+            step === 1 ||
+            (step === 2 && (!valid || stale)) ||
+            (step === 3 && !valid)
+          }
+          onClick={() => setStep(step === 0 ? 1 : step + 1)}
         >
           {t("Next")}
         </button>

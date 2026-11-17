@@ -117,6 +117,21 @@ def test_gemini_structured_interpretation_questions_preview_and_save(monkeypatch
     saved=save_model(session)
     assert saved['saved']
 
+def test_allocation_preview_accepts_optional_unlimited_fields():
+    from backend.import_foundations import validate_preview
+    model={
+        'resources':[{'resource_id':'R1','name':'Resource','resource_type':'labor','unit':'hour','unit_cost':2,'integer':False,'capacity':None}],
+        'projects':[{'project_id':'P1','name':'Project','output_unit':'job','minimum_output':0,'integer':False,'maximum_output':None,'unit_value':None,'priority':1}],
+        'demands':[{'project_id':'P1','resource_type':'labor','unit':'hour','amount_per_output':1}],
+        'links':[],
+        'objective':{'kind':'minimize_cost'},
+    }
+    assert validate_preview('allocation',model)==[]
+    model['objective']={'kind':'maximize_output'}
+    assert not any('unit_value' in issue['message'] for issue in validate_preview('allocation',model))
+    model['objective']={'kind':'maximize_net_value'}
+    assert any('unit_value' in issue['message'] for issue in validate_preview('allocation',model))
+
 def test_malformed_gemini_response_is_safe(monkeypatch):
     from backend.import_foundations import GeminiClient, InterpretRequest, AIProviderFailure
     monkeypatch.setenv('GEMINI_API_KEY','test-only')

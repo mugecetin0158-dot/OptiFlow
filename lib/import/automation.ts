@@ -114,6 +114,27 @@ export type AIMissingQuestion = {
   target: string;
   required: boolean;
 };
+export function uniqueMissingQuestions(
+  questions: AIMissingQuestion[],
+): AIMissingQuestion[] {
+  const sourceId = (question: AIMissingQuestion) =>
+    question.id.startsWith("missing:") ? question.id.split(":")[1] : "";
+  const unique: AIMissingQuestion[] = [];
+  for (const question of questions) {
+    const source = sourceId(question);
+    const duplicateIndex = unique.findIndex((existing) => {
+      const existingSource = sourceId(existing);
+      return (
+        existing.target === question.target &&
+        (!source || !existingSource || source === existingSource)
+      );
+    });
+    if (duplicateIndex < 0) unique.push(question);
+    else if (!sourceId(unique[duplicateIndex]) && source)
+      unique[duplicateIndex] = question;
+  }
+  return unique;
+}
 export type AIModelInterpretation = {
   objective: {
     kind: "minimize_cost" | "maximize_output" | "maximize_net_value" | "unknown";
@@ -413,7 +434,14 @@ export async function submitMissingAnswers(
     try { detail = (await response.json()).detail || ""; } catch {}
     throw Error(detail || "Missing information could not be saved.");
   }
-  return response.json() as Promise<{ accepted: number; remaining_questions: AIMissingQuestion[] }>;
+  const result = (await response.json()) as {
+    accepted: number;
+    remaining_questions: AIMissingQuestion[];
+  };
+  return {
+    ...result,
+    remaining_questions: uniqueMissingQuestions(result.remaining_questions),
+  };
 }
 
 export async function requestModelPreview(sessionId: string, model: unknown) {

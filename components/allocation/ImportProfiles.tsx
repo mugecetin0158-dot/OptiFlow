@@ -7,12 +7,15 @@ import {
   applyAllocationProfile,
   makeAllocationProfile,
 } from "../../lib/allocation/profiles";
+import { titles, fieldLabels, Translate } from "./CatalogEditor";
 export default function ImportProfiles({
   source,
   onApply,
+  t,
 }: {
   source: AllocationSource;
   onApply: (s: AllocationSource) => void;
+  t: Translate;
 }) {
   const [profiles, setProfiles] = useState<AllocationProfile[]>([]),
     [name, setName] = useState(""),
@@ -23,7 +26,7 @@ export default function ImportProfiles({
       if (!Array.isArray(stored)) throw Error("Invalid profile storage.");
       setProfiles(stored);
     } catch (e) {
-      setMessage((e as Error).message);
+      setMessage(t((e as Error).message));
     }
   }
   useEffect(load, []);
@@ -36,7 +39,7 @@ export default function ImportProfiles({
       setMessage("");
       fn();
     } catch (e) {
-      setMessage((e as Error).message);
+      setMessage(t((e as Error).message));
     }
   }
   return (
@@ -45,13 +48,12 @@ export default function ImportProfiles({
         if (e.currentTarget.open) load();
       }}
     >
-      <summary>Reusable allocation import profiles</summary>
+      <summary>{t("Reusable allocation import profiles")}</summary>
       <p>
-        Apply a profile, inspect or change its mappings above, confirm, then
-        save with the same name to update it. New values are always revalidated.
+        {t("Apply a profile, inspect or change its mappings above, confirm, then save with the same name to update it. New values are always revalidated.")}
       </p>
       <label>
-        Profile name{" "}
+        {t("Profile name")}{" "}
         <input value={name} onChange={(e) => setName(e.target.value)} />
       </label>
       <button
@@ -65,18 +67,18 @@ export default function ImportProfiles({
             const old = latest.find((x) => x.name === p.name);
             if (
               old &&
-              !window.confirm("Replace the saved mappings for this profile?")
+              !window.confirm(t("Replace the saved mappings for this profile?"))
             )
               return;
             if (old) p.id = old.id;
             persist([...latest.filter((x) => x.id !== p.id), p]);
-            setMessage("Profile saved locally.");
+            setMessage(t("Profile saved locally."));
           })
         }
       >
-        Save confirmed mappings
+        {t("Save confirmed mappings")}
       </button>
-      {message && <p role="status">{message}</p>}
+      {message && <p role="status">{t(message)}</p>}
       {profiles.map((p) => (
         <div key={p.id}>
           <strong>{p.name}</strong>
@@ -87,12 +89,12 @@ export default function ImportProfiles({
                 onApply(applyAllocationProfile(source, p));
                 setName(p.name);
                 setMessage(
-                  "Profile applied. Review and confirm the dataset meaning.",
+                  t("Profile applied. Review and confirm the dataset meaning."),
                 );
               })
             }
           >
-            Apply / edit
+            {t("Apply / edit")}
           </button>
           <button
             className="btn"
@@ -105,16 +107,16 @@ export default function ImportProfiles({
               })
             }
           >
-            Delete
+            {t("Delete")}
           </button>
           <details>
-            <summary>Inspect mappings</summary>
+            <summary>{t("Inspect mappings")}</summary>
             <p>
-              {p.kind} · decimal: {p.decimal || "clarify"}
+              {t(titles[p.kind])} · {t("Decimal convention")}: {p.decimal || t("Require clarification")}
             </p>
             {p.headers.map((h, i) => (
               <p key={i}>
-                {h} → {p.mappings[i] || "unmapped"}
+                {h} → {p.mappings[i] ? t(fieldLabels[p.mappings[i]] || p.mappings[i]) : t("unmapped")}
               </p>
             ))}
           </details>

@@ -9,6 +9,7 @@ import {
   requestModelPreview,
   saveAIImportModel,
   submitMissingAnswers,
+  uniqueMissingQuestions,
 } from "../../lib/import/automation";
 import { useCSVUpload } from "../CsvPicker";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -30,8 +31,10 @@ import {
   Rules,
   SavedImport,
   ImportProfile,
+  Mapping,
   Dataset,
   datasets,
+  fields as importFields,
   emptyDraft,
   emptyRules,
 } from "../../lib/import/types";
@@ -103,6 +106,18 @@ export default function SmartImport({
   const [aiResult, setAiResult] = useState<AIImportResult | null>(null),
     [questionAnswers, setQuestionAnswers] = useState<Record<string, string>>({}),
     [savedModelId, setSavedModelId] = useState("");
+  const requiredQuestions = uniqueMissingQuestions(
+    aiResult?.questions || [],
+  ).filter((question) => question.required);
+  const questionGroups = requiredQuestions.reduce<
+    [string, typeof requiredQuestions][]
+  >((groups, question) => {
+    const dataset = question.target.split(".")[0] || "model";
+    const group = groups.find(([name]) => name === dataset);
+    if (group) group[1].push(question);
+    else groups.push([dataset, [question]]);
+    return groups;
+  }, []);
   const aiAbort = useRef<AbortController | null>(null);
   const [validationRevision, setValidationRevision] = useState(0);
   const input = useRef<HTMLInputElement>(null);
@@ -121,6 +136,26 @@ export default function SmartImport({
   const issues = [...pipelineIssues, ...validation.issues];
   const errors = issues.filter((i) => i.severity === "error"),
     warnings = issues.filter((i) => i.severity === "warning");
+  const unresolvedKeys = new Set(
+    errors.map((issue) =>
+      issue.field
+        ? `${issue.dataset || ""}:${issue.record ?? ""}:${issue.field}:${issue.source?.fileId || ""}`
+        : `${issue.code}:${issue.message}:${issue.source?.fileId || ""}`,
+    ),
+  );
+  for (const question of uniqueMissingQuestions(aiResult?.questions || [])) {
+    if (!question.required) continue;
+    const [dataset, ...fieldParts] = question.target.split(".");
+    const sourceId = question.id.startsWith("missing:")
+      ? question.id.split(":")[1]
+      : "";
+    unresolvedKeys.add(`${dataset}::${fieldParts.join(".")}:${sourceId}`);
+  }
+  const unresolvedCount = unresolvedKeys.size;
+  const hasMissingInformation = unresolvedCount > 0;
+  useEffect(() => {
+    if (step === 2 && aiComplete && !hasMissingInformation) setStep(3);
+  }, [step, aiComplete, hasMissingInformation]);
   const valid =
     validation.valid &&
     !pipelineIssues.some((i) => i.severity === "error") &&
@@ -218,9 +253,8 @@ export default function SmartImport({
         analysis.requires_verification ||
         prepared.requiresMappingReview ||
         correctionProposals.length
-      )
-        setStep(3);
-      else setStep(4);
+      ) setStep(1);
+      else setStep(3);
       setNotice(
         previewHasErrors || hasRequiredQuestions
           ? "AI processing completed. Complete the highlighted information."
@@ -310,7 +344,12 @@ export default function SmartImport({
     setUnmapped(result.unmapped);
     setStale(false);
     setAccepted(false);
-    setStep(4);
+    const needsMissingInformation =
+      result.issues.some((issue) => issue.severity === "error") ||
+      validateDraft(result.draft, rules).issues.some(
+        (issue) => issue.severity === "error",
+      );
+    setStep(needsMissingInformation ? 2 : 3);
     setNotice(
       "Transformation complete. Review missing information and validation errors.",
     );
@@ -383,7 +422,7 @@ export default function SmartImport({
       setError((e as Error).message);
     }
   }
-  const steps = ["Upload", "AI Interpretation", "Missing Information", "Optional Verification", "Preview", "Save"];
+  const steps = ["Upload", "AI Interpretation", "Missing Information", "Preview", "Save"];
   const { upload, picker } = useCSVUpload(consumeFiles, t);
   return (
     <div className="smart-import">
@@ -412,7 +451,11 @@ export default function SmartImport({
             <button
               aria-current={step === i ? "step" : undefined}
               className={step === i ? "active" : ""}
-              disabled={i > 0 && !aiComplete && !aiBusy}
+              disabled={
+                (i > 0 && !aiComplete && !aiBusy) ||
+                (i === 2 && !hasMissingInformation) ||
+                (i >= 3 && hasMissingInformation)
+              }
               onClick={() => setStep(i)}
             >
               <span>{i + 1}</span>
@@ -421,6 +464,21 @@ export default function SmartImport({
           </li>
         ))}
       </ol>
+      {aiComplete && unresolvedCount > 0 && (
+        <div className="notice missing-warning" role="alert">
+          <strong>
+            {t("Required information is missing")}: {unresolvedCount}{" "}
+            {t(unresolvedCount === 1 ? "unresolved field" : "unresolved fields")}
+          </strong>
+          <button
+            className="btn"
+            onClick={() => setStep(2)}
+            aria-label={t("Go to missing-information questions")}
+          >
+            {t("Answer missing questions")}
+          </button>
+        </div>
+      )}
       <div
         className="import-rule-summary import-validation-stages"
         role="status"
@@ -458,7 +516,7 @@ export default function SmartImport({
           {t(notice)}
         </div>
       )}
-      {stale && step >= 4 && (
+      {stale && step >= 3 && (
         <div className="notice error">
           {t(
             "Source mappings changed. Rebuild the preview before saving or exporting.",
@@ -698,19 +756,18 @@ export default function SmartImport({
       )}
       {step >= 1 && corrections.length > 0 && (
         <details className="panel import-panel">
-          <summary>Automatic corrections ({corrections.length})</summary>
+          <summary>{t("Automatic corrections")} ({corrections.length})</summary>
           <p>
-            Every change retains the original cell, row, result and rule.
-            Uncertain values remain errors until you correct them.
+            {t("Every change retains the original cell, row, result and rule. Uncertain values remain errors until you correct them.")}
           </p>
           <div className="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Source row</th>
-                  <th>Original</th>
-                  <th>Normalized</th>
-                  <th>Reason</th>
+                  <th>{t("Source row")}</th>
+                  <th>{t("Original")}</th>
+                  <th>{t("Normalized")}</th>
+                  <th>{t("Reason")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -721,7 +778,7 @@ export default function SmartImport({
                     </td>
                     <td>{c.original}</td>
                     <td>{c.result}</td>
-                    <td>{c.reason}</td>
+                    <td>{t(c.reason)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -729,13 +786,12 @@ export default function SmartImport({
           </div>
           {corrections.length > 100 && (
             <p>
-              Showing 100 changes; all {corrections.length} are saved with the
-              validated dataset.
+              {t(`Showing 100 changes; all ${corrections.length} are saved with the validated dataset.`)}
             </p>
           )}
         </details>
       )}
-      {(step === 1 || step === 3) && (
+      {step === 1 && (
         <>
           {!sources.length ? (
             <div className="empty-state">
@@ -813,7 +869,7 @@ export default function SmartImport({
               {aiResult.files.filter((file) => file.destination_note).map((file) => (
                 <p key={file.source_id}>
                   <strong>{sources.find((source) => source.id === file.source_id)?.name}</strong>:{" "}
-                  {file.destination_note}
+                  {t(file.destination_note)}
                 </p>
               ))}
             </div>
@@ -873,13 +929,13 @@ export default function SmartImport({
                   {profile.headers.map((header, index) => (
                     <p key={index}>
                       <strong>{header}</strong> →{" "}
-                      {mappingOutputs(profile.mappings[index]).join(" + ") ||
+                      {mappingOutputs(profile.mappings[index]).map(t).join(" + ") ||
                         t(
                           profile.mappings[index].target === "ignore"
                             ? "Irrelevant"
                             : "Unmapped",
                         )}{" "}
-                      · {transformation(profile.mappings[index])}
+                      ·                       {t(transformation(profile.mappings[index]))}
                       {profile.mappings[index].overnight === "next_day" &&
                         ` · ${t("Earlier end time means next day")}`}
                     </p>
@@ -900,48 +956,230 @@ export default function SmartImport({
         <div className="panel import-panel">
           <h3>{t("Missing Information")}</h3>
           <p>{t("Answer only the questions required to complete a trustworthy model. OptiFlow never invents missing rules.")}</p>
-          {aiResult.questions.map((question) => (
-            <label key={question.id}>
-              {question.prompt}
-              {question.answer_type === "choice" ? (
-                <select value={questionAnswers[question.id] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value })}>
-                  <option value="">{t("Select an answer")}</option>
-                  {question.options.map((option) => <option key={option} value={option}>{t(option)}</option>)}
-                </select>
-              ) : (
-                <input type={question.answer_type === "number" ? "number" : "text"} value={questionAnswers[question.id] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value })} />
-              )}
-            </label>
+          {questionGroups.map(([group, questions]) => (
+            <section className="missing-question-group" key={group}>
+              <h4>{t(group === "model" ? "Optimization model" : group)}</h4>
+              {questions.map((question) => {
+            const [dataset, ...targetParts] = question.target.split(".");
+            const target = targetParts.join(".");
+            const sourceId = question.id.startsWith("missing:")
+              ? question.id.split(":")[1]
+              : "";
+            const source = sources.find((item) => item.id === sourceId);
+            const suggestedColumns = source?.parsed.headers.filter((header, index) =>
+              !source.mappings[index].target ||
+              source.mappings[index].target === "ignore" ||
+              source.mappings[index].state === "unmapped",
+            ) || [];
+            const mappingTarget =
+              (dataset === "availability" || dataset === "shifts") &&
+              ["date", "start_time", "end_time"].includes(target)
+                ? `${dataset === "shifts" ? "shift" : "availability"}_${target}`
+                : target;
+            const canMap = importFields.includes(mappingTarget as (typeof importFields)[number]);
+            return (
+              <article className="missing-question-card" key={question.id}>
+                <p>
+                  {t(
+                    question.id.startsWith("missing:")
+                      ? "Which source column or supplied value provides this required information?"
+                      : question.target === "model.objective"
+                        ? "Choose the optimization objective."
+                        : question.prompt,
+                  )}
+                </p>
+                <dl>
+                  <div><dt>{t("Target field")}</dt><dd>{target ? t(target) : t("Objective")}</dd></div>
+                  <div><dt>{t("Source dataset")}</dt><dd>{t(dataset)}{source ? ` · ${source.name}` : ""}</dd></div>
+                  <div><dt>{t("Suggested mapping")}</dt><dd>{source && suggestedColumns.length ? suggestedColumns.join(", ") : t("No source column is mapped yet.")}</dd></div>
+                </dl>
+                {source && canMap && suggestedColumns.length > 0 && (
+                  <label>
+                    {t("Map a source column")}
+                    <select
+                      value=""
+                      onChange={(event) => {
+                        const columnIndex = source.parsed.headers.indexOf(event.target.value);
+                        if (columnIndex < 0) return;
+                        const field = mappingTarget as (typeof importFields)[number];
+                        const transform: Mapping["transform"] =
+                          mappingTarget.endsWith("date")
+                            ? "date"
+                            : mappingTarget.endsWith("time")
+                                ? "time"
+                                : mappingTarget === "status"
+                                  ? "status"
+                                  : "direct";
+                        const nextSource = {
+                          ...source,
+                          confirmed: false,
+                          mappings: source.mappings.map((mapping, index) =>
+                            index === columnIndex
+                                ? {
+                                    ...mapping,
+                                    target: field,
+                                    transform,
+                                    state: "confirmed" as const,
+                                    reason: "Confirmed by you",
+                                  }
+                              : mapping,
+                          ),
+                        };
+                        changeSource(nextSource);
+                        setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value });
+                      }}
+                    >
+                      <option value="">{t("Choose a source column")}</option>
+                      {suggestedColumns.map((column) => <option key={column}>{column}</option>)}
+                    </select>
+                  </label>
+                )}
+                {question.answer_type === "choice" ? (
+                  <label>{t("Your answer")}
+                    <select value={questionAnswers[question.id] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value })}>
+                      <option value="">{t("Select an answer")}</option>
+                      {question.options.map((option) => <option key={option} value={option}>{t(option)}</option>)}
+                    </select>
+                  </label>
+                ) : question.answer_type === "boolean" ? (
+                  <label>{t("Your answer")}
+                    <select value={questionAnswers[question.id] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value })}>
+                      <option value="">{t("Select an answer")}</option>
+                      <option value="true">{t("Yes")}</option>
+                      <option value="false">{t("No")}</option>
+                    </select>
+                  </label>
+                ) : (
+                  <label>{t("Your answer")}
+                    <input
+                      type={question.answer_type === "number" ? "number" : target.endsWith("date") ? "date" : target.endsWith("time") ? "time" : "text"}
+                      value={questionAnswers[question.id] || ""}
+                      aria-invalid={question.required && !questionAnswers[question.id]?.trim()}
+                      onChange={(event) => setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value })}
+                    />
+                  </label>
+                )}
+              </article>
+            );
+              })}
+            </section>
           ))}
-          <button className="btn primary" disabled={!aiResult.questions.every((question) => !question.required || questionAnswers[question.id]?.trim())} onClick={async () => {
+          {issues.filter((issue) => issue.severity === "error" && issue.dataset && issue.field).map((issue, index) => {
+            const row = issue.record === undefined ? undefined : draft[issue.dataset!][issue.record];
+            const key = `${issue.dataset}:${issue.record ?? "mapping"}:${issue.field}:${issue.source?.fileId || ""}`;
+            if (index > 0 && issues.some((other, otherIndex) =>
+              otherIndex < index && other.severity === "error" && other.dataset === issue.dataset &&
+              other.record === issue.record && other.field === issue.field && other.source?.fileId === issue.source?.fileId,
+            )) return null;
+            const source = issue.source && sources.find((item) => item.id === issue.source?.fileId);
+            const mappingIssue = issue.code === "missing-mapping";
+            return (
+              <article className="missing-question-card unresolved" key={key}>
+                <h4>{t(issue.dataset!)}</h4>
+                <p>{t(issue.message)}</p>
+                <dl>
+                  <div><dt>{t("Target field")}</dt><dd>{t(issue.field!)}</dd></div>
+                  <div><dt>{t("Source dataset")}</dt><dd>{source?.name || issue.source?.file || t(issue.dataset!)}</dd></div>
+                  <div><dt>{t("Suggested mapping")}</dt><dd>{mappingIssue ? t("Choose a matching source column or add the value in the preview.") : t("Enter a value that satisfies this field.")}</dd></div>
+                </dl>
+                {mappingIssue ? (
+                  <button className="btn" onClick={() => setStep(1)}>{t("Review source mappings")}</button>
+                ) : row && issue.record !== undefined ? (
+                  <>
+                    <label>{t("Your answer")}
+                      <input
+                        type={["hourly_rate", "max_weekly_hours", "required_count"].includes(issue.field!) ? "number" : issue.field!.endsWith("date") || issue.field === "date" ? "date" : issue.field!.endsWith("time") ? "time" : "text"}
+                        className="invalid"
+                        aria-invalid="true"
+                        aria-label={`${t(issue.dataset!)} ${issue.record + 1} ${t(issue.field!)}`}
+                        value={row.values[issue.field!] || ""}
+                        onChange={(event) => {
+                          const next = structuredClone(draft);
+                          next[issue.dataset!][issue.record!].values[issue.field!] = event.target.value;
+                          changeDraft(next);
+                        }}
+                      />
+                    </label>
+                    <span className="field-error-text">{t(issue.message)}</span>
+                  </>
+                ) : null}
+              </article>
+            );
+          })}
+          <RulesWizard
+            rules={rules}
+            onChange={(nextRules) => {
+              setRules(nextRules);
+              setAccepted(false);
+            }}
+            t={t}
+          />
+          {issues.some(
+            (issue) =>
+              issue.severity === "error" && (!issue.dataset || !issue.field),
+          ) && (
+            <IssueList
+              issues={issues.filter(
+                (issue) =>
+                  issue.severity === "error" && (!issue.dataset || !issue.field),
+              )}
+              t={t}
+            />
+          )}
+          {requiredQuestions.length > 0 && <button className="btn primary" disabled={!requiredQuestions.every((question) => questionAnswers[question.id]?.trim())} onClick={async () => {
             if (!aiResult.session_id) return;
             try {
-              const result = await submitMissingAnswers(aiResult.session_id, questionAnswers);
+              const answers = { ...questionAnswers };
+              for (const question of aiResult.questions) {
+                if (!question.required || answers[question.id]?.trim()) continue;
+                const questionSource = question.id.startsWith("missing:")
+                  ? question.id.split(":")[1]
+                  : "";
+                const visibleQuestion = requiredQuestions.find(
+                  (candidate) => {
+                    const candidateSource = candidate.id.startsWith("missing:")
+                      ? candidate.id.split(":")[1]
+                      : "";
+                    return (
+                      candidate.target === question.target &&
+                      (!questionSource ||
+                        !candidateSource ||
+                        questionSource === candidateSource)
+                    );
+                  },
+                );
+                if (visibleQuestion)
+                  answers[question.id] = questionAnswers[visibleQuestion.id] || "";
+              }
+              const result = await submitMissingAnswers(aiResult.session_id, answers);
               setAiResult({ ...aiResult, questions: result.remaining_questions });
               const mappingReview = sources.some(
                 (source) =>
                   source.kinds.length > 0 &&
-                  source.mappings.some(
-                    (mapping) =>
-                      mapping.state === "suggested" ||
-                      mapping.state === "unmapped",
-                  ),
+                  (!source.confirmed ||
+                    source.mappings.some(
+                      (mapping) =>
+                        mapping.state === "suggested" ||
+                        mapping.state === "unmapped",
+                    )),
               );
               setStep(
-                mappingReview || aiCorrections.length || aiResult.requires_verification
-                  ? 3
-                  : 4,
+                mappingReview || aiCorrections.length
+                  ? 1
+                  : result.remaining_questions.length || hasMissingInformation
+                    ? 2
+                    : 3,
               );
             } catch (failure) { setError((failure as Error).message); }
-          }}>{t("Continue to optional verification")} <ArrowRight size={16} /></button>
+          }}>{t("Continue")} <ArrowRight size={16} /></button>}
         </div>
       )}
-      {(step === 4 || step === 5) && (
+      {(step === 3 || step === 4) && (
         <>
           {aiResult?.model && <div className="panel import-panel">
             <h3>{t("AI Interpretation")}</h3>
-            <p><strong>{t("Objective")}:</strong> {t(aiResult.model.objective.kind)} — {aiResult.model.objective.description}</p>
-            <p><strong>{t("Decision variables")}:</strong> {aiResult.model.decision_variables.map((variable) => variable.name).join(", ") || t("None identified")}</p>
+            <p><strong>{t("Objective")}:</strong> {t(aiResult.model.objective.kind)} — {t(aiResult.model.objective.description)}</p>
+            <p><strong>{t("Decision variables")}:</strong> {aiResult.model.decision_variables.map((variable) => t(variable.name)).join(", ") || t("None identified")}</p>
             <p><strong>{t("Constraints")}:</strong> {aiResult.model.constraints.length}</p>
             <p className="footnote">{t("AI interpretation is explanatory. Deterministic validation remains authoritative.")}</p>
           </div>}
@@ -973,7 +1211,7 @@ export default function SmartImport({
           </p>
         </>
       )}
-      {(step === 4 || step === 5) && (
+      {(step === 3 || step === 4) && (
         <>
           <RulesWizard
             rules={rules}
@@ -985,7 +1223,7 @@ export default function SmartImport({
           />
         </>
       )}
-      {(step === 4 || step === 5) && (
+      {(step === 3 || step === 4) && (
         <>
           <div className="import-summary-cards">
             <div className="metric">
@@ -1039,10 +1277,10 @@ export default function SmartImport({
             ))}
             {!unmapped.length && <p>{t("No unmapped source columns.")}</p>}
           </details>
-          {step === 4 && <button className="btn primary" disabled={!valid} onClick={() => setStep(5)}>
+          {step === 3 && <button className="btn primary" disabled={!valid || hasMissingInformation} onClick={() => setStep(4)}>
             {t("Continue to save")} <ArrowRight size={16} />
           </button>}
-          {step === 5 && <div className="import-save">
+          {step === 4 && <div className="import-save">
             <label className="import-confirm">
               <input
                 type="checkbox"
@@ -1056,7 +1294,7 @@ export default function SmartImport({
             </label>
             <button
               className="btn primary"
-              disabled={!valid || !accepted}
+              disabled={!valid || hasMissingInformation || !accepted}
               onClick={() => void save()}
             >
               <CheckCircle2 size={17} />

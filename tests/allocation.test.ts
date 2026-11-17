@@ -19,6 +19,7 @@ import {
   recognizeAllocation,
   transformAllocationSources,
   exportCatalog,
+  requiredColumns,
 } from "../lib/allocation/import";
 import {
   saveAllocation,
@@ -299,6 +300,21 @@ test("blank upper bounds never turn into unlimited, and zero is never treated as
   assert.equal(validateDraft(d).valid, true);
   d.tables.resources[0].values.capacity = "0";
   assert.equal(validateDraft(d).input.resources[0].capacity, 0);
+});
+test("import requirements follow the optimization schema's conditional and optional fields", () => {
+  assert.deepEqual(requiredColumns("resources", "cost"), [
+    "resource_id",
+    "name",
+    "resource_type",
+    "unit",
+    "unit_cost",
+    "integer",
+  ]);
+  assert.ok(!requiredColumns("resources", "cost").includes("capacity"));
+  assert.ok(!requiredColumns("projects", "cost").includes("unit_value"));
+  assert.ok(requiredColumns("projects", "value").includes("unit_value"));
+  assert.ok(!requiredColumns("projects", "cost").includes("maximum_output"));
+  assert.ok(!requiredColumns("links", "cost").includes("maximum_allocation"));
 });
 test("independent result validation rejects a solver candidate violating a hard constraint", async () => {
   const p = simple();

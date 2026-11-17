@@ -14,6 +14,14 @@ export default function RulesWizard({
   const update = (key: keyof Rules, value: unknown) =>
     onChange({ ...rules, [key]: value, reviewed: false });
   const issues = validateRules(rules).filter((i) => i.field !== "rules");
+  const fieldError = (field: string) => {
+    const errors = issues.filter((issue) => issue.field === field);
+    return errors.length ? (
+      <small className="field-error-text" id={`rules-${field}-error`}>
+        {errors.map((issue) => t(issue.message)).join(" ")}
+      </small>
+    ) : null;
+  };
   const currencyCodes =
     typeof (Intl as any).supportedValuesOf === "function"
       ? (Intl as any).supportedValuesOf("currency")
@@ -29,7 +37,6 @@ export default function RulesWizard({
             )}
           </p>
         </div>
-        <span className="badge teal">{t("Step 4")}</span>
       </div>
       <div className="import-form-grid">
         <label>
@@ -39,9 +46,13 @@ export default function RulesWizard({
             min="0"
             max="168"
             step="0.25"
+            className={issues.some((i) => i.field === "minRestHours") ? "invalid" : ""}
+            aria-invalid={issues.some((i) => i.field === "minRestHours")}
+            aria-describedby={issues.some((i) => i.field === "minRestHours") ? "rules-minRestHours-error" : undefined}
             value={rules.minRestHours}
             onChange={(e) => update("minRestHours", e.target.value)}
           />
+          {fieldError("minRestHours")}
         </label>
         <label>
           {t("Maximum shifts per employee per week")}
@@ -49,9 +60,13 @@ export default function RulesWizard({
             type="number"
             min="1"
             max="168"
+            className={issues.some((i) => i.field === "maxShiftsPerWeek") ? "invalid" : ""}
+            aria-invalid={issues.some((i) => i.field === "maxShiftsPerWeek")}
+            aria-describedby={issues.some((i) => i.field === "maxShiftsPerWeek") ? "rules-maxShiftsPerWeek-error" : undefined}
             value={rules.maxShiftsPerWeek}
             onChange={(e) => update("maxShiftsPerWeek", e.target.value)}
           />
+          {fieldError("maxShiftsPerWeek")}
         </label>
         <label>
           {t("Business weekly hour cap (optional)")}
@@ -60,19 +75,27 @@ export default function RulesWizard({
             min="0"
             max="168"
             step="0.25"
+            className={issues.some((i) => i.field === "maxWeeklyHours") ? "invalid" : ""}
+            aria-invalid={issues.some((i) => i.field === "maxWeeklyHours")}
+            aria-describedby={issues.some((i) => i.field === "maxWeeklyHours") ? "rules-maxWeeklyHours-error" : undefined}
             placeholder={t("Use each employee’s limit")}
             value={rules.maxWeeklyHours}
             onChange={(e) => update("maxWeeklyHours", e.target.value)}
           />
+          {fieldError("maxWeeklyHours")}
         </label>
         <label>
           {t("Business timezone")}
           <input
             list="import-timezones"
             placeholder="Europe/Istanbul"
+            className={issues.some((i) => i.field === "timezone") ? "invalid" : ""}
+            aria-invalid={issues.some((i) => i.field === "timezone")}
+            aria-describedby={issues.some((i) => i.field === "timezone") ? "rules-timezone-error" : undefined}
             value={rules.timezone}
             onChange={(e) => update("timezone", e.target.value)}
           />
+          {fieldError("timezone")}
           <datalist id="import-timezones">
             {[
               "Europe/Istanbul",
@@ -90,6 +113,9 @@ export default function RulesWizard({
         <label>
           {t("Business currency")}
           <select
+            className={issues.some((i) => i.field === "currency") ? "invalid" : ""}
+            aria-invalid={issues.some((i) => i.field === "currency")}
+            aria-describedby={issues.some((i) => i.field === "currency") ? "rules-currency-error" : undefined}
             value={rules.currency}
             onChange={(e) => update("currency", e.target.value)}
           >
@@ -100,14 +126,19 @@ export default function RulesWizard({
               </option>
             ))}
           </select>
+          {fieldError("currency")}
         </label>
         <label>
           {t("Scheduling week start")}
           <input
             type="date"
+            className={issues.some((i) => i.field === "weekStart") ? "invalid" : ""}
+            aria-invalid={issues.some((i) => i.field === "weekStart")}
+            aria-describedby={issues.some((i) => i.field === "weekStart") ? "rules-weekStart-error" : undefined}
             value={rules.weekStart}
             onChange={(e) => update("weekStart", e.target.value)}
           />
+          {fieldError("weekStart")}
         </label>
         <label>
           {t("Maximum daily hours (optional)")}
@@ -116,13 +147,20 @@ export default function RulesWizard({
             min="0"
             max="24"
             step="0.25"
+            className={issues.some((i) => i.field === "maxDailyHours") ? "invalid" : ""}
+            aria-invalid={issues.some((i) => i.field === "maxDailyHours")}
+            aria-describedby={issues.some((i) => i.field === "maxDailyHours") ? "rules-maxDailyHours-error" : undefined}
             value={rules.maxDailyHours}
             onChange={(e) => update("maxDailyHours", e.target.value)}
           />
+          {fieldError("maxDailyHours")}
         </label>
         <label>
           {t("Multiple shifts on the same day")}
           <select
+            className={issues.some((i) => i.field === "allowMultipleShifts") ? "invalid" : ""}
+            aria-invalid={issues.some((i) => i.field === "allowMultipleShifts")}
+            aria-describedby={issues.some((i) => i.field === "allowMultipleShifts") ? "rules-allowMultipleShifts-error" : undefined}
             value={
               rules.allowMultipleShifts === null
                 ? ""
@@ -141,6 +179,7 @@ export default function RulesWizard({
             </option>
             <option value="false">{t("At most one shift per day")}</option>
           </select>
+          {fieldError("allowMultipleShifts")}
         </label>
       </div>
       <fieldset className="import-weekdays">

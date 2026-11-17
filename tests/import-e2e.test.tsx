@@ -221,6 +221,17 @@ test("multiple Scheduling CSVs reach Gemini interpretation and populate the prev
         document.querySelector(`[aria-label="${dataset}: Validated"]`),
         `${dataset} should be validated in the Upload-stage readiness indicators`,
       );
+    await act(async () => {
+      root.render(
+        <SmartImport
+          language="tr"
+          saved={null}
+          savedRules={null}
+          onSaved={() => {}}
+        />,
+      );
+    });
+    assert.ok(document.body.textContent?.includes("employees.csv"));
   } finally {
     await act(async () => root.unmount());
     dom.window.close();

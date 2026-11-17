@@ -58,8 +58,11 @@ test("upload workflow renders in all three languages without employee data or fa
           ),
         ),
       );
-    for (const stage of ["AI Interpretation", "Missing Information", "Optional Verification", "Preview", "Save"])
+    for (const stage of ["AI Interpretation", "Missing Information", "Preview", "Save"])
       assert.ok(html.includes(translate(language, stage)));
+    assert.ok(!html.includes(translate(language, "Optional Verification")));
+    const stages = html.match(/<ol class="import-steps">([\s\S]*?)<\/ol>/)?.[1] || "";
+    assert.equal((stages.match(/<li>/g) || []).length, 5);
     assert.ok(!html.includes(translate(language, "Map columns")));
     assert.ok(html.includes(translate(language, "I consent to sending minimized column metadata and redacted representative values to the configured AI provider for this import.")));
     assert.ok(!html.includes("Alex Morgan"));

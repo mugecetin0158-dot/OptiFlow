@@ -89,12 +89,11 @@ Constraint reports show activity, lower/upper bounds, and slack in each constrai
 
 ## Smart Import integration
 
-1. Open **Smart Import → Import destination → Resource Allocation**, or choose **Open Smart Import** from the Resource Allocation module.
-2. Upload the four fictional files in `tests/fixtures/allocation/`, or your own CSVs. Multiple files per table are supported. Select what each file represents explicitly; automatic column aliases never establish dataset meaning.
-3. Review/correct source-to-field mappings and transformed sample values. Unrelated columns can remain unmapped or be marked irrelevant. Original text remains reviewable in the current session. Unknown boolean/decimal values remain preserved with field and source-line errors.
-4. Confirm each source's dataset and meanings. Choose dot/comma decimal conventions where needed, then **Transform & validate**.
-5. Enter the planning period, objective, currency, and optional budget. Correct canonical table cells, references, duplicates, or pending values. Editing a flagged cell explicitly resolves that normalization question, subject to validation. No resource, project, capacity, compatibility, or demand is manufactured.
-6. Review the full preview and unmapped fields; optionally download the canonical catalogs. Confirm the replacement checkbox and **Save & use resource data**. This replaces only the resource workspace and opens its module. Dataset validity does not imply feasibility; run the optimizer separately.
+1. **Upload:** open **Smart Import → Import destination → Resource Allocation**. Before selecting files, review the required and optional fields for resources, projects, demands, compatibility links, and model settings. Upload the four fictional files in `tests/fixtures/allocation/`, or your own CSVs.
+2. **AI Interpretation:** review AI-proposed dataset and column mappings, confirm each source's meaning, and correct transformed values. Multiple files per table are supported; each allocation file represents one table. Unknown boolean/decimal values remain preserved with field and source-line errors.
+3. **Missing Information:** fill only fields reported by deterministic model validation. This stage is skipped when all required information is present. Capacity, maximum output, maximum allocation, and project priority retain their documented optional/unlimited/default behavior; value per output is required only for value maximization.
+4. **Preview:** review the validated catalogs and settings, fix references, duplicates, and pending values, and optionally download canonical catalogs. Editing a flagged cell explicitly resolves its normalization question, subject to validation. No resource, project, capacity, compatibility, or demand is manufactured.
+5. **Save:** confirm the replacement checkbox and **Save & use resource data**. This replaces only the resource workspace and opens its module. Dataset validity does not imply feasibility; run the optimizer separately.
 
 The importer is an allocation-domain adapter using shared Smart Import primitives. Scheduling's richer time-range transformations and reusable profiles are preserved unchanged. Resource mapping profiles and multi-dataset rows within one source file are not yet supported; classify each allocation file as a single table. `rate` and other ambiguous headers remain unmapped. CSV delimiter/encoding behavior follows the existing parser (quoted cells, escaped quotes, multiline fields, UTF-8/UTF-16 BOM, explicit Windows-1252/1254, comma/semicolon/tab/pipe).
 

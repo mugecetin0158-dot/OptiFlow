@@ -16,6 +16,7 @@ import {
   aiVerificationRequired,
   prepareAIImport,
   datasetReadiness,
+  uniqueMissingQuestions,
 } from "../lib/import/automation";
 import { createAllocationSource } from "../lib/allocation/import";
 import { sampleDraft } from "../lib/allocation/sample";
@@ -33,6 +34,24 @@ import { readFileSync } from "node:fs";
 import { writeCSV, parseCSV } from "../lib/import/csv";
 const staff =
   "employee_id,name,hourly_rate,max_weekly_hours,roles\n001,Ada,20,40,barista";
+test("duplicate missing-information questions are collapsed by source and target", () => {
+  const first = {
+    id: "missing:staff:employees:employee_id",
+    prompt: "Which column provides the employee identifier?",
+    answer_type: "text" as const,
+    options: [],
+    target: "employees.employee_id",
+    required: true,
+  };
+  assert.deepEqual(
+    uniqueMissingQuestions([
+      first,
+      { ...first, id: "ai-question-1", prompt: "Duplicate question" },
+      { ...first, id: "missing:other:employees:employee_id" },
+    ]),
+    [first, { ...first, id: "missing:other:employees:employee_id" }],
+  );
+});
 test("confident scheduling fields automatically parse, classify, transform and validate", () => {
   const result = autoScheduling([createSource("x", "staff.csv", staff)], []);
   assert.equal(result.ready, true);

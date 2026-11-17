@@ -305,7 +305,7 @@ export default function SourceMapping({
                       <option value="ignore">{t("Irrelevant")}</option>
                       {fields.map((f) => (
                         <option key={f} value={f}>
-                          {f}
+                          {t(f)}
                         </option>
                       ))}
                     </select>
@@ -380,7 +380,7 @@ export default function SourceMapping({
                             </select>
                           </label>
                         )}
-                        <small>{mappingOutputs(m).join(" + ")}</small>
+                        <small>{mappingOutputs(m).map(t).join(" + ")}</small>
                       </>
                     )}
                     {m.state === "suggested" && (

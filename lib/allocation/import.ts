@@ -75,9 +75,32 @@ export function createAllocationSource(
   };
 }
 export function requiredColumns(table: Table, mode: Settings["mode"]) {
-  return columns[table].filter(
-    (f) => f !== "priority" && !(f === "unit_value" && mode === "cost"),
-  );
+  const required: Record<Table, string[]> = {
+    resources: [
+      "resource_id",
+      "name",
+      "resource_type",
+      "unit",
+      "unit_cost",
+      "integer",
+    ],
+    projects: [
+      "project_id",
+      "name",
+      "output_unit",
+      "minimum_output",
+      "integer",
+      ...(mode === "value" ? ["unit_value"] : []),
+    ],
+    demands: columns.demands,
+    links: [
+      "resource_id",
+      "project_id",
+      "compatible",
+      "minimum_allocation",
+    ],
+  };
+  return required[table];
 }
 const numeric = new Set([
   "capacity",
@@ -189,10 +212,14 @@ export function transformAllocationSources(
     }
     for (const field of requiredColumns(kind, settings.mode))
       if (!selected.includes(field))
-        add(
-          "Map or derive this required field before approval.",
-          `${kind}.${field}`,
-        );
+        issues.push({
+          severity: "error",
+          message: "Map or derive this required field before approval.",
+          table: kind,
+          field,
+          source,
+          detail: `${kind}.${field}`,
+        });
     file.parsed.rows.forEach((row, index) => {
       const values: Record<string, string> = Object.fromEntries(
           columns[kind].map((f) => [f, ""]),

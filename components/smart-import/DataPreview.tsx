@@ -32,9 +32,9 @@ export function IssueList({ issues, t }: { issues: Issue[]; t: Translate }) {
                 {issue.dataset && t(issue.dataset)}
                 {issue.record !== undefined &&
                   ` · ${t("Record")} ${issue.record + 1}`}
-                {issue.field && ` · ${issue.field}`}
+                {issue.field && ` · ${t(issue.field)}`}
                 {issue.source && ` · ${issue.source.file}:${issue.source.row}`}
-                {issue.detail && ` · ${issue.detail}`}
+                {issue.detail && ` · ${t(issue.detail)}`}
               </small>
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function DataPreview({
                   <tr>
                     <th>#</th>
                     {previewFields(kind).map((field) => (
-                      <th key={field}>{field}</th>
+                      <th key={field}>{t(field)}</th>
                     ))}
                     <th>{t("Source")}</th>
                     {onChange && <th />}
@@ -229,21 +229,30 @@ export default function DataPreview({
                               i.field === field &&
                               i.severity === "error",
                           );
+                          const errorId = `preview-${kind}-${index}-${field}-error`;
                           return (
                             <td key={field}>
                               {onChange ? (
-                                <input
-                                  className={problems.length ? "invalid" : ""}
-                                  aria-label={`${t(kind)} ${index + 1} ${field}`}
-                                  aria-invalid={problems.length > 0}
-                                  title={problems
-                                    .map((p) => t(p.message))
-                                    .join("\n")}
-                                  value={r.values[field] || ""}
-                                  onChange={(e) =>
-                                    edit(kind, index, field, e.target.value)
-                                  }
-                                />
+                                <>
+                                  <input
+                                    className={problems.length ? "invalid" : ""}
+                                    aria-label={`${t(kind)} ${index + 1} ${t(field)}`}
+                                    aria-invalid={problems.length > 0}
+                                    aria-describedby={problems.length ? errorId : undefined}
+                                    title={problems
+                                      .map((p) => t(p.message))
+                                      .join("\n")}
+                                    value={r.values[field] || ""}
+                                    onChange={(e) =>
+                                      edit(kind, index, field, e.target.value)
+                                    }
+                                  />
+                                  {problems.length > 0 && (
+                                    <small className="field-error-text" id={errorId}>
+                                      {problems.map((problem) => t(problem.message)).join(" ")}
+                                    </small>
+                                  )}
+                                </>
                               ) : (
                                 <span>{r.values[field]}</span>
                               )}

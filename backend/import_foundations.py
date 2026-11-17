@@ -48,10 +48,10 @@ REQUIRED_FIELDS = {
     "employees": {"employee_id", "name", "hourly_rate", "max_weekly_hours", "roles"},
     "availability": {"employee_id", "date", "start_time", "end_time", "status"},
     "shifts": {"shift_id", "date", "start_time", "end_time", "required_count", "required_role"},
-    "resources": {"resource_id", "resource_type", "unit", "capacity", "unit_cost", "integer"},
-    "projects": {"project_id", "output_unit", "minimum_output", "maximum_output", "integer"},
+    "resources": {"resource_id", "name", "resource_type", "unit", "unit_cost", "integer"},
+    "projects": {"project_id", "name", "output_unit", "minimum_output", "integer"},
     "demands": {"project_id", "resource_type", "unit", "amount_per_output"},
-    "links": {"resource_id", "project_id", "compatible", "minimum_allocation", "maximum_allocation"},
+    "links": {"resource_id", "project_id", "compatible", "minimum_allocation"},
 }
 
 
@@ -551,7 +551,10 @@ def validate_interpretation(request: InterpretRequest, result: AIInterpretation)
         if any(m.transform == "time_range" and m.field in {"start_time", "availability_start_time", "shift_start_time"} for m in interpreted.columns):
             mapped.add("end_time")
         for dataset in interpreted.datasets:
-            for field in sorted(REQUIRED_FIELDS[dataset] - mapped):
+            required = set(REQUIRED_FIELDS[dataset])
+            if dataset == "projects" and result.model.objective.kind == "maximize_net_value":
+                required.add("unit_value")
+            for field in sorted(required - mapped):
                 q = _question(request.locale, source.source_id, dataset, field)
                 questions.setdefault(q.id, q)
     evidence_groups = [
@@ -691,11 +694,20 @@ def validate_preview(target: Target, model: dict[str, Any]):
             issues.append({"severity": "error", "message": f"{dataset} must be a list of records."})
             continue
         populated += len(records)
+        required_fields = set(REQUIRED_FIELDS[dataset])
+        objective = model.get("objective")
+        settings = model.get("settings")
+        value_objective = (
+            isinstance(objective, dict)
+            and objective.get("kind") == "maximize_net_value"
+        ) or (isinstance(settings, dict) and settings.get("mode") == "value")
+        if dataset == "projects" and value_objective:
+            required_fields.add("unit_value")
         for index, record in enumerate(records):
             if not isinstance(record, dict):
                 issues.append({"severity": "error", "message": f"{dataset} record {index + 1} is invalid."})
                 continue
-            missing = [f for f in REQUIRED_FIELDS[dataset] if f not in record or record[f] in (None, "")]
+            missing = [f for f in required_fields if f not in record or record[f] in (None, "")]
             if missing:
                 issues.append({"severity": "error", "message": f"{dataset} record {index + 1} is missing: {', '.join(sorted(missing))}."})
     if not populated:

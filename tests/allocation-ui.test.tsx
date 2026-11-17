@@ -49,6 +49,14 @@ test("resource Smart Import exposes real file controls, staging, and no fabricat
   assert.ok(html.includes("Parsing validation"));
   assert.ok(html.includes("Mapping validation"));
   assert.ok(html.includes("Dataset validation"));
+  assert.ok(html.includes("What Resource Allocation needs"));
+  assert.ok(html.includes("Required fields"));
+  assert.ok(html.includes("Optional fields"));
+  assert.equal(
+    (html.match(/<ol class="import-steps">([\s\S]*?)<\/ol>/)?.[1].match(/<li>/g) || []).length,
+    5,
+  );
+  assert.ok(!html.includes("Optional Verification"));
   assert.ok(html.includes("Not validated"));
   assert.ok(!html.includes("No validation errors or warnings"));
 });

@@ -4143,5 +4143,282 @@
     "Yapay zekâ bu dosyayı Kaynak Tahsisi ile eşleştiremedi. Uyumlu bir hedef seçin veya uygun bir CSV dosyası yükleyin.",
     "L’IA n’a pas pu associer ce fichier à l’allocation des ressources. Choisissez une destination compatible ou importez un fichier CSV correspondant.",
     "La IA no pudo asociar este archivo con Asignación de recursos. Elija un destino compatible o cargue un archivo CSV adecuado."
+  ],
+  "Required information is missing": [
+    "Gerekli bilgiler eksik",
+    "Des informations obligatoires sont manquantes",
+    "Falta información obligatoria"
+  ],
+  "unresolved field": [
+    "çözümlenmemiş alan",
+    "champ non résolu",
+    "campo sin resolver"
+  ],
+  "unresolved fields": [
+    "çözümlenmemiş alan",
+    "champs non résolus",
+    "campos sin resolver"
+  ],
+  "Go to missing-information questions": [
+    "Eksik bilgi sorularına git",
+    "Accéder aux questions sur les informations manquantes",
+    "Ir a las preguntas sobre información faltante"
+  ],
+  "Answer missing questions": [
+    "Eksik soruları yanıtla",
+    "Répondre aux questions manquantes",
+    "Responder las preguntas pendientes"
+  ],
+  "Target field": [
+    "Hedef alan",
+    "Champ cible",
+    "Campo de destino"
+  ],
+  "Source dataset": [
+    "Kaynak veri kümesi",
+    "Jeu de données source",
+    "Conjunto de datos de origen"
+  ],
+  "Suggested mapping": [
+    "Önerilen eşleme",
+    "Correspondance suggérée",
+    "Asignación sugerida"
+  ],
+  "No source column is mapped yet.": [
+    "Henüz bir kaynak sütunu eşlenmedi.",
+    "Aucune colonne source n’est encore associée.",
+    "Aún no se ha asignado ninguna columna de origen."
+  ],
+  "Map a source column": [
+    "Bir kaynak sütunu eşle",
+    "Associer une colonne source",
+    "Asignar una columna de origen"
+  ],
+  "Choose a source column": [
+    "Bir kaynak sütunu seçin",
+    "Choisir une colonne source",
+    "Elija una columna de origen"
+  ],
+  "Your answer": [
+    "Yanıtınız",
+    "Votre réponse",
+    "Su respuesta"
+  ],
+  "Optimization model": [
+    "Optimizasyon modeli",
+    "Modèle d’optimisation",
+    "Modelo de optimización"
+  ],
+  "Choose a matching source column or add the value in the preview.": [
+    "Eşleşen bir kaynak sütunu seçin veya değeri önizlemede ekleyin.",
+    "Choisissez une colonne source correspondante ou saisissez la valeur dans l’aperçu.",
+    "Elija una columna de origen coincidente o agregue el valor en la vista previa."
+  ],
+  "Enter a value that satisfies this field.": [
+    "Bu alanı karşılayan bir değer girin.",
+    "Saisissez une valeur correspondant à ce champ.",
+    "Ingrese un valor que cumpla este campo."
+  ],
+  "Review source mappings": [
+    "Kaynak eşlemelerini gözden geçir",
+    "Vérifier les correspondances sources",
+    "Revisar las asignaciones de origen"
+  ],
+  "Continue": [
+    "Devam et",
+    "Continuer",
+    "Continuar"
+  ],
+  "Required fields": [
+    "Zorunlu alanlar",
+    "Champs obligatoires",
+    "Campos obligatorios"
+  ],
+  "Optional fields": [
+    "İsteğe bağlı alanlar",
+    "Champs facultatifs",
+    "Campos opcionales"
+  ],
+  "None": [
+    "Yok",
+    "Aucun",
+    "Ninguno"
+  ],
+  "What Resource Allocation needs": [
+    "Kaynak Tahsisi için gerekenler",
+    "Besoins de l’allocation des ressources",
+    "Requisitos de asignación de recursos"
+  ],
+  "Required information comes from the allocation model and its validation rules.": [
+    "Gerekli bilgiler, kaynak tahsisi modelinden ve doğrulama kurallarından alınır.",
+    "Les informations obligatoires découlent du modèle d’allocation et de ses règles de validation.",
+    "La información obligatoria se deriva del modelo de asignación y sus reglas de validación."
+  ],
+  "This dataset is optional. When supplied, its required fields apply to each compatibility link.": [
+    "Bu veri kümesi isteğe bağlıdır. Sağlandığında zorunlu alanlar her uyumluluk bağlantısı için geçerlidir.",
+    "Ce jeu de données est facultatif. S’il est fourni, ses champs obligatoires s’appliquent à chaque lien de compatibilité.",
+    "Este conjunto de datos es opcional. Si se proporciona, sus campos obligatorios se aplican a cada vínculo de compatibilidad."
+  ],
+  "Model settings": [
+    "Model ayarları",
+    "Paramètres du modèle",
+    "Configuración del modelo"
+  ],
+  "Capacity, maximum output, maximum allocation, and project priority may be unlimited or use their documented defaults. Value per output is required only for value maximization.": [
+    "Kapasite, azami çıktı ve azami tahsis sınırsız olabilir; proje önceliği varsayılan olarak 1'dir. Çıktı başına değer yalnızca değeri en üst düzeye çıkarma hedefinde gereklidir.",
+    "La capacité, la production maximale et l’allocation maximale peuvent être illimitées ; la priorité du projet vaut 1 par défaut. La valeur par production n’est obligatoire que pour maximiser la valeur.",
+    "La capacidad, la producción máxima y la asignación máxima pueden ser ilimitadas; la prioridad del proyecto vale 1 de forma predeterminada. El valor por producción solo es obligatorio al maximizar el valor."
+  ],
+  "Complete only the required fields identified by model validation. Optional fields may remain blank.": [
+    "Yalnızca model doğrulamasının belirlediği zorunlu alanları tamamlayın. İsteğe bağlı alanlar boş kalabilir.",
+    "Complétez uniquement les champs obligatoires indiqués par la validation du modèle. Les champs facultatifs peuvent rester vides.",
+    "Complete solo los campos obligatorios identificados por la validación del modelo. Los campos opcionales pueden quedar vacíos."
+  ],
+  "Map or enter the value for this required field.": [
+    "Bu zorunlu alan için eşleme yapın veya bir değer girin.",
+    "Associez une colonne ou saisissez une valeur pour ce champ obligatoire.",
+    "Asigne una columna o ingrese un valor para este campo obligatorio."
+  ],
+  "employee_id": ["Çalışan kimliği", "Identifiant employé", "ID de empleado"],
+  "name": ["Ad", "Nom", "Nombre"],
+  "Name": ["Ad", "Nom", "Nombre"],
+  "hourly_rate": ["Saatlik ücret", "Taux horaire", "Tarifa por hora"],
+  "max_weekly_hours": ["Haftalık azami saat", "Heures hebdomadaires maximales", "Máximo de horas semanales"],
+  "roles": ["Roller", "Rôles", "Funciones"],
+  "date": ["Tarih", "Date", "Fecha"],
+  "start_time": ["Başlangıç saati", "Heure de début", "Hora de inicio"],
+  "end_time": ["Bitiş saati", "Heure de fin", "Hora de fin"],
+  "status": ["Durum", "Statut", "Estado"],
+  "shift_id": ["Vardiya kimliği", "Identifiant du créneau", "ID del turno"],
+  "required_count": ["Gerekli sayı", "Effectif requis", "Cantidad requerida"],
+  "required_role": ["Gerekli rol", "Rôle requis", "Función requerida"],
+  "availability_date": ["Uygunluk tarihi", "Date de disponibilité", "Fecha de disponibilidad"],
+  "availability_start_time": ["Uygunluk başlangıç saati", "Heure de début de disponibilité", "Hora inicial de disponibilidad"],
+  "availability_end_time": ["Uygunluk bitiş saati", "Heure de fin de disponibilité", "Hora final de disponibilidad"],
+  "shift_date": ["Vardiya tarihi", "Date du créneau", "Fecha del turno"],
+  "shift_start_time": ["Vardiya başlangıç saati", "Heure de début du créneau", "Hora de inicio del turno"],
+  "shift_end_time": ["Vardiya bitiş saati", "Heure de fin du créneau", "Hora de fin del turno"],
+  "resource_id": ["Kaynak kimliği", "Identifiant de ressource", "ID del recurso"],
+  "project_id": ["Proje kimliği", "Identifiant du projet", "ID del proyecto"],
+  "resource_type": ["Kaynak türü", "Type de ressource", "Tipo de recurso"],
+  "unit": ["Birim", "Unité", "Unidad"],
+  "capacity": ["Kapasite", "Capacité", "Capacidad"],
+  "unit_cost": ["Birim maliyet", "Coût unitaire", "Costo unitario"],
+  "integer": ["Tam sayı", "Entier", "Entero"],
+  "output_unit": ["Çıktı birimi", "Unité de production", "Unidad de producción"],
+  "minimum_output": ["Asgari çıktı", "Production minimale", "Producción mínima"],
+  "maximum_output": ["Azami çıktı", "Production maximale", "Producción máxima"],
+  "unit_value": ["Birim değer", "Valeur unitaire", "Valor unitario"],
+  "priority": ["Öncelik", "Priorité", "Prioridad"],
+  "amount_per_output": ["Çıktı başına kaynak miktarı", "Ressources par unité produite", "Recursos por unidad producida"],
+  "compatible": ["Uyumlu", "Compatible", "Compatible"],
+  "minimum_allocation": ["Asgari tahsis", "Allocation minimale", "Asignación mínima"],
+  "maximum_allocation": ["Azami tahsis", "Allocation maximale", "Asignación máxima"],
+  "Unresolved fields": [
+    "Çözümlenmemiş alanlar",
+    "Champs non résolus",
+    "Campos sin resolver"
+  ],
+  "Reusable allocation import profiles": [
+    "Yeniden kullanılabilir kaynak tahsisi içe aktarma profilleri",
+    "Profils d’importation réutilisables pour l’allocation des ressources",
+    "Perfiles reutilizables de importación de asignación de recursos"
+  ],
+  "Apply a profile, inspect or change its mappings above, confirm, then save with the same name to update it. New values are always revalidated.": [
+    "Bir profili uygulayın, eşlemelerini inceleyip düzenleyin, onaylayın ve güncellemek için aynı adla kaydedin. Yeni değerler her zaman yeniden doğrulanır.",
+    "Appliquez un profil, examinez ou modifiez ses correspondances, confirmez-les, puis enregistrez-le sous le même nom pour le mettre à jour. Les nouvelles valeurs sont toujours revalidées.",
+    "Aplique un perfil, revise o cambie sus asignaciones, confírmelas y guárdelo con el mismo nombre para actualizarlo. Los valores nuevos siempre se vuelven a validar."
+  ],
+  "Replace the saved mappings for this profile?": [
+    "Bu profilin kayıtlı eşlemeleri değiştirilsin mi?",
+    "Remplacer les correspondances enregistrées de ce profil ?",
+    "¿Reemplazar las asignaciones guardadas de este perfil?"
+  ],
+  "Profile saved locally.": [
+    "Profil yerel olarak kaydedildi.",
+    "Profil enregistré localement.",
+    "Perfil guardado localmente."
+  ],
+  "Save confirmed mappings": [
+    "Onaylanan eşlemeleri kaydet",
+    "Enregistrer les correspondances confirmées",
+    "Guardar las asignaciones confirmadas"
+  ],
+  "Profile applied. Review and confirm the dataset meaning.": [
+    "Profil uygulandı. Veri kümesinin anlamını inceleyip onaylayın.",
+    "Profil appliqué. Vérifiez et confirmez la signification du jeu de données.",
+    "Perfil aplicado. Revise y confirme el significado del conjunto de datos."
+  ],
+  "Apply / edit": [
+    "Uygula / düzenle",
+    "Appliquer / modifier",
+    "Aplicar / editar"
+  ],
+  "Delete": [
+    "Sil",
+    "Supprimer",
+    "Eliminar"
+  ],
+  "Inspect mappings": [
+    "Eşlemeleri incele",
+    "Examiner les correspondances",
+    "Inspeccionar asignaciones"
+  ],
+  "unmapped": [
+    "eşlenmedi",
+    "non associé",
+    "sin asignar"
+  ],
+  "Automatic corrections": [
+    "Otomatik düzeltmeler",
+    "Corrections automatiques",
+    "Correcciones automáticas"
+  ],
+  "Every change retains the original cell, row, result and rule. Uncertain values remain errors until you correct them.": [
+    "Her değişiklik özgün hücreyi, satırı, sonucu ve kuralı korur. Belirsiz değerler siz düzeltinceye kadar hata olarak kalır.",
+    "Chaque modification conserve la cellule, la ligne, le résultat et la règle d’origine. Les valeurs incertaines restent des erreurs jusqu’à leur correction.",
+    "Cada cambio conserva la celda, la fila, el resultado y la regla originales. Los valores inciertos siguen siendo errores hasta que los corrija."
+  ],
+  "Source row": ["Kaynak satırı", "Ligne source", "Fila de origen"],
+  "Original": ["Özgün", "Original", "Original"],
+  "Normalized": ["Normalleştirilmiş", "Normalisé", "Normalizado"],
+  "Reason": ["Neden", "Motif", "Motivo"],
+  "Which source column or supplied value provides this required information?": [
+    "Bu gerekli bilgiyi hangi kaynak sütunu veya sağladığınız değer karşılıyor?",
+    "Quelle colonne source ou valeur fournie correspond à cette information obligatoire ?",
+    "¿Qué columna de origen o valor proporcionado corresponde a esta información obligatoria?"
+  ],
+  "Choose the optimization objective.": [
+    "Optimizasyon hedefini seçin.",
+    "Choisissez l’objectif d’optimisation.",
+    "Elija el objetivo de optimización."
+  ],
+  "minimize_cost": ["Maliyeti en aza indir", "Minimiser le coût", "Minimizar el costo"],
+  "maximize_output": ["Çıktıyı en üst düzeye çıkar", "Maximiser la production", "Maximizar la producción"],
+  "maximize_net_value": ["Net değeri en üst düzeye çıkar", "Maximiser la valeur nette", "Maximizar el valor neto"],
+  "unknown": ["Bilinmiyor", "Inconnu", "Desconocido"],
+  "resources": ["Kaynaklar", "Ressources", "Recursos"],
+  "projects": ["Projeler", "Projets", "Proyectos"],
+  "demands": ["Kaynak talepleri", "Demandes de ressources", "Demandas de recursos"],
+  "links": ["Uyumluluk bağlantıları", "Liens de compatibilité", "Vínculos de compatibilidad"],
+  "Invalid profile storage.": [
+    "Profil depolama verisi geçersiz.",
+    "Le stockage des profils n’est pas valide.",
+    "El almacenamiento de perfiles no es válido."
+  ],
+  "Confirm dataset meanings and enter a profile name first.": [
+    "Önce veri kümesinin anlamını onaylayın ve bir profil adı girin.",
+    "Confirmez d’abord la signification du jeu de données et saisissez un nom de profil.",
+    "Primero confirme el significado del conjunto de datos e ingrese un nombre de perfil."
+  ],
+  "Resolve missing or conflicting required mappings before saving a profile.": [
+    "Profili kaydetmeden önce eksik veya çakışan zorunlu eşlemeleri çözün.",
+    "Résolvez les correspondances obligatoires manquantes ou conflictuelles avant d’enregistrer le profil.",
+    "Resuelva las asignaciones obligatorias faltantes o en conflicto antes de guardar el perfil."
+  ],
+  "Invalid import profile.": [
+    "İçe aktarma profili geçersiz.",
+    "Le profil d’importation n’est pas valide.",
+    "El perfil de importación no es válido."
   ]
 }
