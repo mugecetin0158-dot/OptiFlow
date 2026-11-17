@@ -5,9 +5,9 @@ import {
   correctionJournal,
   applyGroupedIssueAnswer,
   canonicalQuestionKey,
-  canonicalQuestionTarget,
   datasetReadiness,
   groupImportIssues,
+  isValidQuestionAnswer,
   prepareAIImport,
   requestAIImportAnalysis,
   requestModelPreview,
@@ -26,6 +26,7 @@ import {
   Trash2,
   Loader2,
   Sparkles,
+  RefreshCw,
 } from "lucide-react";
 import { Language, translate } from "../../lib/i18n";
 import {
@@ -45,6 +46,7 @@ import {
 import { decodeCSV, MAX_FILES, MAX_BYTES } from "../../lib/import/csv";
 import { createSource } from "../../lib/import/recognition";
 import { transformSources } from "../../lib/import/pipeline";
+import { preserveManualDraftEdits } from "../../lib/import/refresh";
 import { importStages } from "../../lib/import/stages";
 import {
   mappingOutputs,
@@ -96,6 +98,7 @@ export default function SmartImport({
     [errorFile, setErrorFile] = useState(""),
     [notice, setNotice] = useState(""),
     [busy, setBusy] = useState(false),
+    [refreshBusy, setRefreshBusy] = useState(false),
     [dragging, setDragging] = useState(false),
     [encoding, setEncoding] = useState("auto"),
     [delimiter, setDelimiter] = useState("auto"),
@@ -109,6 +112,7 @@ export default function SmartImport({
     [correctionsReviewed, setCorrectionsReviewed] = useState(false);
   const [aiResult, setAiResult] = useState<AIImportResult | null>(null),
     [questionAnswers, setQuestionAnswers] = useState<Record<string, string>>({}),
+    [unresolvedAnswers, setUnresolvedAnswers] = useState<Record<string, string>>({}),
     [savedModelId, setSavedModelId] = useState("");
   const requiredQuestions = uniqueMissingQuestions(
     aiResult?.questions || [],
@@ -192,9 +196,17 @@ export default function SmartImport({
   );
   function changeSource(next: ImportSource) {
     setSources((old) => old.map((s) => (s.id === next.id ? next : s)));
-    setQuestionAnswers({});
     setStale(true);
     setAccepted(false);
+  }
+  function changeQuestionAnswer(key: string, value: string) {
+    setQuestionAnswers((old) => ({ ...old, [key]: value }));
+    setUnresolvedAnswers((old) => {
+      if (old[key] === undefined || old[key] === value) return old;
+      const next = { ...old };
+      delete next[key];
+      return next;
+    });
   }
   function changeDraft(next: ImportDraft) {
     setDraft(next);
@@ -336,7 +348,11 @@ export default function SmartImport({
     )
       return;
     const result = transformSources(sources);
-    setDraft(result.draft);
+    setDraft(
+      stale
+        ? result.draft
+        : preserveManualDraftEdits(draft, result.draft, result.draft),
+    );
     setPipelineIssues(result.issues);
     setUnmapped(result.unmapped);
     setStale(false);
@@ -350,6 +366,100 @@ export default function SmartImport({
     setNotice(
       "Transformation complete. Review missing information and validation errors.",
     );
+  }
+  async function refreshAndRevalidate() {
+    if (!aiResult || refreshBusy || !requiredQuestions.length) return;
+    const unanswered = requiredQuestions.some((question) => {
+      const key = canonicalQuestionKey(question);
+      return (
+        !isValidQuestionAnswer(question, questionAnswers[key]) ||
+        unresolvedAnswers[key] === questionAnswers[key]
+      );
+    });
+    if (unanswered) return;
+    setRefreshBusy(true);
+    setError("");
+    try {
+      const answers = Object.fromEntries(
+        aiResult.questions
+          .filter((question) => question.required)
+          .map((question) => [
+            question.id,
+            questionAnswers[canonicalQuestionKey(question)] || "",
+          ]),
+      );
+      const answerResult = aiResult.session_id
+        ? await submitMissingAnswers(aiResult.session_id, answers)
+        : { remaining_questions: aiResult.questions };
+      const remainingQuestions = uniqueMissingQuestions(
+        answerResult.remaining_questions,
+      );
+      const objectiveAnswer = aiResult.questions.find(
+        (question) =>
+          canonicalQuestionKey(question) ===
+          "model.objective:optimization-objective",
+      );
+      const objectiveValue = objectiveAnswer
+        ? answers[objectiveAnswer.id]
+        : "";
+      const objectiveKind = (
+        ["minimize_cost", "maximize_output", "maximize_net_value"] as const
+      ).find((kind) => kind === objectiveValue);
+      const model =
+        aiResult.model && objectiveKind
+          ? {
+              ...aiResult.model,
+              objective: {
+                ...aiResult.model.objective,
+                kind: objectiveKind,
+                description: objectiveKind,
+                confidence: 1,
+              },
+            }
+          : aiResult.model;
+      const transformed = transformSources(sources);
+      const nextDraft = stale
+        ? transformed.draft
+        : preserveManualDraftEdits(draft, transformed.draft, transformed.draft);
+      const nextValidation = validateDraft(nextDraft, rules);
+      const mappingReview = sources.some(
+        (source) =>
+          source.kinds.length > 0 &&
+          (!source.confirmed ||
+            source.mappings.some(
+              (mapping) =>
+                mapping.state === "suggested" || mapping.state === "unmapped",
+            )),
+      );
+      const hasErrors =
+        transformed.issues.some((issue) => issue.severity === "error") ||
+        !nextValidation.valid;
+      const nextUnresolvedAnswers: Record<string, string> = {};
+      for (const question of remainingQuestions) {
+        const key = canonicalQuestionKey(question);
+        const answer = questionAnswers[key];
+        if (answer) nextUnresolvedAnswers[key] = answer;
+      }
+      setAiResult({ ...aiResult, model, questions: remainingQuestions });
+      setUnresolvedAnswers(nextUnresolvedAnswers);
+      setDraft(nextDraft);
+      setPipelineIssues(transformed.issues);
+      setUnmapped(transformed.unmapped);
+      setStale(false);
+      setAccepted(false);
+      setStep(
+        mappingReview
+          ? 1
+          : remainingQuestions.some((question) => question.required) || hasErrors
+            ? 2
+            : 3,
+      );
+      setNotice("Refresh and revalidation completed. Review any remaining questions or errors.");
+    } catch (failure) {
+      setError((failure as Error).message);
+    } finally {
+      setRefreshBusy(false);
+    }
   }
   function persistProfiles(next: ImportProfile[]) {
     try {
@@ -1024,7 +1134,7 @@ export default function SmartImport({
                           ),
                         };
                         changeSource(nextSource);
-                        setQuestionAnswers({ ...questionAnswers, [answerKey]: event.target.value });
+                        changeQuestionAnswer(answerKey, event.target.value);
                       }}
                     >
                       <option value="">{t("Choose a source column")}</option>
@@ -1034,14 +1144,14 @@ export default function SmartImport({
                 )}
                 {question.answer_type === "choice" ? (
                   <label>{t("Your answer")}
-                    <select value={questionAnswers[answerKey] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [answerKey]: event.target.value })}>
+                    <select value={questionAnswers[answerKey] || ""} onChange={(event) => changeQuestionAnswer(answerKey, event.target.value)}>
                       <option value="">{t("Select an answer")}</option>
                       {question.options.map((option) => <option key={option} value={option}>{t(option)}</option>)}
                     </select>
                   </label>
                 ) : question.answer_type === "boolean" ? (
                   <label>{t("Your answer")}
-                    <select value={questionAnswers[answerKey] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [answerKey]: event.target.value })}>
+                    <select value={questionAnswers[answerKey] || ""} onChange={(event) => changeQuestionAnswer(answerKey, event.target.value)}>
                       <option value="">{t("Select an answer")}</option>
                       <option value="true">{t("Yes")}</option>
                       <option value="false">{t("No")}</option>
@@ -1053,9 +1163,14 @@ export default function SmartImport({
                       type={question.answer_type === "number" ? "number" : target.endsWith("date") ? "date" : target.endsWith("time") ? "time" : "text"}
                       value={questionAnswers[answerKey] || ""}
                       aria-invalid={question.required && !questionAnswers[answerKey]?.trim()}
-                      onChange={(event) => setQuestionAnswers({ ...questionAnswers, [answerKey]: event.target.value })}
+                      onChange={(event) => changeQuestionAnswer(answerKey, event.target.value)}
                     />
                   </label>
+                )}
+                {unresolvedAnswers[answerKey] === questionAnswers[answerKey] && (
+                  <p className="field-error-text" role="status">
+                    {t("This question is still unresolved after refresh. Review the answer or mapping before trying again.")}
+                  </p>
                 )}
               </article>
             );
@@ -1122,79 +1237,42 @@ export default function SmartImport({
               t={t}
             />
           )}
-          {requiredQuestions.length > 0 && <button className="btn primary" disabled={!requiredQuestions.every((question) => questionAnswers[canonicalQuestionKey(question)]?.trim())} onClick={async () => {
-            if (!aiResult.session_id) return;
-            try {
-              const answers = Object.fromEntries(
-                aiResult.questions
-                  .filter((question) => question.required)
-                  .map((question) => {
-                    const target = canonicalQuestionTarget(question.target);
-                    const sourceId = question.id.startsWith("missing:")
-                      ? question.id.split(":")[1]
-                      : "";
-                    const visible = requiredQuestions.find((candidate) => {
-                      const candidateSource = candidate.id.startsWith("missing:")
-                        ? candidate.id.split(":")[1]
-                        : "";
-                      return (
-                        canonicalQuestionTarget(candidate.target) === target &&
-                        (!sourceId || !candidateSource || sourceId === candidateSource)
-                      );
-                    });
-                    return [
-                      question.id,
-                      questionAnswers[
-                        canonicalQuestionKey(visible || question)
-                      ] || "",
-                    ];
-                  }),
-              );
-              const result = await submitMissingAnswers(aiResult.session_id, answers);
-              const objectiveAnswer = aiResult.questions.find(
+          {requiredQuestions.length > 0 && (
+            <div className="missing-question-actions">
+              <button
+                className="btn primary"
+                disabled={
+                  refreshBusy ||
+                  requiredQuestions.some((question) => {
+                    const key = canonicalQuestionKey(question);
+                    return (
+                      !isValidQuestionAnswer(question, questionAnswers[key]) ||
+                      unresolvedAnswers[key] === questionAnswers[key]
+                    );
+                  })
+                }
+                onClick={() => void refreshAndRevalidate()}
+              >
+                {refreshBusy ? (
+                  <Loader2 className="spin" size={16} />
+                ) : (
+                  <RefreshCw size={16} />
+                )}
+                {t("Refresh & Revalidate")}
+              </button>
+              {requiredQuestions.some(
                 (question) =>
-                  canonicalQuestionKey(question) === "model.objective:optimization-objective",
-              );
-              const objectiveValue = objectiveAnswer
-                ? answers[objectiveAnswer.id]
-                : "";
-              const objectiveKinds = [
-                "minimize_cost",
-                "maximize_output",
-                "maximize_net_value",
-              ] as const;
-              const objectiveKind = objectiveKinds.find((kind) => kind === objectiveValue);
-              const model = aiResult.model && objectiveKind
-                ? {
-                    ...aiResult.model,
-                    objective: {
-                      ...aiResult.model.objective,
-                      kind: objectiveKind,
-                      description: objectiveKind,
-                      confidence: 1,
-                    },
-                  }
-                : aiResult.model;
-              setAiResult({ ...aiResult, model, questions: result.remaining_questions });
-              const mappingReview = sources.some(
-                (source) =>
-                  source.kinds.length > 0 &&
-                  (!source.confirmed ||
-                    source.mappings.some(
-                      (mapping) =>
-                        mapping.state === "suggested" ||
-                        mapping.state === "unmapped",
-                    )),
-              );
-              setStep(
-                mappingReview || aiCorrections.length
-                  ? 1
-                  : result.remaining_questions.length || hasMissingInformation
-                    ? 2
-                    : 3,
-              );
-            } catch (failure) { setError((failure as Error).message); }
-          }}>{t("Continue")} <ArrowRight size={16} /></button>}
+                  !isValidQuestionAnswer(
+                    question,
+                    questionAnswers[canonicalQuestionKey(question)],
+                  ),
+              ) && (
+                <p className="field-error-text" role="status">
+                  {t("Answer all required questions with valid values before refreshing.")}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       )}
       {(step === 3 || step === 4) && (

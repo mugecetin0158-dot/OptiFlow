@@ -139,6 +139,15 @@
   display: grid;
   gap: 6px;
 }
+.missing-question-actions {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin-top: 18px;
+}
+.missing-question-actions p {
+  margin: 0;
+}
 .field-error-text {
   display: block;
   margin-top: 4px;

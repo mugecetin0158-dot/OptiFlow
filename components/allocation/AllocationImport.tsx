@@ -3,7 +3,7 @@ import { autoAllocationWithProfiles } from "../../lib/import/automation";
 import { profileSourcesForAI } from "../../lib/import/automation";
 import { useCSVUpload } from "../CsvPicker";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Upload, ArrowRight } from "lucide-react";
+import { Upload, ArrowRight, Loader2, RefreshCw } from "lucide-react";
 import { decodeCSV, MAX_BYTES } from "../../lib/import/csv";
 import {
   Draft,
@@ -31,6 +31,7 @@ import CatalogEditor, {
 import { emptyDraft } from "../../lib/allocation/types";
 import { requiredColumns } from "../../lib/allocation/import";
 import { downloadText } from "../smart-import/SmartImport";
+import { preserveManualDraftEdits } from "../../lib/import/refresh";
 import ImportProfiles from "./ImportProfiles";
 import { PROFILE_KEY, AllocationProfile } from "../../lib/allocation/profiles";
 export default function AllocationImport({
@@ -56,9 +57,11 @@ export default function AllocationImport({
       settings: { ...initialSettings },
     })),
     [stale, setStale] = useState(true),
+    [refreshBusy, setRefreshBusy] = useState(false),
     [accepted, setAccepted] = useState(false),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
+    [notice, setNotice] = useState(""),
     [encoding, setEncoding] = useState("auto"),
     [delimiter, setDelimiter] = useState("auto");
   const fileInput = useRef<HTMLInputElement>(null);
@@ -79,9 +82,6 @@ export default function AllocationImport({
     ),
   ).size;
   const hasMissingInformation = unresolvedCount > 0;
-  useEffect(() => {
-    if (step === 2 && !stale && !hasMissingInformation) setStep(3);
-  }, [step, stale, hasMissingInformation]);
   const valid =
     !stale &&
     validation.valid &&
@@ -90,6 +90,7 @@ export default function AllocationImport({
     setSources((old) => old.map((s) => (s.id === source.id ? source : s)));
     setStale(true);
     setAccepted(false);
+    setNotice("");
   }
   async function processWithAI(input: AllocationSource[]) {
     if (!aiConsent || aiBusy || !input.length) return;
@@ -243,6 +244,43 @@ export default function AllocationImport({
     setPreview(d);
     setAccepted(false);
   }
+  async function refreshAndRevalidate() {
+    if (
+      refreshBusy ||
+      stale ||
+      !aiComplete ||
+      hasMissingInformation ||
+      (aiProposals.length > 0 && !aiProposalsReviewed)
+    )
+      return;
+    setRefreshBusy(true);
+    setError("");
+    try {
+      const transformed = transformAllocationSources(sources, preview.settings);
+      const nextDraft = {
+        ...transformed.draft,
+        tables: preserveManualDraftEdits(
+          preview.tables,
+          transformed.draft.tables,
+          transformed.draft.tables,
+        ),
+      };
+      const nextValidation = validateDraft(nextDraft);
+      const hasErrors =
+        transformed.issues.some((issue) => issue.severity === "error") ||
+        !nextValidation.valid;
+      setPreview(nextDraft);
+      setStale(false);
+      setAccepted(false);
+      setStep(hasErrors ? 2 : 3);
+      setError("");
+      setNotice("Refresh and revalidation completed. Review any remaining questions or errors.");
+    } catch (failure) {
+      setError((failure as Error).message);
+    } finally {
+      setRefreshBusy(false);
+    }
+  }
   const { upload, picker } = useCSVUpload(consumeFiles, t);
   return (
     <div className="smart-import allocation-import">
@@ -378,6 +416,11 @@ export default function AllocationImport({
       {error && (
         <div className="notice error" role="alert">
           {t(error)}
+        </div>
+      )}
+      {notice && (
+        <div className="notice success" role="status">
+          {t(notice)}
         </div>
       )}
       <section className="panel import-panel" hidden={step !== 0}>
@@ -704,6 +747,38 @@ export default function AllocationImport({
           <p className="field-error-text" role="status">
             {t("Unresolved fields")}: {unresolvedCount}
           </p>
+          {aiComplete && (
+            <div className="missing-question-actions">
+              <button
+                className="btn primary"
+                disabled={
+                  refreshBusy ||
+                  aiBusy ||
+                  stale ||
+                  hasMissingInformation ||
+                  (aiProposals.length > 0 && !aiProposalsReviewed)
+                }
+                onClick={() => void refreshAndRevalidate()}
+              >
+                {refreshBusy ? (
+                  <Loader2 className="spin" size={16} />
+                ) : (
+                  <RefreshCw size={16} />
+                )}
+                {t("Refresh & Revalidate")}
+              </button>
+              {hasMissingInformation && (
+                <p className="field-error-text" role="status">
+                  {t("Resolve the required fields above before refreshing.")}
+                </p>
+              )}
+              {stale && (
+                <p className="field-error-text" role="status">
+                  {t("Review source mappings before refreshing.")}
+                </p>
+              )}
+            </div>
+          )}
         </section>
       )}
       <div hidden={step !== 2 && step !== 3}>

@@ -19,7 +19,9 @@ import {
   uniqueMissingQuestions,
   groupImportIssues,
   applyGroupedIssueAnswer,
+  isValidQuestionAnswer,
 } from "../lib/import/automation";
+import { preserveManualDraftEdits } from "../lib/import/refresh";
 import { createAllocationSource } from "../lib/allocation/import";
 import { sampleDraft } from "../lib/allocation/sample";
 import { exportCatalog } from "../lib/allocation/import";
@@ -60,6 +62,69 @@ test("duplicate missing-information questions are collapsed by source and target
     ]),
     [first, { ...first, id: "missing:other:employees:employee_id" }],
   );
+});
+test("required answers are considered valid only when present and typed correctly", () => {
+  const question = {
+    id: "missing:staff:employees:hourly_rate",
+    prompt: "What is the hourly rate?",
+    answer_type: "number" as const,
+    options: [],
+    target: "employees.hourly_rate",
+    required: true,
+  };
+  assert.equal(isValidQuestionAnswer(question, "23.5"), true);
+  assert.equal(isValidQuestionAnswer(question, ""), false);
+  assert.equal(isValidQuestionAnswer(question, "abc"), false);
+  assert.equal(
+    isValidQuestionAnswer(
+      { ...question, answer_type: "choice", options: ["minimize_cost", "maximize_output"] },
+      "maximize_output",
+    ),
+    true,
+  );
+  assert.equal(
+    isValidQuestionAnswer(
+      { ...question, answer_type: "choice", options: ["minimize_cost", "maximize_output"] },
+      "other",
+    ),
+    false,
+  );
+});
+test("refresh preserves previously valid answers and source-backed draft edits", () => {
+  const current: any = {
+    employees: [
+      {
+        values: { employee_id: "E1", name: "Ada", hourly_rate: "18.5", max_weekly_hours: "40", roles: '["Picker"]' },
+        sources: [{ fileId: "file-1", file: "team.csv", row: 2 }],
+      },
+    ],
+    availability: [],
+    shifts: [],
+  };
+  const baseline: any = {
+    employees: [
+      {
+        values: { employee_id: "E1", name: "Ada", hourly_rate: "17", max_weekly_hours: "40", roles: '["Picker"]' },
+        sources: [{ fileId: "file-1", file: "team.csv", row: 2 }],
+      },
+    ],
+    availability: [],
+    shifts: [],
+  };
+  const refreshed: any = {
+    employees: [
+      {
+        values: { employee_id: "E1", name: "Ada", hourly_rate: "18.5", max_weekly_hours: "40", roles: '["Picker"]' },
+        sources: [{ fileId: "file-1", file: "team.csv", row: 2 }],
+        pending: { hourly_rate: "Requires review" },
+      },
+    ],
+    availability: [],
+    shifts: [],
+  };
+  const kept = preserveManualDraftEdits(current, baseline, refreshed);
+  assert.equal(kept.employees[0].values.hourly_rate, "18.5");
+  assert.equal(kept.employees[0].pending?.hourly_rate, undefined);
 });
 test("objective aliases and wording share one canonical question", () => {
   const questions = uniqueMissingQuestions([

@@ -156,6 +156,21 @@ export function canonicalQuestionKey(question: AIMissingQuestion) {
       : questionRequirement(question);
   return `${target}:${requirement}`;
 }
+
+export function isValidQuestionAnswer(
+  question: AIMissingQuestion,
+  answer: string | undefined,
+) {
+  if (!answer?.trim()) return false;
+  if (question.answer_type === "boolean")
+    return answer === "true" || answer === "false";
+  if (question.answer_type === "choice")
+    return question.options.includes(answer);
+  if (question.answer_type === "number")
+    return Number.isFinite(Number(answer));
+  return true;
+}
+
 export function uniqueMissingQuestions(
   questions: AIMissingQuestion[],
 ): AIMissingQuestion[] {

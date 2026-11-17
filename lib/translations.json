@@ -4536,6 +4536,36 @@
   "projects": ["Projeler", "Projets", "Proyectos"],
   "demands": ["Kaynak talepleri", "Demandes de ressources", "Demandas de recursos"],
   "links": ["Uyumluluk bağlantıları", "Liens de compatibilité", "Vínculos de compatibilidad"],
+  "Refresh & Revalidate": [
+    "Yenile ve Yeniden Doğrula",
+    "Actualiser et revalider",
+    "Actualizar y volver a validar"
+  ],
+  "Answer all required questions with valid values before refreshing.": [
+    "Yenilemeden önce tüm zorunlu soruları geçerli yanıtlarla tamamlayın.",
+    "Répondez à toutes les questions obligatoires avec des valeurs valides avant l’actualisation.",
+    "Responda todas las preguntas obligatorias con valores válidos antes de actualizar."
+  ],
+  "This question is still unresolved after refresh. Review the answer or mapping before trying again.": [
+    "Bu soru yenilemeden sonra hâlâ çözümlenmedi. Tekrar denemeden önce yanıtı veya eşlemeyi gözden geçirin.",
+    "Cette question reste sans réponse après l’actualisation. Vérifiez la réponse ou la correspondance avant de réessayer.",
+    "La pregunta sigue sin resolverse después de actualizar. Revise la respuesta o la asignación antes de volver a intentarlo."
+  ],
+  "Refresh and revalidation completed. Review any remaining questions or errors.": [
+    "Yenileme ve yeniden doğrulama tamamlandı. Kalan soruları veya hataları gözden geçirin.",
+    "L’actualisation et la revalidation sont terminées. Vérifiez les questions ou erreurs restantes.",
+    "La actualización y la revalidación finalizaron. Revise las preguntas o errores pendientes."
+  ],
+  "Resolve the required fields above before refreshing.": [
+    "Yenilemeden önce yukarıdaki zorunlu alanları çözün.",
+    "Résolvez les champs obligatoires ci-dessus avant l’actualisation.",
+    "Resuelva los campos obligatorios anteriores antes de actualizar."
+  ],
+  "Review source mappings before refreshing.": [
+    "Yenilemeden önce kaynak eşlemelerini gözden geçirin.",
+    "Vérifiez les correspondances des sources avant l’actualisation.",
+    "Revise las asignaciones de origen antes de actualizar."
+  ],
   "Invalid profile storage.": [
     "Profil depolama verisi geçersiz.",
     "Le stockage des profils n’est pas valide.",
