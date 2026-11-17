@@ -196,11 +196,13 @@ export function transformAllocationSources(
       );
       if (file.parsed.issues.some((i) => i.severity === "error")) continue;
     }
-    if (!file.confirmed || !file.kind) {
+    if (!file.kind) {
       add("Confirm the dataset and column meanings before transforming.");
       continue;
     }
     if (file.kind === "ignore") continue;
+    if (!file.confirmed)
+      add("Confirm the dataset and column meanings before transforming.");
     const kind = file.kind,
       selected = file.mappings.filter((f) => f && f !== "ignore");
     if (

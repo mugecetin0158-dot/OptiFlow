@@ -65,6 +65,7 @@ export default function AllocationImport({
     [encoding, setEncoding] = useState("auto"),
     [delimiter, setDelimiter] = useState("auto");
   const fileInput = useRef<HTMLInputElement>(null);
+  const sourceBaseline = useRef(preview.tables);
   const transformed = useMemo(
     () => transformAllocationSources(sources, preview.settings),
     [sources, preview.settings],
@@ -172,11 +173,13 @@ export default function AllocationImport({
       setAiProposals(proposals);
       setAiComplete(true);
       const transformed = transformAllocationSources(analyzed, preview.settings);
-      if (analyzed.every((s) => s.confirmed) && !proposals.length && !transformed.issues.some((i) => i.severity === "error")) {
-        setPreview(transformed.draft);
-        setStale(false);
-        setStep(validateDraft(transformed.draft).valid ? 3 : 2);
-      }
+      setPreview(transformed.draft);
+      sourceBaseline.current = transformed.draft.tables;
+      setStale(false);
+      const hasErrors =
+        transformed.issues.some((issue) => issue.severity === "error") ||
+        !validateDraft(transformed.draft).valid;
+      setStep(hasErrors ? 2 : proposals.length ? 1 : 3);
     } catch (e) {
       if (!controller.signal.aborted) setError((e as Error).message);
     } finally {
@@ -254,10 +257,11 @@ export default function AllocationImport({
         ...transformed.draft,
         tables: preserveManualDraftEdits(
           preview.tables,
-          transformed.draft.tables,
+          sourceBaseline.current,
           transformed.draft.tables,
         ),
       };
+      sourceBaseline.current = transformed.draft.tables;
       const nextValidation = validateDraft(nextDraft);
       const hasErrors =
         transformed.issues.some((issue) => issue.severity === "error") ||
@@ -688,6 +692,7 @@ export default function AllocationImport({
                   return;
                 const nextDraft = transformed.draft;
                 setPreview(nextDraft);
+                sourceBaseline.current = nextDraft.tables;
                 setStale(false);
                 setStep(
                   transformed.issues.some((issue) => issue.severity === "error") ||

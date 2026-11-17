@@ -334,7 +334,10 @@ test("Resource Allocation refresh stays enabled with no unresolved data and pres
           columns: file.columns.map((column: any) => ({
             column: column.header,
             field: column.header,
-            confidence: 0.99,
+            confidence:
+              file.name === "projects.csv" && column.header === "priority"
+                ? 0.8
+                : 0.99,
           })),
           corrections: [],
         })),
@@ -377,6 +380,62 @@ test("Resource Allocation refresh stays enabled with no unresolved data and pres
     await act(async () => {
       [...document.querySelectorAll<HTMLButtonElement>(".import-steps button")]
         .find((button) => button.textContent?.includes("Missing Information"))
+        ?.click();
+    });
+    const tableCounts = [
+      ...document.querySelectorAll<HTMLButtonElement>(".allocation-tabs [role=tab]"),
+    ].map((tab) => Number(tab.querySelector("span")?.textContent));
+    assert.deepEqual(
+      tableCounts,
+      [4, 2, 5, 7],
+      "AI-matched records must reach all four editable tables even when a mapping needs confirmation",
+    );
+    assert.ok(
+      document.body.textContent?.includes(
+        "Confirm the dataset and column meanings before transforming.",
+      ),
+      "uncertain mappings must remain visible as validation issues",
+    );
+    assert.equal(
+      document.querySelector<HTMLInputElement>(
+        'input[aria-label="Resources 1 Resource ID"]',
+      )?.value,
+      "ENG",
+    );
+    for (const [tabName, field, expected] of [
+      ["Projects", "Project ID", "WEB"],
+      ["Resource demands", "Project ID", "WEB"],
+      ["Compatibility & limits", "Resource ID", "ENG"],
+    ]) {
+      await act(async () => {
+        [...document.querySelectorAll<HTMLButtonElement>(".allocation-tabs [role=tab]")]
+          .find((tab) => tab.textContent?.includes(tabName))
+          ?.click();
+      });
+      assert.equal(
+        document.querySelector<HTMLInputElement>(
+          `input[aria-label="${tabName} 1 ${field}"]`,
+        )?.value,
+        expected,
+        `${tabName} must preserve its imported identifiers and relationships`,
+      );
+    }
+
+    await act(async () => {
+      [...document.querySelectorAll<HTMLElement>(".panel.import-panel")]
+        .find((panel) => panel.querySelector("h3")?.textContent === "projects.csv")
+        ?.querySelector<HTMLInputElement>('input[type="checkbox"]')
+        ?.click();
+      [...document.querySelectorAll<HTMLButtonElement>("button")]
+        .find((button) => button.textContent?.includes("Transform & validate"))
+        ?.click();
+    });
+    await act(async () => {
+      [...document.querySelectorAll<HTMLButtonElement>(".import-steps button")]
+        .find((button) => button.textContent?.includes("Missing Information"))
+        ?.click();
+      [...document.querySelectorAll<HTMLButtonElement>(".allocation-tabs [role=tab]")]
+        .find((tab) => tab.textContent?.includes("Resources"))
         ?.click();
     });
     const refresh = document.querySelector<HTMLButtonElement>(
