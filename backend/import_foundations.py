@@ -155,6 +155,15 @@ class MissingQuestion(BaseModel):
     options: list[str] = Field(default_factory=list, max_length=20)
     target: str = Field(min_length=1, max_length=120)
     required: bool = True
+    requirement: str = Field(default="", max_length=100)
+
+    @field_validator("requirement")
+    @classmethod
+    def normalized_requirement(cls, requirement: str):
+        requirement = requirement.strip().casefold()
+        if requirement and not re.fullmatch(r"[a-z0-9][a-z0-9._:-]*", requirement):
+            raise ValueError("Question requirement must be a stable identifier.")
+        return requirement
 
 
 class ModelInterpretation(BaseModel):
@@ -396,6 +405,10 @@ def _inline_gemini_schema(schema: dict[str, Any], definitions: dict[str, Any]):
 
 def interpretation_schema(target: Target):
     pydantic_schema = AIInterpretation.model_json_schema()
+    question_schema = pydantic_schema["$defs"]["MissingQuestion"]
+    question_schema["required"] = list(
+        dict.fromkeys([*question_schema.get("required", []), "requirement"])
+    )
     pydantic_schema["$defs"]["FileInterpretation"]["properties"]["datasets"]["items"] = {
         "type": "string",
         "enum": sorted(DATASETS[target]),
@@ -415,6 +428,8 @@ def interpretation_system_instruction(target: Target, locale: Locale):
         "Map only exact supplied source headers to allowed fields or 'ignore'. Identify dataset meanings, decision variables, "
         "the objective, hard constraints, and relationships only when supported by source evidence. Never invent values, units, "
         "constraints, identifiers, or business rules. Use kind 'unknown' and ask one targeted question for missing essentials. "
+        "Give each question a stable requirement identifier shared by semantically equivalent questions, even if their wording differs; "
+        "use different identifiers for genuinely different requirements on the same field. "
         "Substantive corrections must be proposals. Keep source values and identifiers unchanged. Write explanations and questions "
         f"in locale {locale}. Return ONLY a JSON object conforming to the enforced response schema."
     )
@@ -491,7 +506,89 @@ def _question(locale: Locale, source_id: str, dataset: str, field: str):
         id=f"missing:{source_id}:{dataset}:{field}",
         prompt=templates[locale],
         target=f"{dataset}.{field}",
+        requirement="required-field-mapping",
     )
+
+
+def _canonical_question_target(target: str):
+    normalized = re.sub(r"[\s-]+", "_", target.strip().casefold())
+    if normalized in {
+        "objective", "goal", "optimization_goal", "optimization_objective",
+        "model.objective", "model.goal", "model.optimization_goal",
+        "model.optimization_objective",
+    }:
+        return "model.objective"
+    return normalized
+
+
+def _question_requirement(question: MissingQuestion):
+    target = _canonical_question_target(question.target)
+    if target == "model.objective":
+        return "optimization-objective"
+    if question.requirement:
+        return question.requirement
+    if question.id.startswith("missing:"):
+        return "required-field-mapping"
+    return (
+        f"{question.answer_type}:{'|'.join(sorted(question.options))}:"
+        f"{' '.join(re.findall(r'[a-z0-9]+', question.prompt.casefold()))}"
+    )
+
+
+def _question_key(question: MissingQuestion):
+    target = _canonical_question_target(question.target)
+    requirement = _question_requirement(question)
+    if target != "model.objective" and question.id.startswith("missing:"):
+        source_id = question.id.split(":")[1]
+        requirement = f"{requirement}:{source_id}"
+    return f"{target}:{requirement}"
+
+
+def _unique_questions(questions: list[MissingQuestion]):
+    unique: dict[str, MissingQuestion] = {}
+    for question in questions:
+        target = _canonical_question_target(question.target)
+        canonical = (
+            question.model_copy(update={
+                "target": target,
+                "answer_type": "choice",
+                "options": ["minimize_cost", "maximize_output", "maximize_net_value"],
+                "requirement": "optimization-objective",
+            })
+            if target == "model.objective"
+            else question.model_copy(update={"target": target})
+        )
+        key = _question_key(canonical)
+        source_specific = canonical.id.startswith("missing:")
+        equivalent_key = None
+        for existing_key, existing_question in unique.items():
+            if _canonical_question_target(existing_question.target) != target:
+                continue
+            existing_source_specific = existing_question.id.startswith("missing:")
+            if target == "model.objective":
+                equivalent_key = existing_key
+                break
+            if source_specific and existing_source_specific:
+                if canonical.id.split(":")[1] == existing_question.id.split(":")[1]:
+                    equivalent_key = existing_key
+                    break
+            elif source_specific != existing_source_specific:
+                if _question_requirement(canonical) == _question_requirement(existing_question):
+                    equivalent_key = existing_key
+                    break
+            elif key == existing_key:
+                equivalent_key = existing_key
+                break
+        if equivalent_key is None:
+            unique[key] = canonical
+        else:
+            existing = unique[equivalent_key]
+            if source_specific and not existing.id.startswith("missing:"):
+                del unique[equivalent_key]
+                unique[key] = canonical
+            elif canonical.required and not existing.required:
+                unique[equivalent_key] = existing.model_copy(update={"required": True})
+    return list(unique.values())
 
 
 def validate_interpretation(request: InterpretRequest, result: AIInterpretation):
@@ -501,9 +598,12 @@ def validate_interpretation(request: InterpretRequest, result: AIInterpretation)
     sources = {f.source_id: f for f in request.files}
     if len(result.files) != len(sources) or {f.source_id for f in result.files} != set(sources):
         raise HTTPException(502, "AI did not return exactly one interpretation for every source file.")
-    questions = {q.id: q for q in result.questions}
-    if len(questions) != len(result.questions):
+    supplied_questions = {q.id: q for q in result.questions}
+    if len(supplied_questions) != len(result.questions):
         raise HTTPException(502, "AI returned duplicate question identifiers.")
+    questions = {
+        q.id: q for q in result.questions if not q.id.startswith("missing:")
+    }
     all_headers = _all_headers(request)
     for interpreted in result.files:
         source = sources[interpreted.source_id]
@@ -575,7 +675,7 @@ def validate_interpretation(request: InterpretRequest, result: AIInterpretation)
             id="model:objective", prompt=prompts[request.locale], answer_type="choice",
             options=["minimize_cost", "maximize_output", "maximize_net_value"], target="model.objective",
         ))
-    result.questions = list(questions.values())
+    result.questions = _unique_questions(list(questions.values()))
     return result
 
 
@@ -659,8 +759,20 @@ def validate_mappings(session_id: str, request: MappingValidationRequest):
     session = sessions.get(session_id)
     candidate = session.interpretation.model_copy(update={"files": request.files})
     candidate = validate_interpretation(session.request, candidate)
+    for question in candidate.questions:
+        if question.id.startswith("missing:"):
+            session.answers.pop(_question_key(question), None)
     session.interpretation = candidate
-    return {"valid": not needs_verification(candidate), "questions": [q.model_dump() for q in candidate.questions], "requires_verification": needs_verification(candidate)}
+    remaining = [
+        question for question in candidate.questions
+        if question.required and not session.answers.get(_question_key(question))
+    ]
+    unresolved = candidate.model_copy(update={"questions": remaining})
+    return {
+        "valid": not needs_verification(unresolved),
+        "questions": [question.model_dump() for question in remaining],
+        "requires_verification": needs_verification(unresolved),
+    }
 
 
 @router.post("/sessions/{session_id}/answers")
@@ -676,8 +788,18 @@ def answer_questions(session_id: str, request: AnswerRequest):
             raise HTTPException(422, f"An answer is required for: {question.prompt}")
         if question.answer_type == "choice" and value not in question.options:
             raise HTTPException(422, f"Choose one of the supplied options for: {question.prompt}")
-        session.answers[question.id] = value
-    remaining = [q for q in session.interpretation.questions if q.required and not session.answers.get(q.id)]
+        key = _question_key(question)
+        session.answers[key] = value
+        if _canonical_question_target(question.target) == "model.objective":
+            session.interpretation.model.objective = (
+                session.interpretation.model.objective.model_copy(
+                    update={"kind": value, "description": value, "confidence": 1}
+                )
+            )
+    remaining = [
+        q for q in _unique_questions(session.interpretation.questions)
+        if q.required and not session.answers.get(_question_key(q))
+    ]
     return {"accepted": len(request.answers), "remaining_questions": [q.model_dump() for q in remaining]}
 
 
@@ -718,7 +840,10 @@ def validate_preview(target: Target, model: dict[str, Any]):
 @router.post("/sessions/{session_id}/preview")
 def preview_model(session_id: str, request: PreviewRequest):
     session = sessions.get(session_id)
-    unanswered = [q for q in session.interpretation.questions if q.required and not session.answers.get(q.id)]
+    unanswered = [
+        q for q in _unique_questions(session.interpretation.questions)
+        if q.required and not session.answers.get(_question_key(q))
+    ]
     issues = validate_preview(session.request.target, request.model)
     if unanswered:
         issues.append({"severity": "error", "message": "Required missing-information questions remain unanswered."})

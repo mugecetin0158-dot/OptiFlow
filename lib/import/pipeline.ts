@@ -6,10 +6,12 @@ import {
   missingMappings,
   transformRow,
 } from "./transformations";
+import { ImportCorrection, reconcileDraft } from "./reconciliation";
 export function transformSources(sources: ImportSource[]): {
   draft: ImportDraft;
   issues: Issue[];
   unmapped: { file: string; column: string; decision: string }[];
+  corrections: ImportCorrection[];
 } {
   const draft = emptyDraft(),
     issues: Issue[] = [],
@@ -25,6 +27,7 @@ export function transformSources(sources: ImportSource[]): {
         },
       ],
       unmapped,
+      corrections: [],
     };
   const repeatedEmployees = new Map<string, (typeof draft.employees)[number]>();
   for (const file of sources) {
@@ -178,5 +181,11 @@ export function transformSources(sources: ImportSource[]): {
         });
     });
   }
-  return { draft, issues, unmapped };
+  const reconciled = reconcileDraft(draft, sources);
+  return {
+    draft: reconciled.draft,
+    issues: [...issues, ...reconciled.issues],
+    unmapped,
+    corrections: reconciled.corrections,
+  };
 }

@@ -17,6 +17,8 @@ import {
   prepareAIImport,
   datasetReadiness,
   uniqueMissingQuestions,
+  groupImportIssues,
+  applyGroupedIssueAnswer,
 } from "../lib/import/automation";
 import { createAllocationSource } from "../lib/allocation/import";
 import { sampleDraft } from "../lib/allocation/sample";
@@ -26,12 +28,14 @@ import { transformSources } from "../lib/import/pipeline";
 import { validateDraft } from "../lib/import/validation";
 import {
   Dataset,
+  emptyDraft,
   emptyRules,
   Field,
   Mapping,
 } from "../lib/import/types";
 import { readFileSync } from "node:fs";
 import { writeCSV, parseCSV } from "../lib/import/csv";
+import { normalizeDecimal } from "../lib/import/normalize";
 const staff =
   "employee_id,name,hourly_rate,max_weekly_hours,roles\n001,Ada,20,40,barista";
 test("duplicate missing-information questions are collapsed by source and target", () => {
@@ -46,10 +50,115 @@ test("duplicate missing-information questions are collapsed by source and target
   assert.deepEqual(
     uniqueMissingQuestions([
       first,
-      { ...first, id: "ai-question-1", prompt: "Duplicate question" },
+      {
+        ...first,
+        id: "ai-question-1",
+        prompt: "Duplicate question",
+        requirement: "required-field-mapping",
+      },
       { ...first, id: "missing:other:employees:employee_id" },
     ]),
     [first, { ...first, id: "missing:other:employees:employee_id" }],
+  );
+});
+test("objective aliases and wording share one canonical question", () => {
+  const questions = uniqueMissingQuestions([
+    {
+      id: "objective-question",
+      prompt: "Choose an optimization objective.",
+      answer_type: "choice",
+      options: ["minimize_cost", "maximize_output"],
+      target: "objective",
+      required: false,
+    },
+    {
+      id: "goal-question",
+      prompt: "What should the model optimize?",
+      answer_type: "text",
+      options: [],
+      target: "model.objective",
+      required: true,
+    },
+  ]);
+  assert.equal(questions.length, 1);
+  assert.equal(questions[0].target, "model.objective");
+  assert.equal(questions[0].required, true);
+  assert.equal(questions[0].answer_type, "choice");
+});
+test("different requirements on the same target remain separate", () => {
+  const questions = uniqueMissingQuestions([
+    {
+      id: "required-roles",
+      prompt: "Which roles may fulfill this requirement?",
+      answer_type: "text",
+      options: [],
+      target: "employees.roles",
+      required: true,
+      requirement: "eligible-roles",
+    },
+    {
+      id: "role-proficiency",
+      prompt: "What proficiency is required for these roles?",
+      answer_type: "text",
+      options: [],
+      target: "employees.roles",
+      required: true,
+      requirement: "role-proficiency",
+    },
+  ]);
+  assert.equal(questions.length, 2);
+});
+test("wording variants with the same stable requirement merge", () => {
+  const questions = uniqueMissingQuestions([
+    {
+      id: "role-source",
+      prompt: "Which job roles can cover the shift?",
+      answer_type: "text",
+      options: [],
+      target: "shifts.required_role",
+      required: true,
+      requirement: "eligible-shift-role",
+    },
+    {
+      id: "role-meaning",
+      prompt: "What role is needed for this shift?",
+      answer_type: "text",
+      options: [],
+      target: "shifts.required_role",
+      required: true,
+      requirement: "eligible-shift-role",
+    },
+  ]);
+  assert.equal(questions.length, 1);
+});
+test("decimal values normalize automatically only when the separator is unambiguous", () => {
+  assert.equal(normalizeDecimal("23.25", "", true), "23.25");
+  assert.equal(normalizeDecimal("24.50", "", true), "24.5");
+  assert.equal(normalizeDecimal("23,25", "", true), "23.25");
+  assert.throws(() => normalizeDecimal("1,234", "", true), /ambiguous/i);
+});
+test("repeated row errors form one answer group and apply the answer to every row", () => {
+  const draft = emptyDraft();
+  draft.employees = [1, 2].map((row) => ({
+    values: {
+      employee_id: `E${row}`,
+      name: "Example",
+      hourly_rate: "bad",
+      max_weekly_hours: "40",
+      roles: '["Picker"]',
+    },
+    sources: [{ fileId: "employees", file: "employees.csv", row: row + 1 }],
+  }));
+  const errors = validateDraft(draft, emptyRules, "employees").issues.filter(
+    (issue) => issue.field === "hourly_rate",
+  );
+  const groups = groupImportIssues(errors, draft);
+  assert.equal(groups.length, 1);
+  assert.equal(groups[0].records.length, 2);
+  const answered = applyGroupedIssueAnswer(draft, groups[0], "23.25");
+  assert.deepEqual(
+    answered.employees.map((employee) => employee.values.hourly_rate),
+    ["23.25", "23.25"],
   );
 });
 test("confident scheduling fields automatically parse, classify, transform and validate", () => {
@@ -288,7 +397,6 @@ test("safe normalization records original and corrected cell with source row", (
     ),
   );
 });
-
 type SyntheticFile = {
   id: string;
   name: string;
@@ -381,6 +489,46 @@ function interpretedSources(files = syntheticFiles, options: {
   const analysis = cleanImportAnalysis(raw, sources);
   return { sources, analysis };
 }
+
+test("employee identifiers and role labels reconcile across uploaded datasets", () => {
+  const files = syntheticFiles.map((file) => ({ ...file }));
+  files[1].text = files[1].text.replace("EMP-001", "emp-001");
+  files[2].text = files[2].text.replace(",Picker", ",  picker  ");
+  const { sources, analysis } = interpretedSources(files);
+  const prepared = prepareAIImport(sources, analysis);
+  assert.equal(prepared.draft.availability[0].values.employee_id, "EMP-001");
+  assert.equal(prepared.draft.shifts[0].values.required_role, "Picker");
+  assert.ok(
+    prepared.corrections.some(
+      (correction) =>
+        correction.column === "employee_id" &&
+        correction.original === "emp-001" &&
+        correction.result === "EMP-001",
+    ),
+  );
+  assert.ok(
+    prepared.corrections.some(
+      (correction) =>
+        correction.column === "required_role" &&
+        correction.original === "  picker  " &&
+        correction.result === "Picker",
+    ),
+  );
+});
+test("ambiguous employee-ID aliases are preserved and remain blocking", () => {
+  const files = syntheticFiles.map((file) => ({ ...file }));
+  files[0].text = [
+    "employee_id,name,hourly_rate,max_weekly_hours,roles",
+    "EMP-001,Example Worker,20,40,Picker",
+    "emp-001,Second Worker,21,40,Picker",
+  ].join("\n");
+  files[1].text = files[1].text.replace("EMP-001", "Emp-001");
+  const { sources, analysis } = interpretedSources(files);
+  const prepared = prepareAIImport(sources, analysis);
+  const availability = prepared.draft.availability[0];
+  assert.equal(availability.values.employee_id, "Emp-001");
+  assert.match(availability.pending?.employee_id || "", /more than one/i);
+});
 
 test("AI mappings populate all Scheduling preview datasets with provenance despite model questions", () => {
   const { sources, analysis } = interpretedSources();

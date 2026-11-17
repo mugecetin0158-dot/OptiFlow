@@ -111,11 +111,42 @@ def test_gemini_structured_interpretation_questions_preview_and_save(monkeypatch
     session=body['session_id']
     answered=answer_questions(session,AnswerRequest.model_validate({'answers':[{'question_id':question['id'],'value':'minimize_cost'}]}))
     assert answered['accepted']==1
+    assert answered['remaining_questions']==[]
+    assert foundations.sessions.get(session).interpretation.model.objective.kind=='minimize_cost'
+    assert foundations.sessions.get(session).answers['model.objective:optimization-objective']=='minimize_cost'
     model={'employees':[],'availability':[{'employee_id':'W001','date':'2026-11-16','start_time':'09:00','end_time':'17:00','status':'available'}],'shifts':[]}
     preview=preview_model(session,PreviewRequest(model=model))
     assert preview['ready']
     saved=save_model(session)
     assert saved['saved']
+
+def test_equivalent_objective_questions_merge_and_answers_persist(monkeypatch):
+    from backend import import_foundations as foundations
+
+    fixture=ai_fixture()
+    fixture['questions']=[
+        {'id':'objective-choice','prompt':'Choose the optimization objective.','answer_type':'choice',
+         'options':['minimize_cost','maximize_output','maximize_net_value'],'target':'objective','required':True},
+        {'id':'model-goal','prompt':'What should the model optimize?','answer_type':'text',
+         'options':[],'target':'model.objective','required':True},
+    ]
+    class FixtureProvider:
+        def interpret(self, request):
+            return foundations.AIInterpretation.model_validate(fixture)
+
+    monkeypatch.setattr(foundations,'provider',FixtureProvider())
+    response=interpret(InterpretRequest.model_validate(import_request()))
+    assert len(response['questions'])==1
+    question=response['questions'][0]
+    assert question['target']=='model.objective'
+    assert question['answer_type']=='choice'
+    answered=answer_questions(response['session_id'],AnswerRequest.model_validate({
+        'answers':[{'question_id':question['id'],'value':'maximize_output'}],
+    }))
+    assert answered['remaining_questions']==[]
+    session=foundations.sessions.get(response['session_id'])
+    assert session.interpretation.model.objective.kind=='maximize_output'
+    assert session.answers['model.objective:optimization-objective']=='maximize_output'
 
 def test_allocation_preview_accepts_optional_unlimited_fields():
     from backend.import_foundations import validate_preview
@@ -267,6 +298,7 @@ def test_gemini_response_schema_is_compact_without_losing_import_contract():
         assert {'id', 'prompt', 'answer_type', 'options', 'target', 'required'} <= set(
             schema['properties']['questions']['items']['properties']
         )
+        assert 'requirement' in schema['properties']['questions']['items']['required']
         confidence = model_properties['objective']['properties']['confidence']
         assert confidence['minimum'] == 0 and confidence['maximum'] == 1
 

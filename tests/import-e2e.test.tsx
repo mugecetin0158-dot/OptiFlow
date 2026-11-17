@@ -116,7 +116,18 @@ test("multiple Scheduling CSVs reach Gemini interpretation and populate the prev
         <SmartImport
           language="en"
           saved={null}
-          savedRules={null}
+          savedRules={{
+            minRestHours: "0",
+            maxShiftsPerWeek: "5",
+            timezone: "Etc/UTC",
+            currency: "USD",
+            weekStart: "2026-11-16",
+            closedWeekdays: [],
+            maxWeeklyHours: "",
+            maxDailyHours: "",
+            allowMultipleShifts: true,
+            reviewed: true,
+          }}
           onSaved={() => {}}
         />,
       );
@@ -194,6 +205,13 @@ test("multiple Scheduling CSVs reach Gemini interpretation and populate the prev
     );
     assert.equal(document.querySelectorAll(".source-line").length, 3);
     assert.ok(document.body.textContent?.includes("availability.csv:2"));
+    assert.equal(
+      [...document.querySelectorAll<HTMLButtonElement>(".import-steps button")]
+        .find((button) => button.getAttribute("aria-current") === "step")
+        ?.textContent?.trim(),
+      "4Preview",
+      "Missing Information is skipped when interpretation, data, and rules are resolved",
+    );
     const name = document.querySelector<HTMLInputElement>(
       'input[aria-label="employees 1 name"]',
     )!;

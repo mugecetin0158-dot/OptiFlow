@@ -50,12 +50,27 @@ export function normalizeTime(input: string) {
 export function normalizeDecimal(
   input: string,
   mode: Normalization["decimal"] = "",
+  inferUnambiguous = false,
 ): string {
   const s = input.trim();
   if (!s) return "";
   if (/^[-+]?\d+$/.test(s)) return String(Number(s));
-  if (!mode) throw Error("Choose a decimal convention for fractional values.");
-  const re = mode === "dot" ? /^[-+]?\d+(?:\.\d+)?$/ : /^[-+]?\d+(?:,\d+)?$/;
+  let decimalMode = mode;
+  if (!decimalMode && inferUnambiguous) {
+    if (/^[-+]?\d+\.\d+$/.test(s)) decimalMode = "dot";
+    else if (/^[-+]?\d+,\d+$/.test(s) && !/^\d{1,3},\d{3}$/.test(s))
+      decimalMode = "comma";
+    else
+      throw Error(
+        "Decimal convention is ambiguous. Choose a decimal convention or correct the value.",
+      );
+  }
+  if (!decimalMode)
+    throw Error("Choose a decimal convention for fractional values.");
+  const re =
+    decimalMode === "dot"
+      ? /^[-+]?\d+(?:\.\d+)?$/
+      : /^[-+]?\d+(?:,\d+)?$/;
   if (!re.test(s))
     throw Error(
       "Invalid decimal. Currency symbols and thousands separators are not supported.",

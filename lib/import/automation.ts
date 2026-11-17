@@ -113,27 +113,144 @@ export type AIMissingQuestion = {
   options: string[];
   target: string;
   required: boolean;
+  requirement?: string;
 };
+export function canonicalQuestionTarget(target: string) {
+  const normalized = target
+    .trim()
+    .toLowerCase()
+    .replace(/[\s-]+/g, "_")
+    .replace(/\.{2,}/g, ".");
+  if (
+    [
+      "objective",
+      "goal",
+      "optimization_goal",
+      "optimization_objective",
+      "model.objective",
+      "model.goal",
+      "model.optimization_goal",
+      "model.optimization_objective",
+    ].includes(normalized)
+  )
+    return "model.objective";
+  return normalized;
+}
+function questionRequirement(question: AIMissingQuestion) {
+  if (question.requirement) return question.requirement.toLowerCase();
+  if (question.id.startsWith("missing:")) return "required-field-mapping";
+  return `${question.answer_type}:${[...question.options].sort().join("|")}:${question.prompt
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()}`;
+}
+export function canonicalQuestionKey(question: AIMissingQuestion) {
+  const target = canonicalQuestionTarget(question.target);
+  const source = question.id.startsWith("missing:")
+    ? question.id.split(":")[1]
+    : "";
+  const requirement = target === "model.objective"
+    ? "optimization-objective"
+    : question.id.startsWith("missing:")
+      ? `${questionRequirement(question)}:${source}`
+      : questionRequirement(question);
+  return `${target}:${requirement}`;
+}
 export function uniqueMissingQuestions(
   questions: AIMissingQuestion[],
 ): AIMissingQuestion[] {
-  const sourceId = (question: AIMissingQuestion) =>
-    question.id.startsWith("missing:") ? question.id.split(":")[1] : "";
-  const unique: AIMissingQuestion[] = [];
+  const unique = new Map<string, AIMissingQuestion>();
   for (const question of questions) {
-    const source = sourceId(question);
-    const duplicateIndex = unique.findIndex((existing) => {
-      const existingSource = sourceId(existing);
-      return (
-        existing.target === question.target &&
-        (!source || !existingSource || source === existingSource)
-      );
+    const key = canonicalQuestionKey(question);
+    const target = canonicalQuestionTarget(question.target);
+    const sourceSpecific = question.id.startsWith("missing:");
+    const equivalentIndex = [...unique.entries()].find(([, existing]) => {
+      if (canonicalQuestionTarget(existing.target) !== target) return false;
+      if (target === "model.objective") return true;
+      const existingSourceSpecific = existing.id.startsWith("missing:");
+      if (sourceSpecific && existingSourceSpecific)
+        return question.id.split(":")[1] === existing.id.split(":")[1];
+      if (sourceSpecific !== existingSourceSpecific)
+        return questionRequirement(existing) === questionRequirement(question);
+      return canonicalQuestionKey(existing) === key;
     });
-    if (duplicateIndex < 0) unique.push(question);
-    else if (!sourceId(unique[duplicateIndex]) && source)
-      unique[duplicateIndex] = question;
+    const canonical = target === "model.objective"
+      ? {
+          ...question,
+          target,
+          answer_type: "choice" as const,
+          options: ["minimize_cost", "maximize_output", "maximize_net_value"],
+        }
+      : { ...question, target };
+    const existingKey = equivalentIndex?.[0] || key;
+    const existing = unique.get(existingKey);
+    if (!existing) unique.set(key, canonical);
+    else {
+      if (sourceSpecific && !existing.id.startsWith("missing:")) {
+        unique.delete(existingKey);
+        unique.set(key, canonical);
+      } else if (canonical.required && !existing.required)
+        unique.set(existingKey, { ...existing, required: true });
+    }
   }
-  return unique;
+  return [...unique.values()];
+}
+
+export type GroupedImportIssue = {
+  key: string;
+  issue: Issue;
+  records: { dataset: Dataset; record: number }[];
+};
+
+export function groupImportIssues(
+  issues: Issue[],
+  draft: ImportDraft,
+): GroupedImportIssue[] {
+  const groups = new Map<string, GroupedImportIssue>();
+  for (const issue of issues.filter((item) => item.severity === "error")) {
+    const value =
+      issue.dataset && issue.field && issue.record !== undefined
+        ? draft[issue.dataset][issue.record]?.values[issue.field] || ""
+        : "";
+    const source = issue.code === "missing-mapping"
+      ? issue.source?.fileId || ""
+      : "";
+    const target =
+      issue.dataset && issue.field
+        ? `${issue.dataset}.${issue.field}`
+        : `${issue.dataset || ""}`;
+    const requirement =
+      issue.code === "missing-mapping"
+        ? `required-field-mapping:${source}`
+        : `${issue.code}:${issue.message}:${value}`;
+    const key = `${target}:${requirement}`;
+    const group = groups.get(key) || { key, issue, records: [] };
+    if (
+      issue.dataset &&
+      issue.record !== undefined &&
+      !group.records.some(
+        (record) =>
+          record.dataset === issue.dataset && record.record === issue.record,
+      )
+    )
+      group.records.push({ dataset: issue.dataset, record: issue.record });
+    groups.set(key, group);
+  }
+  return [...groups.values()];
+}
+
+export function applyGroupedIssueAnswer(
+  draft: ImportDraft,
+  group: GroupedImportIssue,
+  answer: string,
+) {
+  const next = structuredClone(draft);
+  for (const { dataset, record } of group.records) {
+    next[dataset][record].values[group.issue.field!] = answer;
+    if (next[dataset][record].pending)
+      delete next[dataset][record].pending[group.issue.field!];
+  }
+  return next;
 }
 export type AIModelInterpretation = {
   objective: {
@@ -258,9 +375,16 @@ export function cleanImportAnalysis(raw: unknown, sources: ImportSource[]): AIIm
           !q || typeof q.id !== "string" || typeof q.prompt !== "string" ||
           !["text", "number", "choice", "boolean"].includes(q.answer_type) ||
           !Array.isArray(q.options) || typeof q.target !== "string" ||
-          typeof q.required !== "boolean"
+            typeof q.required !== "boolean" ||
+            (q.requirement !== undefined &&
+              (typeof q.requirement !== "string" || q.requirement.length > 100))
         ) throw Error("AI returned an invalid missing-information question.");
-        return q;
+          return {
+            ...q,
+            requirement: typeof q.requirement === "string"
+              ? q.requirement.trim().toLowerCase()
+              : "",
+          };
       })
     : [];
   const model = root.model;
@@ -612,5 +736,9 @@ export function correctionJournal(sources: ImportSource[]): Correction[] {
           /* Transformation failures remain blocking validation errors. */
         }
       }
-  return changes;
+  changes.push(...transformSources(sources).corrections);
+  const unique = new Map<string, Correction>();
+  for (const change of changes)
+    unique.set(`${change.file}:${change.row}:${change.column}`, change);
+  return [...unique.values()];
 }

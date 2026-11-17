@@ -118,7 +118,7 @@ export function transformCell(
   else if (mode === "status")
     result = normalizeStatus(value, options.statusMap);
   else if (m.target === "hourly_rate" || m.target === "max_weekly_hours")
-    result = normalizeDecimal(value, options.decimal);
+    result = normalizeDecimal(value, options.decimal, true);
   else if (m.target === "roles")
     result = JSON.stringify(normalizeRoles(value, options.roleSeparator));
   return { [m.target]: result };

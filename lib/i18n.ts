@@ -20,6 +20,7 @@ const dictionary: Record<string, string[]> = catalog;
 
 const spanishPatterns: { match: RegExp; render: (m: RegExpMatchArray) => string }[] = [
   { match: /^(\d+) employees in your team$/, render: (m) => `${m[1]} empleados en tu equipo` },
+  { match: /^(\d+) affected rows$/, render: (m) => `${m[1]} filas afectadas` },
   { match: /^(\d+) shifts with staffing requirements$/, render: (m) => `${m[1]} turnos con necesidades de personal` },
   { match: /^(\d+) constraint violations$/, render: (m) => `${m[1]} incumplimientos de restricciones` },
   { match: /^([\d.]+) hrs?$/, render: (m) => `${formatNumber("es", +m[1])} h` },
@@ -79,6 +80,11 @@ const patterns: MessagePattern[] = [
         `Ekibinizde ${m[1]} çalışan var`,
         `${m[1]} employé(s) dans votre équipe`,
       ),
+  },
+  {
+    match: /^(\d+) affected rows$/,
+    render: (m, l) =>
+      pick(l, `${m[1]} satır etkilendi`, `${m[1]} lignes concernées`),
   },
   {
     match: /^(\d+) shifts with staffing requirements$/,

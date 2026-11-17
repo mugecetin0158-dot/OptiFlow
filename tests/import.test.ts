@@ -153,7 +153,7 @@ test("ambiguous columns remain pending and unknown structures remain unmapped", 
   assert.ok(!assigned.kinds.includes("shifts"));
   assert.ok(!assigned.kinds.includes("availability"));
 });
-test("date, time, decimal and status normalization requires explicit ambiguous choices", () => {
+test("date, time, decimal and status normalization auto-corrects only unambiguous values", () => {
   assert.equal(normalizeDate("2026/11/16"), "2026-11-16");
   assert.throws(() => normalizeDate("03/04/2026"));
   assert.equal(normalizeDate("03/04/2026", "DMY"), "2026-04-03");
@@ -162,7 +162,8 @@ test("date, time, decimal and status normalization requires explicit ambiguous c
   assert.equal(normalizeTime("9 AM"), "09:00");
   assert.equal(normalizeTime("12:30 pm"), "12:30");
   assert.throws(() => normalizeTime("25:00"));
-  assert.throws(() => normalizeDecimal("18.50"));
+  assert.equal(normalizeDecimal("18.50", "", true), "18.5");
+  assert.throws(() => normalizeDecimal("1,234", "", true));
   assert.equal(normalizeDecimal("18,50", "comma"), "18.5");
   assert.throws(() => normalizeDecimal("1,200.00", "dot"));
   assert.throws(() => normalizeStatus("approved", {}));
@@ -187,17 +188,22 @@ test("full transform produces real records, source traceability and no invented 
   ]);
   assert.ok(result.unmapped.some((u) => u.column === "Payroll Notes"));
 });
-test("unconfirmed numeric meaning cannot become valid just because raw text parses as a number", () => {
+test("unambiguous decimals normalize automatically while ambiguous numeric formats stay blocking", () => {
   const files = inputs();
   files[0].options.decimal = "";
-  const draft = transformSources(files).draft;
-  assert.equal(validateDraft(draft, rules).valid, false);
-  assert.match(draft.employees[0].pending!.hourly_rate, /convention/);
-  draft.employees.forEach((r) => {
-    r.values.hourly_rate = String(Number(r.values.hourly_rate));
-    delete r.pending!.hourly_rate;
-  });
-  assert.equal(validateDraft(draft, rules).valid, true);
+  const normalized = transformSources(files);
+  assert.equal(normalized.draft.employees[0].values.hourly_rate, "18.5");
+  assert.equal(validateDraft(normalized.draft, rules).valid, true);
+  const rateColumn = files[0].mappings.findIndex(
+    (mapping) => mapping.target === "hourly_rate",
+  );
+  files[0].parsed.rows[0][rateColumn] = "1,200.00";
+  const ambiguous = transformSources(files);
+  assert.match(
+    ambiguous.draft.employees[0].pending!.hourly_rate,
+    /ambiguous/i,
+  );
+  assert.equal(validateDraft(ambiguous.draft, rules).valid, false);
 });
 test("missing fields, duplicate employee IDs, invalid references and role mismatch block saving", () => {
   const d = transformSources(inputs()).draft;

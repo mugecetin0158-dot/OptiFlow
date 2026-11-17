@@ -3,7 +3,11 @@ import {
   AIImportCorrection,
   AIImportResult,
   correctionJournal,
+  applyGroupedIssueAnswer,
+  canonicalQuestionKey,
+  canonicalQuestionTarget,
   datasetReadiness,
+  groupImportIssues,
   prepareAIImport,
   requestAIImportAnalysis,
   requestModelPreview,
@@ -136,20 +140,11 @@ export default function SmartImport({
   const issues = [...pipelineIssues, ...validation.issues];
   const errors = issues.filter((i) => i.severity === "error"),
     warnings = issues.filter((i) => i.severity === "warning");
-  const unresolvedKeys = new Set(
-    errors.map((issue) =>
-      issue.field
-        ? `${issue.dataset || ""}:${issue.record ?? ""}:${issue.field}:${issue.source?.fileId || ""}`
-        : `${issue.code}:${issue.message}:${issue.source?.fileId || ""}`,
-    ),
-  );
+  const groupedErrors = groupImportIssues(errors, draft);
+  const unresolvedKeys = new Set(groupedErrors.map((group) => group.key));
   for (const question of uniqueMissingQuestions(aiResult?.questions || [])) {
     if (!question.required) continue;
-    const [dataset, ...fieldParts] = question.target.split(".");
-    const sourceId = question.id.startsWith("missing:")
-      ? question.id.split(":")[1]
-      : "";
-    unresolvedKeys.add(`${dataset}::${fieldParts.join(".")}:${sourceId}`);
+    unresolvedKeys.add(canonicalQuestionKey(question));
   }
   const unresolvedCount = unresolvedKeys.size;
   const hasMissingInformation = unresolvedCount > 0;
@@ -197,6 +192,7 @@ export default function SmartImport({
   );
   function changeSource(next: ImportSource) {
     setSources((old) => old.map((s) => (s.id === next.id ? next : s)));
+    setQuestionAnswers({});
     setStale(true);
     setAccepted(false);
   }
@@ -225,6 +221,7 @@ export default function SmartImport({
     setAiComplete(false);
     setAiCorrections([]);
     setCorrectionsReviewed(false);
+    setQuestionAnswers({});
     setError("");
     setNotice("");
     setStep(1);
@@ -248,7 +245,7 @@ export default function SmartImport({
       const previewHasErrors =
         prepared.issues.some((issue) => issue.severity === "error") ||
         !validated.valid;
-      if (hasRequiredQuestions) setStep(2);
+      if (hasRequiredQuestions || previewHasErrors) setStep(2);
       else if (
         analysis.requires_verification ||
         prepared.requiresMappingReview ||
@@ -962,6 +959,7 @@ export default function SmartImport({
               {questions.map((question) => {
             const [dataset, ...targetParts] = question.target.split(".");
             const target = targetParts.join(".");
+            const answerKey = canonicalQuestionKey(question);
             const sourceId = question.id.startsWith("missing:")
               ? question.id.split(":")[1]
               : "";
@@ -1026,7 +1024,7 @@ export default function SmartImport({
                           ),
                         };
                         changeSource(nextSource);
-                        setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value });
+                        setQuestionAnswers({ ...questionAnswers, [answerKey]: event.target.value });
                       }}
                     >
                       <option value="">{t("Choose a source column")}</option>
@@ -1036,14 +1034,14 @@ export default function SmartImport({
                 )}
                 {question.answer_type === "choice" ? (
                   <label>{t("Your answer")}
-                    <select value={questionAnswers[question.id] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value })}>
+                    <select value={questionAnswers[answerKey] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [answerKey]: event.target.value })}>
                       <option value="">{t("Select an answer")}</option>
                       {question.options.map((option) => <option key={option} value={option}>{t(option)}</option>)}
                     </select>
                   </label>
                 ) : question.answer_type === "boolean" ? (
                   <label>{t("Your answer")}
-                    <select value={questionAnswers[question.id] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value })}>
+                    <select value={questionAnswers[answerKey] || ""} onChange={(event) => setQuestionAnswers({ ...questionAnswers, [answerKey]: event.target.value })}>
                       <option value="">{t("Select an answer")}</option>
                       <option value="true">{t("Yes")}</option>
                       <option value="false">{t("No")}</option>
@@ -1053,9 +1051,9 @@ export default function SmartImport({
                   <label>{t("Your answer")}
                     <input
                       type={question.answer_type === "number" ? "number" : target.endsWith("date") ? "date" : target.endsWith("time") ? "time" : "text"}
-                      value={questionAnswers[question.id] || ""}
-                      aria-invalid={question.required && !questionAnswers[question.id]?.trim()}
-                      onChange={(event) => setQuestionAnswers({ ...questionAnswers, [question.id]: event.target.value })}
+                      value={questionAnswers[answerKey] || ""}
+                      aria-invalid={question.required && !questionAnswers[answerKey]?.trim()}
+                      onChange={(event) => setQuestionAnswers({ ...questionAnswers, [answerKey]: event.target.value })}
                     />
                   </label>
                 )}
@@ -1064,19 +1062,19 @@ export default function SmartImport({
               })}
             </section>
           ))}
-          {issues.filter((issue) => issue.severity === "error" && issue.dataset && issue.field).map((issue, index) => {
-            const row = issue.record === undefined ? undefined : draft[issue.dataset!][issue.record];
-            const key = `${issue.dataset}:${issue.record ?? "mapping"}:${issue.field}:${issue.source?.fileId || ""}`;
-            if (index > 0 && issues.some((other, otherIndex) =>
-              otherIndex < index && other.severity === "error" && other.dataset === issue.dataset &&
-              other.record === issue.record && other.field === issue.field && other.source?.fileId === issue.source?.fileId,
-            )) return null;
+          {groupedErrors.filter(({ issue }) => issue.dataset && issue.field).map((group) => {
+            const { issue } = group;
+            const rowRef = group.records[0];
+            const row = rowRef ? draft[rowRef.dataset][rowRef.record] : undefined;
             const source = issue.source && sources.find((item) => item.id === issue.source?.fileId);
             const mappingIssue = issue.code === "missing-mapping";
             return (
-              <article className="missing-question-card unresolved" key={key}>
+              <article className="missing-question-card unresolved" key={group.key}>
                 <h4>{t(issue.dataset!)}</h4>
                 <p>{t(issue.message)}</p>
+                {group.records.length > 1 && (
+                  <p>{t(`${group.records.length} affected rows`)}</p>
+                )}
                 <dl>
                   <div><dt>{t("Target field")}</dt><dd>{t(issue.field!)}</dd></div>
                   <div><dt>{t("Source dataset")}</dt><dd>{source?.name || issue.source?.file || t(issue.dataset!)}</dd></div>
@@ -1084,19 +1082,17 @@ export default function SmartImport({
                 </dl>
                 {mappingIssue ? (
                   <button className="btn" onClick={() => setStep(1)}>{t("Review source mappings")}</button>
-                ) : row && issue.record !== undefined ? (
+                ) : row && rowRef ? (
                   <>
                     <label>{t("Your answer")}
                       <input
                         type={["hourly_rate", "max_weekly_hours", "required_count"].includes(issue.field!) ? "number" : issue.field!.endsWith("date") || issue.field === "date" ? "date" : issue.field!.endsWith("time") ? "time" : "text"}
                         className="invalid"
                         aria-invalid="true"
-                        aria-label={`${t(issue.dataset!)} ${issue.record + 1} ${t(issue.field!)}`}
+                        aria-label={`${t(issue.dataset!)} ${rowRef.record + 1} ${t(issue.field!)}`}
                         value={row.values[issue.field!] || ""}
                         onChange={(event) => {
-                          const next = structuredClone(draft);
-                          next[issue.dataset!][issue.record!].values[issue.field!] = event.target.value;
-                          changeDraft(next);
+                          changeDraft(applyGroupedIssueAnswer(draft, group, event.target.value));
                         }}
                       />
                     </label>
@@ -1126,33 +1122,60 @@ export default function SmartImport({
               t={t}
             />
           )}
-          {requiredQuestions.length > 0 && <button className="btn primary" disabled={!requiredQuestions.every((question) => questionAnswers[question.id]?.trim())} onClick={async () => {
+          {requiredQuestions.length > 0 && <button className="btn primary" disabled={!requiredQuestions.every((question) => questionAnswers[canonicalQuestionKey(question)]?.trim())} onClick={async () => {
             if (!aiResult.session_id) return;
             try {
-              const answers = { ...questionAnswers };
-              for (const question of aiResult.questions) {
-                if (!question.required || answers[question.id]?.trim()) continue;
-                const questionSource = question.id.startsWith("missing:")
-                  ? question.id.split(":")[1]
-                  : "";
-                const visibleQuestion = requiredQuestions.find(
-                  (candidate) => {
-                    const candidateSource = candidate.id.startsWith("missing:")
-                      ? candidate.id.split(":")[1]
+              const answers = Object.fromEntries(
+                aiResult.questions
+                  .filter((question) => question.required)
+                  .map((question) => {
+                    const target = canonicalQuestionTarget(question.target);
+                    const sourceId = question.id.startsWith("missing:")
+                      ? question.id.split(":")[1]
                       : "";
-                    return (
-                      candidate.target === question.target &&
-                      (!questionSource ||
-                        !candidateSource ||
-                        questionSource === candidateSource)
-                    );
-                  },
-                );
-                if (visibleQuestion)
-                  answers[question.id] = questionAnswers[visibleQuestion.id] || "";
-              }
+                    const visible = requiredQuestions.find((candidate) => {
+                      const candidateSource = candidate.id.startsWith("missing:")
+                        ? candidate.id.split(":")[1]
+                        : "";
+                      return (
+                        canonicalQuestionTarget(candidate.target) === target &&
+                        (!sourceId || !candidateSource || sourceId === candidateSource)
+                      );
+                    });
+                    return [
+                      question.id,
+                      questionAnswers[
+                        canonicalQuestionKey(visible || question)
+                      ] || "",
+                    ];
+                  }),
+              );
               const result = await submitMissingAnswers(aiResult.session_id, answers);
-              setAiResult({ ...aiResult, questions: result.remaining_questions });
+              const objectiveAnswer = aiResult.questions.find(
+                (question) =>
+                  canonicalQuestionKey(question) === "model.objective:optimization-objective",
+              );
+              const objectiveValue = objectiveAnswer
+                ? answers[objectiveAnswer.id]
+                : "";
+              const objectiveKinds = [
+                "minimize_cost",
+                "maximize_output",
+                "maximize_net_value",
+              ] as const;
+              const objectiveKind = objectiveKinds.find((kind) => kind === objectiveValue);
+              const model = aiResult.model && objectiveKind
+                ? {
+                    ...aiResult.model,
+                    objective: {
+                      ...aiResult.model.objective,
+                      kind: objectiveKind,
+                      description: objectiveKind,
+                      confidence: 1,
+                    },
+                  }
+                : aiResult.model;
+              setAiResult({ ...aiResult, model, questions: result.remaining_questions });
               const mappingReview = sources.some(
                 (source) =>
                   source.kinds.length > 0 &&
