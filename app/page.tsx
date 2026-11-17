@@ -1123,6 +1123,7 @@ export default function App() {
             <ImportedSchedule
               saved={imported}
               rules={importRules}
+              language={language}
               t={tr}
               onReview={() => {
                 setImportTarget("scheduling");

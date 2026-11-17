@@ -104,6 +104,7 @@ test("empty imported Scheduling mode requests validated data and offers no solve
     <ImportedSchedule
       saved={null}
       rules={null}
+      language="en"
       t={(s) => s}
       onReview={() => {}}
     />,

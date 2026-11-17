@@ -403,7 +403,12 @@ test("all three imported datasets preserve overnight dates through save, reload,
   const loaded = loadValidated(store)!;
   assert.equal(loaded.saved.data.availability[0].end_date, "2026-11-17");
   assert.equal(loaded.saved.data.shifts[0].end_date, "2026-11-17");
-  assert.equal(schedulingInput(loaded.saved, loaded.rules).canOptimize, false);
+  const adapted = schedulingInput(loaded.saved, loaded.rules);
+  assert.equal(adapted.canOptimize, true);
+  assert.equal(adapted.scenario.shifts[0].start, "23:00");
+  assert.equal(adapted.scenario.shifts[0].end, "05:00");
+  assert.equal(adapted.scenario.shifts[0].dailyMinutes["2026-11-16"], 60);
+  assert.equal(adapted.scenario.shifts[0].dailyMinutes["2026-11-17"], 300);
   const crossingWeek = structuredClone(result.draft);
   crossingWeek.shifts[0].values.date = "2026-11-22";
   crossingWeek.shifts[0].values.end_date = "2026-11-23";

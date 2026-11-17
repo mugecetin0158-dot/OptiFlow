@@ -132,6 +132,43 @@ test("localized model messages preserve employee names, amounts and hard-constra
   const cases = [
     ...inputErrors(p),
     ...shortages(preset("Infeasible test")),
+    ...shortages({
+      ...preset(),
+      constraints: {
+        minRestMinutes: 0,
+        maxShiftsPerWeek: 5,
+        maxDailyHours: 8,
+        allowMultipleShifts: true,
+      },
+      shifts: [
+        {
+          id: 0,
+          day: 0,
+          period: "Manager",
+          start: "09:00",
+          end: "17:00",
+          required: 2,
+          requiredRole: "Manager",
+          startAt: 30000000,
+          endAt: 30000480,
+        },
+      ],
+      employees: [
+        {
+          id: "x",
+          name: "Worker",
+          wage: 20,
+          maxHours: 8,
+          roles: ["Manager"],
+          availability: [true],
+        },
+      ],
+    }),
+    "Worker: hourly rate must be a nonnegative amount no greater than 1,000,000.",
+    "Worker: availability must cover every imported shift.",
+    "Day 1 Manager: needs 2, but only 1 eligible employees are available.",
+    "The local time 2026-03-08 02:30 does not exist in America/New_York; correct the time or timezone.",
+    "The local time 2026-11-01 01:30 is ambiguous in America/New_York; choose a different time or timezone.",
     "Morning is unavailable for day 1 Afternoon.",
     "Morning has overlapping shifts on day 2.",
     "Morning: 36h exceeds the 32h weekly limit.",

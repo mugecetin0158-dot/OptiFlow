@@ -37,7 +37,7 @@ Preview acceptance checklist (Chrome desktop, Safari/iPhone, and Android; 375px 
 3. Add a dated second period, explicitly classify resources, set receipts/carryover and horizon constraints. Verify outputs/capacities/budgets and inventory balances. Try an infeasible model; no accepted recommendation should appear.
 4. Cancel a running solve; ensure the UI stays responsive and the run is cancelled. Reload, reopen a historical run, reverify, and duplicate/compare scenarios. Test storage denial/quota behavior.
 5. Export CSV and Excel, reopen them and compare amounts, IDs and verification status. Test text starting with `=` using XLSX or CSV text import.
-6. Scheduling: solve each fictional preset, edit an assignment into a violation, check warnings and export labeling. Imported scheduling remains gated because the demo optimizer cannot enforce every imported rule.
+6. Scheduling: solve each fictional preset, edit an assignment into a violation, check warnings and export labeling. Import employee, availability and shift CSVs, then verify the generated schedule preserves roles, windows, timezone handling, and reviewed rules. Cross-period rest cannot be verified without adjacent-period assignments.
 7. Check mobile navigation, horizontal tables, all five import steps, dark mode, keyboard controls and zoom. Existing responsive CSS remains; visual/device correctness is not established by static rendering tests.
 
 ## Beta limitations

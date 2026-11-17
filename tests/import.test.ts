@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import GLPK from "glpk.js";
 import { parseCSV, decodeCSV, writeCSV } from "../lib/import/csv";
 import {
   recognize,
@@ -30,6 +31,7 @@ import {
   LocalStore,
 } from "../lib/import/storage";
 import { schedulingInput } from "../lib/import/integration";
+import { solve } from "../lib/solver";
 import { Rules, schemas } from "../lib/import/types";
 const fixture = (name: string) =>
   readFileSync(`tests/fixtures/import/${name}.csv`, "utf8");
@@ -310,7 +312,7 @@ test("standard CSV exports round-trip IDs, UTF-8 names, role lists and exact sch
   assert.deepEqual(JSON.parse(p.rows[0][4]), ["Cashier", "Manager"]);
   assert.equal(p.rows[1][1], "Émile Yılmaz");
 });
-test("saved data and rules persist separately, demo storage is untouched, and imported optimization is gated", () => {
+test("saved data and rules persist separately and adapt to the existing optimizer without losing roles or windows", () => {
   const store = memory();
   store.setItem("optiflow-v1", "DEMO");
   const { draft, issues, unmapped } = transformSources(inputs());
@@ -322,10 +324,135 @@ test("saved data and rules persist separately, demo storage is untouched, and im
   assert.deepEqual(restored.saved.data, saved.data);
   const input = schedulingInput(restored.saved, restored.rules);
   assert.equal(input.source, "import");
-  assert.equal(input.canOptimize, false);
+  assert.equal(input.canOptimize, true);
   assert.deepEqual(input.data, saved.data);
+  assert.deepEqual(input.scenario.employees[0].roles, ["Cashier", "Manager"]);
+  assert.equal(input.scenario.shifts[0].requiredRole, "Cashier");
+  assert.equal(input.scenario.shifts[0].start, "09:00");
+  assert.equal(input.scenario.shifts[0].end, "17:00");
+  assert.equal(input.scenario.shifts[0].dailyMinutes["2026-11-16"], 480);
+  assert.deepEqual(input.scenario.employees[0].availability, [true]);
   store.setItem(RULES_KEY, JSON.stringify({ ...rules, minRestHours: "0" }));
   assert.throws(() => loadValidated(store));
+});
+test("imported optimization assigns role-qualified employees for variable intervals", async () => {
+  const { draft, issues, unmapped } = transformSources(inputs());
+  draft.shifts[0].values.required_role = "Manager";
+  draft.shifts[0].values.start_time = "13:00";
+  draft.shifts[0].values.required_count = "1";
+  const store = memory();
+  const saved = saveValidated(store, draft, rules, unmapped, issues);
+  const adapted = schedulingInput(saved, rules);
+  const result = await solve(adapted.scenario, GLPK());
+  assert.equal(result.status, "OPTIMAL");
+  assert.deepEqual(result.assignments, [["001"]]);
+});
+test("imported invalid data and ambiguous timezone wall-times are reported instead of guessed", () => {
+  const { draft, issues, unmapped } = transformSources(inputs());
+  const saved = saveValidated(memory(), draft, rules, unmapped, issues);
+  assert.throws(
+    () => schedulingInput(saved, { ...rules, maxShiftsPerWeek: "4" }),
+    /requires validation/,
+  );
+  const dstRules = {
+    ...rules,
+    timezone: "America/New_York",
+    weekStart: "2026-03-02",
+  };
+  const dstDraft = structuredClone(draft);
+  dstDraft.availability[0].values.date = "2026-03-08";
+  dstDraft.availability[0].values.start_time = "01:00";
+  dstDraft.availability[0].values.end_time = "04:00";
+  dstDraft.shifts[0].values.date = "2026-03-08";
+  dstDraft.shifts[0].values.start_time = "02:00";
+  dstDraft.shifts[0].values.end_time = "03:00";
+  const dstSaved = saveValidated(memory(), dstDraft, dstRules, unmapped, issues);
+  assert.throws(() => schedulingInput(dstSaved, dstRules), /does not exist/);
+  const fallRules = {
+    ...rules,
+    timezone: "America/New_York",
+    weekStart: "2026-10-26",
+  };
+  const fallDraft = structuredClone(draft);
+  fallDraft.shifts[0].values.date = "2026-11-01";
+  fallDraft.shifts[0].values.start_time = "01:30";
+  fallDraft.shifts[0].values.end_time = "03:00";
+  const fallSaved = saveValidated(
+    memory(),
+    fallDraft,
+    fallRules,
+    unmapped,
+    issues,
+  );
+  assert.throws(() => schedulingInput(fallSaved, fallRules), /ambiguous/);
+});
+test("imported optimizer returns infeasible when weekly shift-count rules cannot be met", async () => {
+  const { draft, issues, unmapped } = transformSources(inputs());
+  draft.shifts[0].values.required_role = "Manager";
+  draft.shifts[0].values.end_time = "12:00";
+  draft.shifts.push({
+    values: {
+      shift_id: "S-002",
+      date: "2026-11-16",
+      start_time: "13:00",
+      end_time: "17:00",
+      required_count: "1",
+      required_role: "Manager",
+    },
+    sources: [],
+  });
+  draft.availability = draft.availability.filter(
+    (window) => window.values.employee_id === "001",
+  );
+  const strictRules = {
+    ...rules,
+    minRestHours: "0",
+    maxShiftsPerWeek: "1",
+  };
+  const saved = saveValidated(memory(), draft, strictRules, unmapped, issues);
+  const adapted = schedulingInput(saved, strictRules);
+  const result = await solve(adapted.scenario, GLPK());
+  assert.equal(result.status, "INFEASIBLE");
+  assert.deepEqual(result.assignments, []);
+});
+test("imported optimizer enforces minimum rest, maximum daily hours, and same-day shift rules", async () => {
+  for (const patch of [
+    { minRestHours: "2", maxDailyHours: "8", allowMultipleShifts: true },
+    { minRestHours: "0", maxDailyHours: "6", allowMultipleShifts: true },
+    { minRestHours: "0", maxDailyHours: "8", allowMultipleShifts: false },
+  ]) {
+    const { draft, issues, unmapped } = transformSources(inputs());
+    draft.shifts[0].values.required_role = "Manager";
+    draft.shifts[0].values.required_count = "1";
+    draft.shifts[0].values.end_time = "12:00";
+    draft.shifts.push({
+      values: {
+        shift_id: "S-002",
+        date: "2026-11-16",
+        start_time: "13:00",
+        end_time: "17:00",
+        required_count: "1",
+        required_role: "Manager",
+      },
+      sources: [],
+    });
+    const constrainedRules = {
+      ...rules,
+      minRestHours: patch.minRestHours,
+      maxDailyHours: patch.maxDailyHours,
+      allowMultipleShifts: patch.allowMultipleShifts,
+    };
+    const saved = saveValidated(
+      memory(),
+      draft,
+      constrainedRules,
+      unmapped,
+      issues,
+    );
+    const adapted = schedulingInput(saved, constrainedRules);
+    const result = await solve(adapted.scenario, GLPK());
+    assert.equal(result.status, "INFEASIBLE", JSON.stringify(patch));
+  }
 });
 test("blocking errors and storage failure cannot report a successful save", () => {
   const d = transformSources(inputs()).draft;

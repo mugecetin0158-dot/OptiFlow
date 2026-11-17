@@ -37,10 +37,17 @@ const spanishPatterns: { match: RegExp; render: (m: RegExpMatchArray) => string 
   { match: /^Showing 100 changes; all (\d+) are saved with the validated dataset\.$/, render: (m) => `Se muestran 100 cambios; los ${m[1]} se guardan con el conjunto de datos validado.` },
   { match: /^(.+): wage must be \$0–\$1,000 with at most two decimals\.$/, render: (m) => `${m[1]}: el salario debe estar entre 0 y 1.000 USD y tener como máximo dos decimales.` },
   { match: /^(.+): maximum hours must be 0–168 in whole minutes\.$/, render: (m) => `${m[1]}: el límite debe estar entre 0 y 168 horas, en minutos enteros.` },
+  { match: /^(.+): hourly rate must be a nonnegative amount no greater than 1,000,000\.$/, render: (m) => `${m[1]}: la tarifa por hora debe ser un importe no negativo que no supere 1.000.000.` },
+  { match: /^(.+): availability must cover every imported shift\.$/, render: (m) => `${m[1]}: debe indicarse la disponibilidad para todos los turnos importados.` },
   { match: /^(.+): availability must cover all 14 shifts\.$/, render: (m) => `${m[1]}: debe indicarse la disponibilidad para los 14 turnos.` },
   { match: /^Day (\d+) (Morning|Afternoon): end time must be after start time on the same day\.$/, render: (m) => `Día ${m[1]}, ${translate("es", m[2])}: la hora de fin debe ser posterior a la de inicio el mismo día.` },
   { match: /^Day (\d+) (Morning|Afternoon): staffing must be a whole number from 0–30\.$/, render: (m) => `Día ${m[1]}, ${translate("es", m[2])}: la dotación debe ser un número entero entre 0 y 30.` },
   { match: /^Day (\d+) (Morning|Afternoon): needs (\d+), but only (\d+) eligible employees are available\.$/, render: (m) => `Día ${m[1]}, ${translate("es", m[2])}: se necesitan ${m[3]} empleados, pero solo hay ${m[4]} disponibles y aptos.` },
+  { match: /^Day (\d+) (.+): needs (\d+), but only (\d+) eligible employees are available\.$/, render: (m) => `Día ${m[1]}, ${m[2]}: se necesitan ${m[3]} empleados, pero solo hay ${m[4]} disponibles y aptos.` },
+  { match: /^The local time (.+) is ambiguous in (.+); choose a different time or timezone\.$/, render: (m) => `La hora local ${m[1]} es ambigua en ${m[2]}; elija otra hora o zona horaria.` },
+  { match: /^The local time (.+) does not exist in (.+); correct the time or timezone\.$/, render: (m) => `La hora local ${m[1]} no existe en ${m[2]}; corrija la hora o la zona horaria.` },
+  { match: /^The calendar date (.+) does not exist in (.+); correct the scheduling period\.$/, render: (m) => `La fecha ${m[1]} no existe en ${m[2]}; corrija el período de programación.` },
+  { match: /^Shift (.+) must end after it starts in the selected timezone\.$/, render: (m) => `El turno ${m[1]} debe terminar después de su inicio en la zona horaria seleccionada.` },
   { match: /^Day (\d+) (Morning|Afternoon): (\d+) unfilled position\(s\)\.$/, render: (m) => `Día ${m[1]}, ${translate("es", m[2])}: quedan ${m[3]} puestos sin cubrir.` },
   { match: /^Weekly demand is ([\d.]+) hours; employee limits provide only ([\d.]+) hours\.$/, render: (m) => `La demanda semanal es de ${formatNumber("es", +m[1])} horas; los límites del personal solo permiten ${formatNumber("es", +m[2])} horas.` },
 ];
@@ -239,6 +246,69 @@ const patterns: MessagePattern[] = [
     match: /^(.+) required staff$/,
     render: (m, l) =>
       pick(l, `${m[1]} gerekli personel`, `${m[1]} : personnel requis`),
+  },
+  {
+    match: /^(.+): hourly rate must be a nonnegative amount no greater than 1,000,000\.$/,
+    render: (m, l) =>
+      pick(
+        l,
+        `${m[1]}: saatlik ücret negatif olmayan ve 1.000.000'dan büyük olmayan bir tutar olmalıdır.`,
+        `${m[1]} : le taux horaire doit être positif ou nul et ne pas dépasser 1 000 000.`,
+      ),
+  },
+  {
+    match: /^(.+): availability must cover every imported shift\.$/,
+    render: (m, l) =>
+      pick(
+        l,
+        `${m[1]}: uygunluk tüm içe aktarılan vardiyaları kapsamalıdır.`,
+        `${m[1]} : les disponibilités doivent couvrir tous les créneaux importés.`,
+      ),
+  },
+  {
+    match: /^Day (\d+) (.+): needs (\d+), but only (\d+) eligible employees are available\.$/,
+    render: (m, l) =>
+      pick(
+        l,
+        `${m[1]}. gün ${m[2]} rolü için ${m[3]} çalışan gerekiyor, ancak yalnızca ${m[4]} uygun çalışan var.`,
+        `Jour ${m[1]}, rôle ${m[2]} : ${m[3]} employé(s) requis, mais seulement ${m[4]} disponible(s) et admissible(s).`,
+      ),
+  },
+  {
+    match: /^The local time (.+) is ambiguous in (.+); choose a different time or timezone\.$/,
+    render: (m, l) =>
+      pick(
+        l,
+        `${m[1]} yerel saati ${m[2]} saat diliminde belirsiz; başka bir saat veya saat dilimi seçin.`,
+        `L’heure locale ${m[1]} est ambiguë dans ${m[2]} ; choisissez une autre heure ou un autre fuseau.`,
+      ),
+  },
+  {
+    match: /^The local time (.+) does not exist in (.+); correct the time or timezone\.$/,
+    render: (m, l) =>
+      pick(
+        l,
+        `${m[1]} yerel saati ${m[2]} saat diliminde mevcut değil; saati veya saat dilimini düzeltin.`,
+        `L’heure locale ${m[1]} n’existe pas dans ${m[2]} ; corrigez l’heure ou le fuseau.`,
+      ),
+  },
+  {
+    match: /^The calendar date (.+) does not exist in (.+); correct the scheduling period\.$/,
+    render: (m, l) =>
+      pick(
+        l,
+        `${m[1]} takvim tarihi ${m[2]} saat diliminde mevcut değil; planlama dönemini düzeltin.`,
+        `La date ${m[1]} n’existe pas dans ${m[2]} ; corrigez la période de planification.`,
+      ),
+  },
+  {
+    match: /^Shift (.+) must end after it starts in the selected timezone\.$/,
+    render: (m, l) =>
+      pick(
+        l,
+        `${m[1]} vardiyası seçilen saat diliminde başlangıç saatinden sonra bitmelidir.`,
+        `Le créneau ${m[1]} doit se terminer après son début dans le fuseau sélectionné.`,
+      ),
   },
 ];
 

@@ -26,7 +26,7 @@ Open Resource Allocation. The default workspace is the multi-period planner; the
 6. Add periods or explicitly copy an existing period's assumptions. Enter ordered, non-overlapping dates; classify resources and configure inventory policies, receipts, period budgets and horizon constraints.
 7. Optimize all periods together. Inspect solver status, independent checks, allocations, outputs, capacity usage, binding constraints and inventory balances. Save/duplicate scenarios and compare two historical runs. Reopening a run restores its original inputs; rerunning creates a new run.
 
-The scheduling Smart Import uses the same CSV-only picker and preserves its AI-first steps, transformations, rules wizard and dataset validation. Imported scheduling optimization remains deliberately gated: the current demo engine does not enforce every imported role/rest/timezone rule. No schedule is fabricated. Demo scheduling gains independent-check CSV and Excel exports; manual edits never inherit an optimality claim in those exports.
+The scheduling Smart Import uses the same CSV-only picker and preserves its AI-first steps, transformations, rules wizard and dataset validation. Validated imported schedules now use an adapter to the existing GLPK solver, enforcing roles, variable shift intervals, availability, weekly/daily hour caps, weekly shift counts, rest gaps, same-day shift rules, closed weekdays, and timezone-aware durations. Ambiguous/nonexistent daylight-saving times are rejected. The seven-day import does not include prior/future assignments, so rest at the period boundary cannot be verified. Demo scheduling remains separate and retains its independent-check CSV and Excel exports; manual edits never inherit an optimality claim in those exports.
 
 ## Mathematical model
 
@@ -89,7 +89,7 @@ CSV exports cover allocations, outputs, period summaries, stock movements, verif
 
 Import limits: 10 CSV files, 2 MB and 5,000 data rows per file, 80 columns per file, and 10,000 combined source rows. Excess input produces errors, not truncated success.
 
-Planning limits: 24 periods; each period retains 50 resources, 50 projects, 500 demand records and 2,500 compatibility links; solve limit 1–120 seconds. There is no automatic unit/currency conversion, project-output inventory, precedence, purchasing, stochastic demand, nonlinear objective, arbitrary free-text constraint execution, or dual-price sensitivity analysis. Scheduling's existing limits and imported-data gate remain.
+Planning limits: 24 periods; each period retains 50 resources, 50 projects, 500 demand records and 2,500 compatibility links; solve limit 1–120 seconds. There is no automatic unit/currency conversion, project-output inventory, precedence, purchasing, stochastic demand, nonlinear objective, arbitrary free-text constraint execution, or dual-price sensitivity analysis. Imported scheduling is limited to 30 employees and 100 shift requirements and cannot certify rest against assignments outside its seven-day horizon.
 
 ## Next steps
 

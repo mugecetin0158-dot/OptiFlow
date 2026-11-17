@@ -3,33 +3,34 @@ import {
   Result,
   inputErrors,
   shortages,
-  minutes,
-  overlap,
   analyze,
+  duration,
+  intervalStart,
+  intervalEnd,
 } from "./model";
 export function buildModel(p: Scenario, g: any) {
   const vars = p.employees.flatMap((e, ei) =>
     p.shifts.map((s, si) => ({
       name: `x_${ei}_${si}`,
-      coef: Math.round(e.wage * 100) * (minutes(s.end) - minutes(s.start)),
+      coef: e.wage * duration(s) * 60,
     })),
   );
   const subjectTo: any[] = [];
-  p.shifts.forEach((s, si) =>
+  p.shifts.forEach((s, si) => {
     subjectTo.push({
       name: `coverage_${si}`,
       vars: p.employees.map((_, ei) => ({ name: `x_${ei}_${si}`, coef: 1 })),
       bnds: { type: g.GLP_LO, lb: s.required, ub: 0 },
-    }),
-  );
+    });
+  });
   p.employees.forEach((e, ei) => {
     subjectTo.push({
       name: `hours_${ei}`,
       vars: p.shifts.map((s, si) => ({
         name: `x_${ei}_${si}`,
-        coef: minutes(s.end) - minutes(s.start),
+        coef: duration(s) * 60,
       })),
-      bnds: { type: g.GLP_UP, lb: 0, ub: Math.round(e.maxHours * 60) },
+      bnds: { type: g.GLP_UP, lb: 0, ub: e.maxHours * 60 },
     });
     p.shifts.forEach((s, si) => {
       if (!e.availability[si])
@@ -38,8 +39,18 @@ export function buildModel(p: Scenario, g: any) {
           vars: [{ name: `x_${ei}_${si}`, coef: 1 }],
           bnds: { type: g.GLP_FX, lb: 0, ub: 0 },
         });
+      if (s.requiredRole && !e.roles?.includes(s.requiredRole))
+        subjectTo.push({
+          name: `role_${ei}_${si}`,
+          vars: [{ name: `x_${ei}_${si}`, coef: 1 }],
+          bnds: { type: g.GLP_FX, lb: 0, ub: 0 },
+        });
       p.shifts.forEach((t, ti) => {
-        if (ti < si && overlap(s, t))
+        if (
+          ti < si &&
+          intervalStart(s) < intervalEnd(t) &&
+          intervalStart(t) < intervalEnd(s)
+        )
           subjectTo.push({
             name: `overlap_${ei}_${si}_${ti}`,
             vars: [
@@ -50,6 +61,79 @@ export function buildModel(p: Scenario, g: any) {
           });
       });
     });
+    if (p.constraints) {
+      subjectTo.push({
+        name: `shift_count_${ei}`,
+        vars: p.shifts.map((_, si) => ({
+          name: `x_${ei}_${si}`,
+          coef: 1,
+        })),
+        bnds: {
+          type: g.GLP_UP,
+          lb: 0,
+          ub: p.constraints.maxShiftsPerWeek,
+        },
+      });
+      const byDay = new Map<number, number[]>();
+      p.shifts.forEach((s, si) => {
+        const group = byDay.get(s.day) || [];
+        group.push(si);
+        byDay.set(s.day, group);
+      });
+      if (!p.constraints.allowMultipleShifts)
+        byDay.forEach((indices, day) =>
+          subjectTo.push({
+            name: `one_shift_${ei}_${day}`,
+            vars: indices.map((si) => ({ name: `x_${ei}_${si}`, coef: 1 })),
+            bnds: { type: g.GLP_UP, lb: 0, ub: 1 },
+          }),
+        );
+      if (p.constraints.maxDailyHours !== null) {
+        const dates = new Map<string, { shift: number; minutes: number }[]>();
+        p.shifts.forEach((s, si) => {
+          const daily = s.dailyMinutes || {
+            [String(s.day)]: intervalEnd(s) - intervalStart(s),
+          };
+          Object.entries(daily).forEach(([date, value]) => {
+            const group = dates.get(date) || [];
+            group.push({ shift: si, minutes: value });
+            dates.set(date, group);
+          });
+        });
+        dates.forEach((entries, date) =>
+          subjectTo.push({
+            name: `daily_hours_${ei}_${date.replaceAll("-", "_")}`,
+            vars: entries.map(({ shift, minutes: value }) => ({
+              name: `x_${ei}_${shift}`,
+              coef: value / 60,
+            })),
+            bnds: {
+              type: g.GLP_UP,
+              lb: 0,
+              ub: p.constraints!.maxDailyHours!,
+            },
+          }),
+        );
+      }
+      if (p.constraints.minRestMinutes > 0)
+        p.shifts.forEach((s, si) =>
+          p.shifts.forEach((t, ti) => {
+            if (ti >= si) return;
+            const gap =
+              Math.max(intervalStart(s), intervalStart(t)) -
+              Math.min(intervalEnd(s), intervalEnd(t));
+            if (gap < p.constraints!.minRestMinutes)
+              subjectTo.push({
+                name: `rest_${ei}_${si}_${ti}`,
+                vars: [
+                  { name: `x_${ei}_${si}`, coef: 1 },
+                  { name: `x_${ei}_${ti}`, coef: 1 },
+                ],
+                bnds: { type: g.GLP_UP, lb: 0, ub: 1 },
+              });
+          }),
+        );
+    }
   });
   return {
     name: "OptiFlow minimum labor cost",
@@ -95,7 +179,7 @@ export async function solve(p: Scenario, g: any): Promise<Result> {
       : [];
   if (assignments.length && analyze(p, assignments).violations.length)
     throw new Error(
-      "Solver result failed independent constraint validation. No schedule was accepted.",
+      "The optimizer result failed independent constraint validation. No schedule was accepted.",
     );
   return {
     status,
@@ -105,7 +189,7 @@ export async function solve(p: Scenario, g: any): Promise<Result> {
     messages:
       status === "INFEASIBLE"
         ? [
-            "No assignment satisfies availability, coverage, overlapping shifts, and weekly hour limits together. Try increasing capacity or reducing demand.",
+            "No assignment satisfies role requirements, availability, coverage, rest periods, shift limits, and working-hour limits together. Review the imported constraints or staffing requirements.",
           ]
         : status === "UNKNOWN"
           ? [

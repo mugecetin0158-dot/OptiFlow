@@ -1,6 +1,6 @@
 # OptiFlow Smart Import
 
-A browser-local CSV-only import workflow integrated with OptiFlow's existing Next.js application. Upload one or multiple CSV files; UTF-8 and BOM-marked files, comma and semicolon delimiters, quoted fields, escaped quotes, empty cells, and common line endings are supported. Each file remains a separate source through AI-first dataset detection and deterministic validation. Unsupported file types and malformed CSV data block import with actionable errors. The existing GLPK and Python CP-SAT demo optimizers remain unchanged.
+A browser-local CSV-only import workflow integrated with OptiFlow's existing Next.js application. Upload one or multiple CSV files; UTF-8 and BOM-marked files, comma and semicolon delimiters, quoted fields, escaped quotes, empty cells, and common line endings are supported. Each file remains a separate source through AI-first dataset detection and deterministic validation. Unsupported file types and malformed CSV data block import with actionable errors. Imported Scheduling adapts validated records to the existing GLPK solver; the Python demo endpoint and demo scenario workflow remain separate.
 
 ## Run and use
 
@@ -15,7 +15,7 @@ Open http://localhost:3000 and choose **Smart Import** in the sidebar. The desti
 2. **AI Interpretation:** after consent, AI identifies datasets and proposes column mappings while preserving source values. Review uncertain mappings, normalizations, and corrections here. Exact-alias matches and saved profiles remain available, but neither an assignment nor an absent value is silently treated as demand or availability. Choose DMY/MDY when numeric dates are ambiguous and a decimal convention for fractional values.
 3. **Missing Information:** answer only the required, unresolved questions. Each card identifies the target field, source dataset, and available source-column suggestions; use a date, number, choice, or text input as appropriate. This stage is skipped when no required information is missing. No ID, pay, role, hour limit, availability, staffing demand, or constraint is invented.
 4. **Preview:** transform and validate, then review and edit all three datasets, rules, warnings, and unmapped fields. Enter dates as YYYY-MM-DD, times as HH:mm, decimals with a period, and roles as a JSON array such as `["Cashier", "Manager"]`. Supply rest time, maximum shifts, business timezone, currency, and a seven-day period start; review optional business weekly/daily caps, closed weekdays, and multiple-shift behavior. Export `employees.csv`, `availability.csv`, and `shifts.csv`. Internal validation remains authoritative.
-5. **Save:** confirm the review checkbox and save after resolving all blocking errors. A changed source mapping makes the preview stale and disables saving/export until rebuilt. Saving opens the separate **Validated imported data** view. Switch back to **Demo scenarios** to use the existing scheduling demo; neither mode overwrites the other.
+5. **Save:** confirm the review checkbox and save after resolving all blocking errors. A changed source mapping makes the preview stale and disables saving/export until rebuilt. Saving opens the separate **Validated imported data** view. Select **Optimize imported schedule** to generate a schedule with the existing GLPK optimizer. Switch back to **Demo scenarios** to use the existing scheduling demo; neither mode overwrites the other.
 
 The workflow and messages are translated into English, Turkish, French, and Spanish. Standard schema field names and export filenames stay canonical for interoperability. User-entered names, IDs, and roles are never translated.
 
@@ -42,7 +42,7 @@ Other fixtures demonstrate ambiguous headers, unrelated invoices, employee assig
 - `lib/import/validation.ts`: required fields, ID uniqueness and references, roles, same-day and explicit overnight windows, duplicate/conflicting availability, rules, and detectable coverage shortages.
 - `lib/import/profiles.ts`: confirmed reusable mappings; normalized header matching supports reordered columns.
 - `lib/import/storage.ts`: separate data/rules/profile storage, revalidation on reload, failure handling, and canonical exports.
-- `lib/import/integration.ts`: validated scheduling input contract and explicit optimization gate.
+- `lib/import/integration.ts`: validated conversion into the solver model, including IANA timezone interval conversion.
 - `components/smart-import/`: upload workflow, mapping editor, rules wizard, editable previews, and imported Scheduling view.
 - `app/page.tsx`: navigation, dashboard entry, and isolated demo/import source switch.
 - `app/smart-import.css`: responsive styling using the existing design tokens.
@@ -80,11 +80,12 @@ Raw files and unconfirmed corrections remain in browser memory while navigating 
 - Imports are limited to 10 CSV files, 80 columns per file, 2 MB and 5,000 data rows per file, and 10,000 source rows total. Browser memory/storage can impose smaller practical limits.
 - UTF-8 and BOM-marked UTF-16 are detected; Windows-1252 and Windows-1254 are explicit choices. Comma and semicolon separators are supported. Ambiguous delimiters require selection.
 - PDF, TSV, pipe-delimited files, nested tables, headerless files, locale prose dates, thousands separators, and automatic wide-grid unpivoting are not supported. One header row is required. Role arrays are exported as JSON inside CSV cells.
-- Time windows may cross midnight with an explicit `end_date`; maximum duration is 24 calendar-wall-clock hours. Shift requirements must fit the configured seven-day period. Business timezone is recorded; DST transition interpretation awaits the imported-data optimizer adapter.
+- Time windows may cross midnight with an explicit `end_date`; maximum duration is 24 calendar-wall-clock hours. Shift requirements must fit the configured seven-day period. Shift/rest/daily-hour durations use elapsed minutes in the selected IANA timezone. Ambiguous or nonexistent local times during daylight-saving transitions are rejected with an actionable error instead of guessed.
 - Availability statuses include YES → available and NO → unavailable. Unknown values require explicit mapping; all distinct values are accessible in paginated controls. Empty values are never defaulted.
-- An explicit rules review is required. Rest/shift-count/cap restrictions are stored; they cannot be enforced on assignments until an imported schedule is actually generated.
-- **The existing demo optimizer is real, but its fixed 14-shift schema does not support imported roles, arbitrary windows, or the new rules. Imported-data optimization is intentionally disabled.** `schedulingInput()` returns validated records and settings with `canOptimize: false`. The app never drops unsupported constraints to manufacture a schedule.
-- Next: implement a general role-aware CP-SAT/GLPK adapter with staffing, role eligibility, unknown/unavailable handling, rest gaps, shift counts, individual/business hour caps, closed days, and time-zone/DST semantics. Add independent post-solve checks and role-aware manual editing/exports before enabling its Generate action. Production work also includes authenticated storage, tenant isolation, audit/versioning, retention controls, and jurisdiction-specific rule review.
+- An explicit rules review is required. The adapter enforces exact role eligibility, contiguous availability coverage and unavailable windows, imported staffing counts, individual and optional business weekly-hour caps, minimum rest between imported shifts, maximum shifts per week, optional maximum daily hours (splitting overnight shifts at local midnight), the reviewed same-day multi-shift rule, and closed weekdays validated during import.
+- The GLPK solver is shared with the existing demo; its demo inputs and interface remain unchanged. Imported mode supports up to 30 employees and 100 shift requirements. `schedulingInput()` revalidates the draft and rules revision and either creates a complete solver model or reports a blocking error; no rows, roles, constraints, or availability are silently discarded.
+- The seven-day import schema does not include already assigned shifts from adjacent weeks. Minimum-rest checks therefore cover only shifts in the generated planning period; rest from/to unknown external assignments cannot be verified. Import those commitments as a future supported dataset before treating cross-period rest as certified. Ambiguous/nonexistent daylight-saving wall times are also rejected rather than resolved by assumption.
+- Production work still includes authenticated storage, tenant isolation, audit/versioning, retention controls, jurisdiction-specific rule review, and cross-period assignment support.
 
 ## Verification
 
@@ -94,7 +95,7 @@ npm run typecheck
 npm run build
 ```
 
-`npm test` runs the original scheduling and localization tests plus the Smart Import suite. Import fixtures and tests cover parsing, encodings, aliases, ambiguity, unrelated data, missing fields, duplicates, normalization, references, overlaps, profiles, canonical CSV exports, separate persistence, quota failure, and the scheduling integration gate. React server-render smoke checks exercise the new components without pretending to be browser interaction tests.
+`npm test` runs the original scheduling and localization tests plus the Smart Import suite. Import fixtures and tests cover parsing, encodings, aliases, ambiguity, unrelated data, missing fields, duplicates, normalization, references, overlaps, profiles, canonical CSV exports, separate persistence, quota failure, role-aware optimization, timezone conversion, invalid inputs, and infeasible imported schedules. React server-render smoke checks exercise the new components without pretending to be browser interaction tests.
 
 No ESLint configuration or lint command exists in this repository. TypeScript checks, production compilation, and whitespace validation are used; no lint pass is claimed. Browser automation tools are unavailable in this managed session, so drag/drop, native file selection, focus, and responsive visual behavior still need end-to-end browser/device verification.
 
@@ -124,7 +125,7 @@ This file alone does **not** authorize scheduling: employee references remain un
 - **Dataset** covers required values, pending clarifications, dates/times, references, duplicates, contradictions, rules, and configured-period checks. Editing canonical cells explicitly resolves their pending transformation question, then runs validation again.
 - Direct mapping preserves canonical values; date/time/status transformation modes perform normalization. Existing profiles without a `transform` property retain their original field-based normalization behavior.
 - Same-day exports retain the original five-column availability schema. When any interval crosses midnight, exports append `end_date`; same-day rows in that file use their start date. Both availability and shift-requirement exports, imported previews, reload validation, and availability coverage use the extension consistently. Original uploads remain available separately from edited raw CSV during the current session.
-- Overnight validation uses calendar-wall time. Resolving daylight-saving gaps/ambiguities and actual elapsed work duration still belongs to the future timezone-aware imported-data optimizer; no imported schedule is generated.
+- Import validation checks calendar-wall-time consistency; optimization converts validated windows to actual instants in the selected timezone and rejects DST gaps or ambiguous wall times. Overnight shifts are split over their actual local calendar dates for daily-hour limits.
 
 `tests/import-transformations.test.ts` includes an end-to-end **data-pipeline** test for the exact fixture, plus direct mappings, range formats, statuses, mixed/invalid dates, overnight dates, duplicates, missing fields, ambiguous dataset meaning, conflicting mappings, exports, profile reuse, and shift requirements. These are executed automated tests, not browser interaction tests.
 
