@@ -5,6 +5,8 @@ import { JSDOM } from "jsdom";
 import { File } from "node:buffer";
 import { readFileSync } from "node:fs";
 import SmartImport from "../components/smart-import/SmartImport";
+import AllocationImport from "../components/allocation/AllocationImport";
+import { sampleDraft } from "../lib/allocation/sample";
 import { Field } from "../lib/import/types";
 
 (globalThis as any).React = React;
@@ -43,7 +45,15 @@ test("multiple Scheduling CSVs reach Gemini interpretation and populate the prev
     ["shifts.csv", "ai_shifts.csv"],
   ] as const;
   let interpretedRequest: any;
+  let answerCalls = 0;
   globalThis.fetch = async (input, init) => {
+    if (String(input).includes("/answers")) {
+      answerCalls++;
+      return new Response(
+        JSON.stringify({ accepted: 0, remaining_questions: [] }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    }
     assert.equal(String(input), "https://api.example.test/import/interpret");
     interpretedRequest = JSON.parse(String(init?.body));
     const interpretations = interpretedRequest.files.map((file: any) => {
@@ -231,6 +241,25 @@ test("multiple Scheduling CSVs reach Gemini interpretation and populate the prev
     assert.ok(document.body.textContent?.includes("availability.csv:2"));
     await act(async () => {
       [...document.querySelectorAll<HTMLButtonElement>(".import-steps button")]
+        .find((button) => button.textContent?.includes("Missing Information"))
+        ?.click();
+    });
+    const refresh = document.querySelector<HTMLButtonElement>(
+      ".missing-question-actions button",
+    )!;
+    assert.ok(refresh);
+    assert.equal(refresh.disabled, false);
+    await act(async () => refresh.click());
+    assert.equal(answerCalls, 0, "refreshing without answers must not call the answers API");
+    assert.equal(
+      document.querySelector<HTMLInputElement>(
+        'input[aria-label="employees 1 name"]',
+      )?.value,
+      "Corrected Worker",
+      "refreshing must preserve preview corrections",
+    );
+    await act(async () => {
+      [...document.querySelectorAll<HTMLButtonElement>(".import-steps button")]
         .find((button) => button.textContent?.includes("Upload"))
         ?.click();
     });
@@ -250,6 +279,144 @@ test("multiple Scheduling CSVs reach Gemini interpretation and populate the prev
       );
     });
     assert.ok(document.body.textContent?.includes("employees.csv"));
+  } finally {
+    await act(async () => root.unmount());
+    dom.window.close();
+    Object.assign(globalThis, {
+      window: previous.window,
+      document: previous.document,
+      localStorage: previous.localStorage,
+      fetch: previous.fetch,
+      confirm: previous.confirm,
+    });
+    Object.defineProperty(globalThis, "navigator", {
+      configurable: true,
+      value: previous.navigator,
+    });
+    delete (globalThis as any).IS_REACT_ACT_ENVIRONMENT;
+  }
+});
+
+test("Resource Allocation refresh stays enabled with no unresolved data and preserves preview corrections", async () => {
+  const dom = new JSDOM("<!doctype html><html><body><div id='root'></div></body></html>", {
+    url: "http://localhost",
+  });
+  const previous = {
+    window: globalThis.window,
+    document: globalThis.document,
+    navigator: globalThis.navigator,
+    localStorage: globalThis.localStorage,
+    fetch: globalThis.fetch,
+    confirm: globalThis.confirm,
+  };
+  Object.assign(globalThis, {
+    window: dom.window,
+    document: dom.window.document,
+    localStorage: dom.window.localStorage,
+  });
+  Object.defineProperty(globalThis, "navigator", {
+    configurable: true,
+    value: dom.window.navigator,
+  });
+  globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+  const { createRoot } = await import("react-dom/client");
+  let interpretationCalls = 0;
+  globalThis.fetch = async (_input, init) => {
+    interpretationCalls++;
+    const request = JSON.parse(String(init?.body));
+    assert.equal(request.target, "allocation");
+    return new Response(
+      JSON.stringify({
+        files: request.files.map((file: any) => ({
+          source_id: file.source_id,
+          datasets: [file.name.replace(".csv", "")],
+          destination_note: "",
+          columns: file.columns.map((column: any) => ({
+            column: column.header,
+            field: column.header,
+            confidence: 0.99,
+          })),
+          corrections: [],
+        })),
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
+  };
+  const root = createRoot(document.getElementById("root")!);
+  try {
+    await act(async () => {
+      root.render(
+        <AllocationImport
+          initialSettings={sampleDraft().settings}
+          onConfirm={() => {}}
+          t={(value) => value}
+        />,
+      );
+    });
+    await act(async () => {
+      document.querySelector<HTMLInputElement>('input[type="checkbox"]')!.click();
+    });
+    const fileInput = document.querySelector<HTMLInputElement>('input[type="file"]')!;
+    Object.defineProperty(fileInput, "files", {
+      configurable: true,
+      value: [
+        ...["resources", "projects", "demands", "links"].map(
+          (table) =>
+            new File(
+              [readFileSync(`tests/fixtures/allocation/${table}.csv`, "utf8")],
+              `${table}.csv`,
+              { type: "text/csv" },
+            ),
+        ),
+      ],
+    });
+    await act(async () => {
+      fileInput.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+    await act(async () => {
+      [...document.querySelectorAll<HTMLButtonElement>(".import-steps button")]
+        .find((button) => button.textContent?.includes("Missing Information"))
+        ?.click();
+    });
+    const refresh = document.querySelector<HTMLButtonElement>(
+      ".missing-question-actions button",
+    )!;
+    assert.ok(refresh);
+    assert.equal(refresh.disabled, false);
+    assert.ok(document.body.textContent?.includes("Unresolved fields: 0"));
+
+    const name = document.querySelector<HTMLInputElement>(
+      'input[aria-label$="Name"]',
+    )!;
+    assert.ok(name);
+    await act(async () => {
+      const setValue = Object.getOwnPropertyDescriptor(
+        dom.window.HTMLInputElement.prototype,
+        "value",
+      )?.set;
+      setValue?.call(name, "Corrected resource");
+      name.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+      name.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+    });
+    await act(async () => {
+      document
+        .querySelector<HTMLButtonElement>(".missing-question-actions button")
+        ?.click();
+    });
+    assert.equal(interpretationCalls, 1, "local refresh must not repeat AI interpretation");
+    assert.equal(name.value, "Corrected resource");
+    await act(async () => {
+      [...document.querySelectorAll<HTMLButtonElement>(".import-steps button")]
+        .find((button) => button.textContent?.includes("Missing Information"))
+        ?.click();
+    });
+    assert.equal(
+      document.querySelector<HTMLButtonElement>(
+        ".missing-question-actions button",
+      )?.disabled,
+      false,
+    );
   } finally {
     await act(async () => root.unmount());
     dom.window.close();

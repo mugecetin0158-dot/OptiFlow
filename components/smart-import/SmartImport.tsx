@@ -152,9 +152,6 @@ export default function SmartImport({
   }
   const unresolvedCount = unresolvedKeys.size;
   const hasMissingInformation = unresolvedCount > 0;
-  useEffect(() => {
-    if (step === 2 && aiComplete && !hasMissingInformation) setStep(3);
-  }, [step, aiComplete, hasMissingInformation]);
   const valid =
     validation.valid &&
     !pipelineIssues.some((i) => i.severity === "error") &&
@@ -368,15 +365,7 @@ export default function SmartImport({
     );
   }
   async function refreshAndRevalidate() {
-    if (!aiResult || refreshBusy || !requiredQuestions.length) return;
-    const unanswered = requiredQuestions.some((question) => {
-      const key = canonicalQuestionKey(question);
-      return (
-        !isValidQuestionAnswer(question, questionAnswers[key]) ||
-        unresolvedAnswers[key] === questionAnswers[key]
-      );
-    });
-    if (unanswered) return;
+    if (!aiResult || refreshBusy) return;
     setRefreshBusy(true);
     setError("");
     try {
@@ -388,8 +377,25 @@ export default function SmartImport({
             questionAnswers[canonicalQuestionKey(question)] || "",
           ]),
       );
-      const answerResult = aiResult.session_id
-        ? await submitMissingAnswers(aiResult.session_id, answers)
+      const submittedAnswers = Object.fromEntries(
+        aiResult.questions
+          .filter((question) => {
+            const key = canonicalQuestionKey(question);
+            const answer = questionAnswers[key];
+            return (
+              question.required &&
+              isValidQuestionAnswer(question, answer) &&
+              unresolvedAnswers[key] !== answer
+            );
+          })
+          .map((question) => [
+            question.id,
+            questionAnswers[canonicalQuestionKey(question)],
+          ]),
+      );
+      const answerResult =
+        aiResult.session_id && Object.keys(submittedAnswers).length
+          ? await submitMissingAnswers(aiResult.session_id, submittedAnswers)
         : { remaining_questions: aiResult.questions };
       const remainingQuestions = uniqueMissingQuestions(
         answerResult.remaining_questions,
@@ -418,9 +424,11 @@ export default function SmartImport({
             }
           : aiResult.model;
       const transformed = transformSources(sources);
-      const nextDraft = stale
-        ? transformed.draft
-        : preserveManualDraftEdits(draft, transformed.draft, transformed.draft);
+      const nextDraft = preserveManualDraftEdits(
+        draft,
+        transformed.draft,
+        transformed.draft,
+      );
       const nextValidation = validateDraft(nextDraft, rules);
       const mappingReview = sources.some(
         (source) =>
@@ -560,7 +568,7 @@ export default function SmartImport({
               className={step === i ? "active" : ""}
               disabled={
                 (i > 0 && !aiComplete && !aiBusy) ||
-                (i === 2 && !hasMissingInformation) ||
+                (i === 2 && !aiComplete) ||
                 (i >= 3 && hasMissingInformation)
               }
               onClick={() => setStep(i)}
@@ -1237,42 +1245,20 @@ export default function SmartImport({
               t={t}
             />
           )}
-          {requiredQuestions.length > 0 && (
-            <div className="missing-question-actions">
-              <button
-                className="btn primary"
-                disabled={
-                  refreshBusy ||
-                  requiredQuestions.some((question) => {
-                    const key = canonicalQuestionKey(question);
-                    return (
-                      !isValidQuestionAnswer(question, questionAnswers[key]) ||
-                      unresolvedAnswers[key] === questionAnswers[key]
-                    );
-                  })
-                }
-                onClick={() => void refreshAndRevalidate()}
-              >
-                {refreshBusy ? (
-                  <Loader2 className="spin" size={16} />
-                ) : (
-                  <RefreshCw size={16} />
-                )}
-                {t("Refresh & Revalidate")}
-              </button>
-              {requiredQuestions.some(
-                (question) =>
-                  !isValidQuestionAnswer(
-                    question,
-                    questionAnswers[canonicalQuestionKey(question)],
-                  ),
-              ) && (
-                <p className="field-error-text" role="status">
-                  {t("Answer all required questions with valid values before refreshing.")}
-                </p>
+          <div className="missing-question-actions">
+            <button
+              className="btn primary"
+              disabled={refreshBusy}
+              onClick={() => void refreshAndRevalidate()}
+            >
+              {refreshBusy ? (
+                <Loader2 className="spin" size={16} />
+              ) : (
+                <RefreshCw size={16} />
               )}
-            </div>
-          )}
+              {t("Refresh & Revalidate")}
+            </button>
+          </div>
         </div>
       )}
       {(step === 3 || step === 4) && (

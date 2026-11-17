@@ -245,14 +245,7 @@ export default function AllocationImport({
     setAccepted(false);
   }
   async function refreshAndRevalidate() {
-    if (
-      refreshBusy ||
-      stale ||
-      !aiComplete ||
-      hasMissingInformation ||
-      (aiProposals.length > 0 && !aiProposalsReviewed)
-    )
-      return;
+    if (refreshBusy) return;
     setRefreshBusy(true);
     setError("");
     try {
@@ -298,7 +291,7 @@ export default function AllocationImport({
               className={step === i ? "active" : ""}
               disabled={
                 (i > 0 && !aiComplete && !aiBusy) ||
-                (i === 2 && !hasMissingInformation) ||
+                (i === 2 && !aiComplete) ||
                 (i >= 3 && hasMissingInformation)
               }
               onClick={() => setStep(i)}
@@ -747,38 +740,20 @@ export default function AllocationImport({
           <p className="field-error-text" role="status">
             {t("Unresolved fields")}: {unresolvedCount}
           </p>
-          {aiComplete && (
-            <div className="missing-question-actions">
-              <button
-                className="btn primary"
-                disabled={
-                  refreshBusy ||
-                  aiBusy ||
-                  stale ||
-                  hasMissingInformation ||
-                  (aiProposals.length > 0 && !aiProposalsReviewed)
-                }
-                onClick={() => void refreshAndRevalidate()}
-              >
-                {refreshBusy ? (
-                  <Loader2 className="spin" size={16} />
-                ) : (
-                  <RefreshCw size={16} />
-                )}
-                {t("Refresh & Revalidate")}
-              </button>
-              {hasMissingInformation && (
-                <p className="field-error-text" role="status">
-                  {t("Resolve the required fields above before refreshing.")}
-                </p>
+          <div className="missing-question-actions">
+            <button
+              className="btn primary"
+              disabled={refreshBusy}
+              onClick={() => void refreshAndRevalidate()}
+            >
+              {refreshBusy ? (
+                <Loader2 className="spin" size={16} />
+              ) : (
+                <RefreshCw size={16} />
               )}
-              {stale && (
-                <p className="field-error-text" role="status">
-                  {t("Review source mappings before refreshing.")}
-                </p>
-              )}
-            </div>
-          )}
+              {t("Refresh & Revalidate")}
+            </button>
+          </div>
         </section>
       )}
       <div hidden={step !== 2 && step !== 3}>
