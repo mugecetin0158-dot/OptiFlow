@@ -9,12 +9,16 @@ import {
   Draft,
   Settings,
   tables,
+  allocationDatasets,
   columns,
   Table,
+  datasetColumns,
 } from "../../lib/allocation/types";
 import {
   AllocationSource,
   createAllocationSource,
+  isModelSettingsFile,
+  preserveManualSettings,
   recognizeAllocation,
   transformAllocationSources,
   normalizeAllocationCell,
@@ -66,6 +70,7 @@ export default function AllocationImport({
     [delimiter, setDelimiter] = useState("auto");
   const fileInput = useRef<HTMLInputElement>(null);
   const sourceBaseline = useRef(preview.tables);
+  const settingsBaseline = useRef(preview.settings);
   const transformed = useMemo(
     () => transformAllocationSources(sources, preview.settings),
     [sources, preview.settings],
@@ -124,7 +129,7 @@ export default function AllocationImport({
             ? document.documentElement.lang
             : "en",
           files: profileSourcesForAI(input as any),
-          allowed_fields: [...new Set(tables.flatMap((kind) => columns[kind]))],
+          allowed_fields: [...new Set(allocationDatasets.flatMap(datasetColumns))],
         }),
       });
       if (!response.ok) {
@@ -142,9 +147,10 @@ export default function AllocationImport({
         if (!file || !Array.isArray(file.datasets) || !Array.isArray(file.columns) ||
             typeof file.destination_note !== "string" || file.destination_note.length > 400)
           throw Error("AI returned an invalid source reference.");
-        if (file.datasets.some((dataset: unknown) => typeof dataset !== "string" || !tables.includes(dataset as Table)))
+        if (file.datasets.some((dataset: unknown) => typeof dataset !== "string" || !allocationDatasets.includes(dataset as (typeof allocationDatasets)[number])))
           throw Error("AI returned a dataset type incompatible with Resource Allocation. Select the matching destination or upload a Resource Allocation CSV file.");
-        if (file.datasets.length === 0 && !file.destination_note.trim())
+        const namedSettings = isModelSettingsFile(source.name);
+        if (file.datasets.length === 0 && !file.destination_note.trim() && !namedSettings)
           throw Error("AI could not match this file to Resource Allocation. Choose a compatible destination or upload a matching CSV file.");
         if (file.destination_note) destinationNotes.push({ file: source.name, note: file.destination_note });
         for (const c of Array.isArray(file.corrections) ? file.corrections : []) {
@@ -155,17 +161,25 @@ export default function AllocationImport({
             throw Error("AI returned an invalid correction proposal.");
           proposals.push({ file: source.name, column: c.column, original: c.source_value, proposed: c.proposed_value, reason: c.reason });
         }
-        const kind: AllocationSource["kind"] = file.datasets.length === 1 && tables.includes(file.datasets[0]) ? file.datasets[0] as Table : "";
-        const mappings = source.parsed.headers.map((header) => {
+        const kind: AllocationSource["kind"] = namedSettings
+          ? "model_settings"
+          : file.datasets.length === 1 && allocationDatasets.includes(file.datasets[0])
+            ? file.datasets[0] as (typeof allocationDatasets)[number]
+            : "";
+        const mappings = namedSettings
+          ? recognizeAllocation(source.parsed.headers, "model_settings")
+          : source.parsed.headers.map((header) => {
           const match = file.columns.find((c: any) => c.column === header);
           if (!match) return "";
-          if (typeof match.field !== "string" || (match.field && match.field !== "ignore" && (!kind || !columns[kind].includes(match.field))) ||
+          if (typeof match.field !== "string" || (match.field && match.field !== "ignore" && (!kind || !datasetColumns(kind).includes(match.field))) ||
               typeof match.confidence !== "number" || match.confidence < 0 || match.confidence > 1)
             throw Error("AI returned an invalid column mapping.");
           return match.field as string;
         });
-        const confirmed = Boolean(kind) && file.columns.every((c: any) => c.confidence >= .9) &&
-          mappings.every(Boolean) && !file.corrections?.length;
+        const confirmed = Boolean(kind) && (namedSettings
+          ? requiredColumns("model_settings", preview.settings.mode).every((field) => mappings.includes(field))
+          : file.columns.every((c: any) => c.confidence >= .9) &&
+            mappings.every(Boolean) && !file.corrections?.length);
         return { ...source, kind, mappings, confirmed };
       });
       setSources(analyzed);
@@ -175,6 +189,7 @@ export default function AllocationImport({
       const transformed = transformAllocationSources(analyzed, preview.settings);
       setPreview(transformed.draft);
       sourceBaseline.current = transformed.draft.tables;
+      settingsBaseline.current = transformed.draft.settings;
       setStale(false);
       const hasErrors =
         transformed.issues.some((issue) => issue.severity === "error") ||
@@ -255,6 +270,11 @@ export default function AllocationImport({
       const transformed = transformAllocationSources(sources, preview.settings);
       const nextDraft = {
         ...transformed.draft,
+        settings: preserveManualSettings(
+          preview.settings,
+          settingsBaseline.current,
+          transformed.draft.settings,
+        ),
         tables: preserveManualDraftEdits(
           preview.tables,
           sourceBaseline.current,
@@ -262,6 +282,14 @@ export default function AllocationImport({
         ),
       };
       sourceBaseline.current = transformed.draft.tables;
+      if (preview.settings.mode === settingsBaseline.current.mode)
+        settingsBaseline.current.mode = transformed.draft.settings.mode;
+      if (preview.settings.currency === settingsBaseline.current.currency)
+        settingsBaseline.current.currency = transformed.draft.settings.currency;
+      if (preview.settings.period === settingsBaseline.current.period)
+        settingsBaseline.current.period = transformed.draft.settings.period;
+      if (preview.settings.budget === settingsBaseline.current.budget)
+        settingsBaseline.current.budget = transformed.draft.settings.budget;
       const nextValidation = validateDraft(nextDraft);
       const hasErrors =
         transformed.issues.some((issue) => issue.severity === "error") ||
@@ -361,7 +389,7 @@ export default function AllocationImport({
           <h2>{t("Map real resources to a valid model.")}</h2>
           <p>
             {t(
-              "Four datasets: resources, projects, demands, and compatibility links. Files stay in this browser. Unmapped columns remain available for review.",
+              "Five datasets: resources, projects, demands, compatibility links, and model settings. Files stay in this browser. Unmapped columns remain available for review.",
             )}
           </p>
         </div>
@@ -495,7 +523,9 @@ export default function AllocationImport({
         {aiComplete && aiDestinationNotes.length > 0 && <div className="notice" role="status">{aiDestinationNotes.map((item) => <p key={item.file}><strong>{item.file}</strong>: {t(item.note)}</p>)}</div>}
         {aiComplete && aiProposals.length > 0 && <div className="panel import-panel"><h3>{t("Corrections requiring approval")}</h3><p>{t("AI proposals are never applied automatically. Correct the affected source or preview value yourself before saving.")}</p>{aiProposals.map((p, i) => <p key={i}>{p.file} · {p.column}: {p.original} → {p.proposed} · {t(p.reason)}</p>)}<label className="import-confirm"><input type="checkbox" checked={aiProposalsReviewed} onChange={(e) => setAiProposalsReviewed(e.target.checked)} />{t("I reviewed these proposals. Keep original values unless I explicitly edit them.")}</label></div>}
         {aiComplete && <>
-        {sources.map((source) => (
+        {sources.map((source) => {
+          const kind = source.kind;
+          return (
           <section className="panel import-panel" key={source.id}>
             <div className="section-heading">
               <div>
@@ -516,7 +546,9 @@ export default function AllocationImport({
                 {t("Remove file")}
               </button>
             </div>
-            <ImportProfiles source={source} onApply={update} t={t} />
+            {source.kind !== "model_settings" && (
+              <ImportProfiles source={source} onApply={update} t={t} />
+            )}
             <div className="allocation-toolbar">
               <label>
                 {t("What do these rows represent?")}
@@ -536,7 +568,7 @@ export default function AllocationImport({
                   }}
                 >
                   <option value="">{t("Choose explicitly")}</option>
-                  {tables.map((k) => (
+                  {allocationDatasets.map((k) => (
                     <option value={k} key={k}>
                       {t(titles[k])}
                     </option>
@@ -593,7 +625,7 @@ export default function AllocationImport({
                 value={source.text}
               />
             </details>
-            {source.kind && source.kind !== "ignore" && (
+            {kind && kind !== "ignore" && (
               <div className="table-wrap">
                 <table className="import-mappings">
                   <thead>
@@ -623,7 +655,7 @@ export default function AllocationImport({
                           >
                             <option value="">{t("Keep unmapped")}</option>
                             <option value="ignore">{t("Irrelevant")}</option>
-                            {columns[source.kind as Table].map((f) => (
+                            {datasetColumns(kind).map((f) => (
                               <option key={f} value={f}>{t(fieldLabels[f] || f)}</option>
                             ))}
                           </select>
@@ -673,7 +705,8 @@ export default function AllocationImport({
               {t("I confirm this dataset and its column meanings.")}
             </label>
           </section>
-        ))}
+          );
+        })}
         {sources.length > 0 && (
           <>
             <AllocationIssues issues={transformed.issues} t={t} />
@@ -693,6 +726,7 @@ export default function AllocationImport({
                 const nextDraft = transformed.draft;
                 setPreview(nextDraft);
                 sourceBaseline.current = nextDraft.tables;
+                settingsBaseline.current = nextDraft.settings;
                 setStale(false);
                 setStep(
                   transformed.issues.some((issue) => issue.severity === "error") ||

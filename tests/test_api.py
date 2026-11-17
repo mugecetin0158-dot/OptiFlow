@@ -229,7 +229,7 @@ def test_allocation_destination_is_enforced_by_gemini_schema_and_validation(monk
     foundations.validate_interpretation(request, valid)
     schema = seen['body']['generationConfig']['responseJsonSchema']
     allowed = schema['properties']['files']['items']['properties']['datasets']['items']['enum']
-    assert set(allowed) == {'resources','projects','demands','links'}
+    assert set(allowed) == {'resources','projects','demands','links','model_settings'}
     instruction = seen['body']['systemInstruction']['parts'][0]['text']
     assert "selected import destination is 'allocation'" in instruction
     assert 'destination_note' in instruction
@@ -245,6 +245,42 @@ def test_allocation_destination_is_enforced_by_gemini_schema_and_validation(monk
         assert error.status_code == 502
         assert 'matching destination' in error.detail
 
+def test_allocation_model_settings_dataset_and_fields_are_supported():
+    from backend.import_foundations import InterpretRequest, AIInterpretation, validate_interpretation
+    request_data = {
+        'target': 'allocation',
+        'locale': 'en',
+        'allowed_fields': ['objective', 'planning_period', 'currency', 'budget'],
+        'files': [{
+            'source_id': 'settings',
+            'name': 'optiflow_model_settings.csv',
+            'row_count': 1,
+            'columns': [
+                {'header': 'objective', 'inferred_type': 'text', 'samples': ['minimize_cost'], 'blank_count': 0, 'unique_count': 1},
+                {'header': 'planning_period', 'inferred_type': 'text', 'samples': ['Q4 plan'], 'blank_count': 0, 'unique_count': 1},
+                {'header': 'currency', 'inferred_type': 'text', 'samples': ['USD'], 'blank_count': 0, 'unique_count': 1},
+                {'header': 'budget', 'inferred_type': 'integer', 'samples': ['100'], 'blank_count': 0, 'unique_count': 1},
+            ],
+        }],
+    }
+    request = InterpretRequest.model_validate(request_data)
+    interpretation = AIInterpretation.model_validate({
+        **allocation_ai_fixture(),
+        'files': [{
+            'source_id': 'settings',
+            'datasets': ['model_settings'],
+            'destination_note': '',
+            'columns': [
+                {'column': field, 'field': field, 'transform': 'direct', 'confidence': .99, 'reason': 'Exact model setting'}
+                for field in ['objective', 'planning_period', 'currency', 'budget']
+            ],
+            'corrections': [],
+        }],
+    })
+    validated = validate_interpretation(request, interpretation)
+    assert validated.files[0].datasets == ['model_settings']
+    assert not any(question.target.startswith('model_settings.') for question in validated.questions)
+
 def test_gemini_response_schema_is_compact_without_losing_import_contract():
     from backend import import_foundations as foundations
     from pydantic import ValidationError
@@ -252,7 +288,7 @@ def test_gemini_response_schema_is_compact_without_losing_import_contract():
     original_size = len(json.dumps(foundations.AIInterpretation.model_json_schema(), separators=(',', ':')))
     for target, expected_datasets in [
         ('scheduling', {'employees', 'availability', 'shifts'}),
-        ('allocation', {'resources', 'projects', 'demands', 'links'}),
+        ('allocation', {'resources', 'projects', 'demands', 'links', 'model_settings'}),
     ]:
         schema = foundations.interpretation_schema(target)
         assert len(json.dumps(schema, separators=(',', ':'))) < original_size * .6

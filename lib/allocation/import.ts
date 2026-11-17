@@ -3,11 +3,12 @@ import { normalizeHeader } from "../import/recognition";
 import { normalizeDecimal } from "../import/normalize";
 import { ParsedCSV } from "../import/types";
 import {
+  AllocationDataset,
   Draft,
   Issue,
   Table,
-  tables,
   columns,
+  datasetColumns,
   emptyDraft,
   Settings,
 } from "./types";
@@ -16,7 +17,7 @@ export type AllocationSource = {
   name: string;
   text: string;
   parsed: ParsedCSV;
-  kind: Table | "" | "ignore";
+  kind: AllocationDataset | "" | "ignore";
   mappings: string[];
   decimal: "" | "dot" | "comma";
   confirmed: boolean;
@@ -44,10 +45,35 @@ const aliases: Record<string, string[]> = {
   compatible: ["compatible", "allowed"],
   minimum_allocation: ["minimum allocation", "allocation minimum"],
   maximum_allocation: ["maximum allocation", "allocation limit"],
+  objective: ["optimization objective", "optimization goal", "goal"],
+  planning_period: ["planning period", "period"],
+  currency: ["business currency", "currency code"],
+  budget: ["budget limit", "maximum budget"],
 };
-export function recognizeAllocation(headers: string[], kind: Table): string[] {
+export function isModelSettingsFile(name: string) {
+  return (
+    name.trim().toLowerCase().split(/[\\/]/).pop() ===
+    "optiflow_model_settings.csv"
+  );
+}
+export function preserveManualSettings(
+  current: Settings,
+  baseline: Settings,
+  refreshed: Settings,
+): Settings {
+  const next = { ...refreshed };
+  if (current.mode !== baseline.mode) next.mode = current.mode;
+  if (current.currency !== baseline.currency) next.currency = current.currency;
+  if (current.period !== baseline.period) next.period = current.period;
+  if (current.budget !== baseline.budget) next.budget = current.budget;
+  return next;
+}
+export function recognizeAllocation(
+  headers: string[],
+  kind: AllocationDataset,
+): string[] {
   return headers.map((h) => {
-    const found = columns[kind].filter((f) =>
+    const found = datasetColumns(kind).filter((f) =>
       [f, ...(aliases[f] || [])].some(
         (a) => normalizeHeader(a) === normalizeHeader(h),
       ),
@@ -74,7 +100,12 @@ export function createAllocationSource(
     delimiter,
   };
 }
-export function requiredColumns(table: Table, mode: Settings["mode"]) {
+export function requiredColumns(
+  table: AllocationDataset,
+  mode: Settings["mode"],
+) {
+  if (table === "model_settings")
+    return ["objective", "planning_period", "currency"];
   const required: Record<Table, string[]> = {
     resources: [
       "resource_id",
@@ -105,6 +136,7 @@ export function requiredColumns(table: Table, mode: Settings["mode"]) {
 const numeric = new Set([
   "capacity",
   "unit_cost",
+  "budget",
   "minimum_output",
   "maximum_output",
   "unit_value",
@@ -123,6 +155,26 @@ export function normalizeAllocationCell(
   if (!v) return "";
   if (limits.has(field) && v.toLowerCase() === "unlimited") return "unlimited";
   if (numeric.has(field)) return normalizeDecimal(v, decimal);
+  if (field === "objective") {
+    const objective = normalizeHeader(v);
+    if (
+      ["cost", "minimize cost", "minimum cost", "minimize total cost"].includes(
+        objective,
+      )
+    )
+      return "cost";
+    if (
+      [
+        "value",
+        "maximize value",
+        "maximize priority weighted value",
+        "priority weighted value",
+      ].includes(objective)
+    )
+      return "value";
+    throw Error("Choose cost or priority-weighted value as the objective.");
+  }
+  if (field === "currency") return v.toUpperCase();
   if (field === "integer" || field === "compatible") {
     if (["true", "yes"].includes(v.toLowerCase())) return "true";
     if (["false", "no"].includes(v.toLowerCase())) return "false";
@@ -170,6 +222,9 @@ export function transformAllocationSources(
       ],
       unmapped,
     };
+  const settingsSourceCount = sources.filter(
+    (source) => source.kind === "model_settings",
+  ).length;
   for (const file of sources) {
     const source = { fileId: file.id, file: file.name, row: 1 };
     const add = (message: string, detail?: string) =>
@@ -203,11 +258,12 @@ export function transformAllocationSources(
     if (file.kind === "ignore") continue;
     if (!file.confirmed)
       add("Confirm the dataset and column meanings before transforming.");
-    const kind = file.kind,
+    const kind = file.kind as AllocationDataset,
+      fields = datasetColumns(kind),
       selected = file.mappings.filter((f) => f && f !== "ignore");
     if (
       new Set(selected).size !== selected.length ||
-      selected.some((f) => !columns[kind].includes(f))
+      selected.some((f) => !fields.includes(f))
     ) {
       add("Conflicting or incompatible column mappings must be resolved.");
       continue;
@@ -222,9 +278,54 @@ export function transformAllocationSources(
           source,
           detail: `${kind}.${field}`,
         });
+    if (kind === "model_settings") {
+      if (settingsSourceCount > 1) {
+        add("Use only one model settings source per import.");
+        continue;
+      }
+      if (file.parsed.rows.length !== 1) {
+        add("Model settings must contain exactly one data row.");
+        continue;
+      }
+      const row = file.parsed.rows[0];
+      for (const field of fields) {
+        const index = file.mappings.indexOf(field);
+        if (index < 0) continue;
+        const raw = row[index] || "";
+        if (!raw.trim()) {
+          if (field === "budget") draft.settings.budget = "";
+          else if (requiredColumns(kind, settings.mode).includes(field))
+            issues.push({
+              severity: "error",
+              message: "A nonempty value is required for this model setting.",
+              table: kind,
+              field,
+              source: { ...source, row: file.parsed.lineNumbers[0] },
+            });
+          continue;
+        }
+        try {
+          const value = normalizeAllocationCell(field, raw, file.decimal);
+          if (field === "objective")
+            draft.settings.mode = value as Settings["mode"];
+          else if (field === "planning_period") draft.settings.period = value;
+          else if (field === "currency") draft.settings.currency = value;
+          else if (field === "budget") draft.settings.budget = value;
+        } catch (e) {
+          issues.push({
+            severity: "error",
+            message: (e as Error).message,
+            table: kind,
+            field,
+            source: { ...source, row: file.parsed.lineNumbers[0] },
+          });
+        }
+      }
+      continue;
+    }
     file.parsed.rows.forEach((row, index) => {
       const values: Record<string, string> = Object.fromEntries(
-          columns[kind].map((f) => [f, ""]),
+          fields.map((f) => [f, ""]),
         ),
         pending: Record<string, string> = {};
       file.mappings.forEach((field, i) => {

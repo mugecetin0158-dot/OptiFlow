@@ -19,6 +19,7 @@ export function makeAllocationProfile(
     !source.confirmed ||
     !source.kind ||
     source.kind === "ignore" ||
+    source.kind === "model_settings" ||
     !name.trim()
   )
     throw Error("Confirm dataset meanings and enter a profile name first.");

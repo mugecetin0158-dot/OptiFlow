@@ -4,16 +4,18 @@ import { Plus, Trash2 } from "lucide-react";
 import {
   Draft,
   Issue,
+  AllocationDataset,
   Table,
   tables,
   columns,
 } from "../../lib/allocation/types";
 export type Translate = (s: string) => string;
-export const titles: Record<Table, string> = {
+export const titles: Record<AllocationDataset, string> = {
   resources: "Resources",
   projects: "Projects",
   demands: "Resource demands",
   links: "Compatibility & limits",
+  model_settings: "Model settings",
 };
 export const fieldLabels: Record<string, string> = {
   resource_id: "Resource ID",
@@ -33,6 +35,10 @@ export const fieldLabels: Record<string, string> = {
   compatible: "Compatible",
   minimum_allocation: "Minimum allocation",
   maximum_allocation: "Maximum allocation",
+  objective: "Objective",
+  planning_period: "Planning period",
+  currency: "Business currency",
+  budget: "Budget (blank = no budget limit)",
 };
 export function AllocationIssues({
   issues,

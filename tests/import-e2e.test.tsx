@@ -329,7 +329,11 @@ test("Resource Allocation refresh stays enabled with no unresolved data and pres
       JSON.stringify({
         files: request.files.map((file: any) => ({
           source_id: file.source_id,
-          datasets: [file.name.replace(".csv", "")],
+          datasets: [
+            file.name === "optiflow_model_settings.csv"
+              ? "model_settings"
+              : file.name.replace(".csv", ""),
+          ],
           destination_note: "",
           columns: file.columns.map((column: any) => ({
             column: column.header,
@@ -370,6 +374,13 @@ test("Resource Allocation refresh stays enabled with no unresolved data and pres
               `${table}.csv`,
               { type: "text/csv" },
             ),
+        ),
+        new File(
+            [
+              "objective,planning_period,currency\ncost,Imported plan,USD",
+            ],
+            "optiflow_model_settings.csv",
+            { type: "text/csv" },
         ),
       ],
     });
@@ -443,8 +454,36 @@ test("Resource Allocation refresh stays enabled with no unresolved data and pres
     )!;
     assert.ok(refresh);
     assert.equal(refresh.disabled, false);
-    assert.ok(document.body.textContent?.includes("Unresolved fields: 0"));
+    assert.ok(
+      document.body.textContent?.includes("Unresolved fields: 0"),
+      "the validated import should have no unresolved fields",
+    );
 
+    const period = document.querySelector<HTMLInputElement>(
+      'input[placeholder="For example: November delivery plan"]',
+    )!;
+    assert.equal(period.value, "Imported plan");
+    assert.equal(
+      document.querySelector<HTMLInputElement>(
+        'input[aria-label="Business currency"]',
+      )?.value,
+      "USD",
+    );
+    assert.equal(
+      document.querySelector<HTMLSelectElement>(
+        ".allocation-settings select",
+      )?.value,
+      "cost",
+    );
+    const setValue = Object.getOwnPropertyDescriptor(
+      dom.window.HTMLInputElement.prototype,
+      "value",
+    )?.set;
+    await act(async () => {
+      setValue?.call(period, "Corrected plan");
+      period.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+      period.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+    });
     const name = document.querySelector<HTMLInputElement>(
       'input[aria-label$="Name"]',
     )!;
@@ -463,6 +502,13 @@ test("Resource Allocation refresh stays enabled with no unresolved data and pres
         .querySelector<HTMLButtonElement>(".missing-question-actions button")
         ?.click();
     });
+    assert.equal(
+      document.querySelector<HTMLInputElement>(
+        'input[placeholder="For example: November delivery plan"]',
+      )?.value,
+      "Corrected plan",
+      "refreshing must preserve corrected model settings",
+    );
     assert.equal(interpretationCalls, 1, "local refresh must not repeat AI interpretation");
     assert.equal(name.value, "Corrected resource");
     await act(async () => {

@@ -1,6 +1,19 @@
 import { DraftRecord, SourceRef } from "../import/types";
 export const tables = ["resources", "projects", "demands", "links"] as const;
 export type Table = (typeof tables)[number];
+export const allocationDatasets = [...tables, "model_settings"] as const;
+export type AllocationDataset = (typeof allocationDatasets)[number];
+export const modelSettingsFields = [
+  "objective",
+  "planning_period",
+  "currency",
+  "budget",
+] as const;
+export function datasetColumns(dataset: AllocationDataset): string[] {
+  return dataset === "model_settings"
+    ? [...modelSettingsFields]
+    : columns[dataset];
+}
 export const columns: Record<Table, string[]> = {
   resources: [
     "resource_id",
@@ -101,7 +114,7 @@ export type Input = {
 export type Issue = {
   severity: "error" | "warning";
   message: string;
-  table?: Table;
+  table?: AllocationDataset;
   record?: number;
   field?: string;
   source?: SourceRef;

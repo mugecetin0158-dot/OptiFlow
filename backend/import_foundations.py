@@ -39,10 +39,11 @@ ALLOCATION_FIELDS = {
     "capacity", "unit_cost", "integer", "output_unit", "minimum_output",
     "maximum_output", "unit_value", "priority", "amount_per_output",
     "compatible", "minimum_allocation", "maximum_allocation",
+    "objective", "planning_period", "currency", "budget",
 }
 DATASETS = {
     "scheduling": {"employees", "availability", "shifts"},
-    "allocation": {"resources", "projects", "demands", "links"},
+    "allocation": {"resources", "projects", "demands", "links", "model_settings"},
 }
 REQUIRED_FIELDS = {
     "employees": {"employee_id", "name", "hourly_rate", "max_weekly_hours", "roles"},
@@ -52,6 +53,7 @@ REQUIRED_FIELDS = {
     "projects": {"project_id", "name", "output_unit", "minimum_output", "integer"},
     "demands": {"project_id", "resource_type", "unit", "amount_per_output"},
     "links": {"resource_id", "project_id", "compatible", "minimum_allocation"},
+    "model_settings": {"objective", "planning_period", "currency"},
 }
 
 
@@ -110,7 +112,7 @@ class ProposedCorrection(BaseModel):
 
 class FileInterpretation(BaseModel):
     source_id: str = Field(min_length=1, max_length=80)
-    datasets: list[str] = Field(default_factory=list, max_length=4)
+    datasets: list[str] = Field(default_factory=list, max_length=5)
     destination_note: str = Field(max_length=400)
     columns: list[ColumnMapping] = Field(default_factory=list, max_length=80)
     corrections: list[ProposedCorrection] = Field(default_factory=list, max_length=40)
@@ -428,6 +430,13 @@ def interpretation_system_instruction(target: Target, locale: Locale):
         "Map only exact supplied source headers to allowed fields or 'ignore'. Identify dataset meanings, decision variables, "
         "the objective, hard constraints, and relationships only when supported by source evidence. Never invent values, units, "
         "constraints, identifiers, or business rules. Use kind 'unknown' and ask one targeted question for missing essentials. "
+        + (
+            "For Resource Allocation, model_settings is a single-row dataset with required objective, planning_period, and currency fields; "
+            "budget is optional. Map objective only to a supported cost or priority-weighted value objective when the source explicitly states it. "
+            if target == "allocation"
+            else ""
+        )
+        +
         "Give each question a stable requirement identifier shared by semantically equivalent questions, even if their wording differs; "
         "use different identifiers for genuinely different requirements on the same field. "
         "Substantive corrections must be proposals. Keep source values and identifiers unchanged. Write explanations and questions "

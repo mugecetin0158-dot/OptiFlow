@@ -3439,10 +3439,10 @@
     "Associez vos ressources à un modèle valide.",
     "Asigne recursos reales a un modelo válido."
   ],
-  "Four datasets: resources, projects, demands, and compatibility links. Files stay in this browser. Unmapped columns remain available for review.": [
-    "Dört veri kümesi: kaynaklar, projeler, ihtiyaçlar ve uyumluluk bağlantıları. Dosyalar bu tarayıcıda kalır. Eşlenmeyen sütunlar incelenebilir.",
-    "Quatre jeux de données : ressources, projets, besoins et liens de compatibilité. Les fichiers restent dans ce navigateur. Les colonnes non associées restent consultables.",
-    "Cuatro conjuntos de datos: recursos, proyectos, demandas y enlaces de compatibilidad. Los archivos permanecen en este navegador. Las columnas no asignadas permanecen disponibles para su revisión."
+  "Five datasets: resources, projects, demands, compatibility links, and model settings. Files stay in this browser. Unmapped columns remain available for review.": [
+    "Beş veri kümesi: kaynaklar, projeler, talepler, uyumluluk bağlantıları ve model ayarları. Dosyalar bu tarayıcıda kalır. Eşlenmeyen sütunlar incelenebilir.",
+    "Cinq jeux de données : ressources, projets, demandes, liens de compatibilité et paramètres du modèle. Les fichiers restent dans ce navigateur. Les colonnes non associées restent consultables.",
+    "Cinco conjuntos de datos: recursos, proyectos, demandas, enlaces de compatibilidad y configuración del modelo. Los archivos permanecen en este navegador. Las columnas no asignadas permanecen disponibles para su revisión."
   ],
   "No allocation data": [
     "Tahsis verisi yok",
@@ -4398,6 +4398,26 @@
     "Model ayarları",
     "Paramètres du modèle",
     "Configuración del modelo"
+  ],
+  "A nonempty value is required for this model setting.": [
+    "Bu model ayarı için boş olmayan bir değer gereklidir.",
+    "Une valeur non vide est requise pour ce paramètre du modèle.",
+    "Este ajuste del modelo requiere un valor no vacío."
+  ],
+  "Choose cost or priority-weighted value as the objective.": [
+    "Amaç olarak maliyeti veya öncelik ağırlıklı değeri seçin.",
+    "Choisissez le coût ou la valeur pondérée par priorité comme objectif.",
+    "Elija el costo o el valor ponderado por prioridad como objetivo."
+  ],
+  "Model settings must contain exactly one data row.": [
+    "Model ayarları tam olarak bir veri satırı içermelidir.",
+    "Les paramètres du modèle doivent contenir exactement une ligne de données.",
+    "La configuración del modelo debe contener exactamente una fila de datos."
+  ],
+  "Use only one model settings source per import.": [
+    "Her içe aktarmada yalnızca bir model ayarları kaynağı kullanın.",
+    "Utilisez une seule source de paramètres du modèle par importation.",
+    "Use una sola fuente de configuración del modelo por importación."
   ],
   "Capacity, maximum output, maximum allocation, and project priority may be unlimited or use their documented defaults. Value per output is required only for value maximization.": [
     "Kapasite, azami çıktı ve azami tahsis sınırsız olabilir; proje önceliği varsayılan olarak 1'dir. Çıktı başına değer yalnızca değeri en üst düzeye çıkarma hedefinde gereklidir.",

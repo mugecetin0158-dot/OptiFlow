@@ -15,11 +15,17 @@ import { transformSources } from "./pipeline";
 import { validateDraft } from "./validation";
 import {
   AllocationSource,
+  isModelSettingsFile,
   recognizeAllocation,
   requiredColumns,
   transformAllocationSources,
 } from "../allocation/import";
-import { Table, tables, Settings } from "../allocation/types";
+import {
+  AllocationDataset,
+  allocationDatasets,
+  Table,
+  Settings,
+} from "../allocation/types";
 import { normalizeHeader } from "./recognition";
 import {
   AllocationProfile,
@@ -59,13 +65,29 @@ const signatures: Record<Table, string[]> = {
   demands: ["project_id", "resource_type", "amount_per_output"],
   links: ["resource_id", "project_id", "compatible"],
 };
+const modelSettingsSignature = ["objective", "planning_period", "currency"];
 export function autoAllocation(
   source: AllocationSource,
   settings: Settings,
 ): AllocationSource {
   if (source.parsed.issues.some((i) => i.severity === "error")) return source;
-  const matches = tables.filter((kind) => {
+  if (isModelSettingsFile(source.name)) {
+    const kind: AllocationDataset = "model_settings";
+    const next = {
+      ...source,
+      kind,
+      mappings: recognizeAllocation(source.parsed.headers, kind),
+      confirmed: true,
+    };
+    const transformed = transformAllocationSources([next], settings);
+    return transformed.issues.some((i) => i.severity === "error")
+      ? { ...next, confirmed: false }
+      : next;
+  }
+  const matches = allocationDatasets.filter((kind) => {
     const mapped = recognizeAllocation(source.parsed.headers, kind);
+    if (kind === "model_settings")
+      return modelSettingsSignature.every((field) => mapped.includes(field));
     return (
       signatures[kind].every((f) => mapped.includes(f)) &&
       requiredColumns(kind, settings.mode).every((f) => mapped.includes(f))
@@ -696,6 +718,7 @@ export function autoAllocationWithProfiles(
   settings: Settings,
   profiles: AllocationProfile[],
 ) {
+  if (isModelSettingsFile(source.name)) return autoAllocation(source, settings);
   const matches = profiles.filter(
     (p) =>
       Array.isArray(p?.headers) &&

@@ -278,6 +278,22 @@ test("allocation catalog with distinctive complete fields is classified; partial
     false,
   );
 });
+test("the named model settings CSV is automatically classified and mapped", () => {
+  const source = createAllocationSource(
+    "settings",
+    "optiflow_model_settings.csv",
+    "Objective,Planning Period,Business Currency,Budget\nMinimize cost,Winter plan,USD,100",
+  );
+  const auto = autoAllocation(source, sampleDraft().settings);
+  assert.equal(auto.kind, "model_settings");
+  assert.deepEqual(auto.mappings, [
+    "objective",
+    "planning_period",
+    "currency",
+    "budget",
+  ]);
+  assert.equal(auto.confirmed, true);
+});
 test("Resource Allocation CSV catalogs use the deterministic import path", () => {
   const csv = readFileSync("tests/fixtures/allocation/resources.csv", "utf8");
   assert.equal(parseCSV(csv).issues.length, 0);

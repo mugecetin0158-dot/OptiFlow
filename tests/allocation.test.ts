@@ -20,6 +20,7 @@ import {
   transformAllocationSources,
   exportCatalog,
   requiredColumns,
+  preserveManualSettings,
 } from "../lib/allocation/import";
 import {
   saveAllocation,
@@ -315,6 +316,71 @@ test("import requirements follow the optimization schema's conditional and optio
   assert.ok(requiredColumns("projects", "value").includes("unit_value"));
   assert.ok(!requiredColumns("projects", "cost").includes("maximum_output"));
   assert.ok(!requiredColumns("links", "cost").includes("maximum_allocation"));
+  assert.deepEqual(requiredColumns("model_settings", "cost"), [
+    "objective",
+    "planning_period",
+    "currency",
+  ]);
+});
+test("model settings imports populate model settings, allow an omitted budget, and reject missing values", () => {
+  const source = createAllocationSource(
+    "settings",
+    "optiflow_model_settings.csv",
+    "objective,planning_period,currency\nmaximize_priority_weighted_value,Q4 plan,eur",
+  );
+  source.kind = "model_settings";
+  source.mappings = recognizeAllocation(source.parsed.headers, "model_settings");
+  source.confirmed = true;
+  const initial = { ...simpleSettings(), budget: "500" };
+  const transformed = transformAllocationSources([source], initial);
+  assert.deepEqual(transformed.issues, []);
+  assert.deepEqual(transformed.draft.settings, {
+    mode: "value",
+    currency: "EUR",
+    period: "Q4 plan",
+    budget: "500",
+  });
+
+  const budgetSource = createAllocationSource(
+    "settings-with-budget",
+    "optiflow_model_settings.csv",
+    "objective,planning_period,currency,budget\ncost,Q4 plan,USD,",
+  );
+  budgetSource.kind = "model_settings";
+  budgetSource.mappings = recognizeAllocation(
+    budgetSource.parsed.headers,
+    "model_settings",
+  );
+  budgetSource.confirmed = true;
+  assert.equal(
+    transformAllocationSources([budgetSource], initial).draft.settings.budget,
+    "",
+  );
+
+  source.parsed.rows[0][0] = "";
+  const missing = transformAllocationSources([source], initial);
+  assert.ok(
+    missing.issues.some(
+      (issue) => issue.field === "objective" && issue.source?.row === 2,
+    ),
+  );
+  source.parsed.rows[0][0] = "unknown";
+  assert.ok(
+    transformAllocationSources([source], initial).issues.some(
+      (issue) => issue.field === "objective" && issue.message.includes("Choose"),
+    ),
+  );
+});
+test("refresh preserves manually corrected model settings but accepts changed imported settings", () => {
+  const baseline = { mode: "cost" as const, currency: "USD", period: "Week 1", budget: "" };
+  assert.deepEqual(
+    preserveManualSettings(
+      { ...baseline, period: "Corrected week" },
+      baseline,
+      { mode: "value", currency: "EUR", period: "Week 2", budget: "100" },
+    ),
+    { mode: "value", currency: "EUR", period: "Corrected week", budget: "100" },
+  );
 });
 test("independent result validation rejects a solver candidate violating a hard constraint", async () => {
   const p = simple();
